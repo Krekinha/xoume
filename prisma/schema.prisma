@@ -1,0 +1,23 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
+}
+
+model User {
+  id    String @id @default(cuid())
+  nome  String
+  email String @unique
+  role  Role   @default(USER)
+  senha String
+}
+
+enum Role {
+  USER
+  ADMIN
+  DEV
+}
