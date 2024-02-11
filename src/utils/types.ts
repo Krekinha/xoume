@@ -3,11 +3,17 @@ export type User = {
   nome?: string;
   email?: string;
   senha?: string;
-  role?: Role;
+  roles?: Role[];
 };
 
 enum Role {
-  USER,
   ADMIN,
   DEV,
+  COLAB,
+  FINANCE,
 }
+
+export type ILogin = {
+  email: string;
+  senha: string;
+};

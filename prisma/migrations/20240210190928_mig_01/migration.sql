@@ -1,12 +1,12 @@
 -- CreateEnum
-CREATE TYPE "Role" AS ENUM ('USER', 'ADMIN', 'DEV');
+CREATE TYPE "Role" AS ENUM ('ADMIN', 'DEV', 'COLAB', 'FINANCE');
 
 -- CreateTable
 CREATE TABLE "User" (
     "id" TEXT NOT NULL,
     "nome" TEXT NOT NULL,
     "email" TEXT NOT NULL,
-    "role" "Role" NOT NULL DEFAULT 'USER',
+    "roles" "Role"[] DEFAULT ARRAY['COLAB']::"Role"[],
     "senha" TEXT NOT NULL,
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")

@@ -12,12 +12,13 @@ model User {
   id    String @id @default(cuid())
   nome  String
   email String @unique
-  role  Role   @default(USER)
+  roles Role[] @default([COLAB])
   senha String
 }
 
 enum Role {
-  USER
   ADMIN
   DEV
+  COLAB
+  FINANCE
 }
