@@ -4,6 +4,7 @@ import { Formik, Form, Field } from "formik";
 import { ILogin } from "@/utils/types";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { useState } from "react";
 
 const initialValues = {
@@ -45,10 +46,24 @@ export default function Login() {
       <div>
         <div className="flex-col md:flex-row justify-between flex gap-4 items-start mx-4 py-12">
           <div className="mx-auto dark">
-            <div className="mt-3">
-              <div className="flex flex-col w-full max-w-md px-4 py-8 bg-white rounded-lg shadow dark:bg-gray-800 sm:px-6 md:px-8 lg:px-10">
-                <div className="self-center mb-6 text-xl font-light text-gray-600 sm:text-2xl dark:text-white">
-                  Faça login na sua conta
+            <div className="flex gap-x-2">
+              <Image
+                src="/images/logo-aya.png"
+                width={40}
+                height={40}
+                alt="makit"
+                priority
+              />
+              <div className="flex items-end">
+                <span className="text-xl font-bold align-bottom text-violet-900 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]">
+                  xoume
+                </span>
+              </div>
+            </div>
+            <div className="mt-5">
+              <div className="flex flex-col w-full max-w-md px-4 py-8 bg-gray-50 rounded-lg shadow shadow-gray-400 sm:px-6 md:px-8 lg:px-10">
+                <div className="self-center mb-6 font-normal text-xl text-gray-800 sm:text-2xl">
+                  Faça login em sua conta
                 </div>
                 <div className="mt-8">
                   <Formik
@@ -79,7 +94,7 @@ export default function Login() {
                                   type="email"
                                   name="email"
                                   value={props.values.email}
-                                  className=" rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
+                                  className="rounded-r-lg flex-1 appearance-none border border-gray-300 w-full py-2 px-4 bg-white text-gray-700 placeholder-gray-400 shadow-sm text-base focus:outline-none focus:ring-2 focus:ring-purple-600 focus:border-transparent"
                                   placeholder="Seu email"
                                 />
                               </div>
@@ -124,7 +139,7 @@ export default function Login() {
                           <div className="flex ml-auto">
                             <a
                               href="#"
-                              className="inline-flex text-xs font-thin text-gray-500 sm:text-sm dark:text-gray-100 hover:text-gray-700 dark:hover:text-white"
+                              className="inline-flex text-xs underline text-gray-800 sm:text-sm hover:text-gray-700"
                             >
                               Esqueceu sua senha?
                             </a>
@@ -146,15 +161,6 @@ export default function Login() {
                       </Form>
                     )}
                   </Formik>
-                </div>
-                <div className="flex items-center justify-center mt-6">
-                  <a
-                    href="#"
-                    target="_blank"
-                    className="inline-flex items-center text-xs font-thin text-center text-gray-500 hover:text-gray-700 dark:text-gray-100 dark:hover:text-white"
-                  >
-                    <span className="ml-2">Você não tem uma conta?</span>
-                  </a>
                 </div>
               </div>
             </div>
