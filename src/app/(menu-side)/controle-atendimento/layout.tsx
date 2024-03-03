@@ -47,8 +47,8 @@ export default async function RootLayout({
         <NextAuthSessionProvider session={session}>
           <SidemenuContextProvider>
             <div className="flex flex-row min-h-screen bg-gray-200 text-gray-800">
-              <Sidebar sidemenu={menu} session={session}/>
-              <main className="main flex flex-col flex-grow -ml-64 md:ml-0 transition-all duration-150 ease-in">
+              <Sidebar sidemenu={menu} session={session} />
+              <main className="flex flex-col flex-grow -ml-44 md:ml-0 transition-all duration-150 ease-in">
                 <NavbarMenuSide modulo="CONTROLE DE ATENDIMENTO" />
                 {children}
               </main>
