@@ -17,3 +17,14 @@ export type ILogin = {
   email: string;
   senha: string;
 };
+
+export type Sidemenu = {
+  modulo?: string;
+  menu?: MenuSideList[]
+}
+
+export type MenuSideList = {
+  nome?: string;
+  icon?: string;
+  notificacao?: number;
+}

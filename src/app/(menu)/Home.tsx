@@ -1,4 +1,4 @@
-import ControleAtendimentoCard from "./ControleAtendimentoCard";
+import ControleAtendimentoCard from "../(menu-side)/ControleAtendimentoCard";
 
 /**
  * Home é o componente de entrada do app.
