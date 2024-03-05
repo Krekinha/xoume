@@ -1,3 +1,5 @@
+import { ReactNode } from "react";
+
 export type User = {
   id?: string;
   nome?: string;
@@ -20,11 +22,13 @@ export type ILogin = {
 
 export type Sidemenu = {
   modulo?: string;
-  menu?: MenuSideList[]
-}
+  menu?: MenuSideList[];
+};
 
 export type MenuSideList = {
-  nome?: string;
-  icon?: string;
+  label?: string;
+  icon?: ReactNode;
   notificacao?: number;
-}
+  link?: string;
+};
+

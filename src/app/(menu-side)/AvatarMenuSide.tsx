@@ -25,7 +25,6 @@ interface RadixMenuItem {
 }
 
 export default function AvatarMenuSide({ session }: any) {
-  const { status } = useSession();
   const generalMenuItems: RadixMenuItem[] = [
     {
       label: "Perfil",
@@ -44,25 +43,25 @@ export default function AvatarMenuSide({ session }: any) {
       <div className="relative inline-block">
         <DropdownMenuPrimitive.Root>
           <DropdownMenuPrimitive.Trigger asChild>
-              <button
-                type="button"
-                className="hover:bg-gray-100 py-1 px-2 active:bg-gray-500 mr-1 mb-1 ease-linear transition-all outline-none duration-150 rounded-full"
-              >
-                <div className="flex items-center gap-2">
-                  <div className="bg-gray-100 py-1 px-1 active:bg-gray-100 border shadow-md hover:shadow-none outline-none rounded-full">
-                    <Image
-                      src="/images/user.png"
-                      alt={""}
-                      width={16}
-                      height={16}
-                    />
-                  </div>
-
-                  <span className="text-gray-900 text-[0.70rem] font-bold uppercase">
-                    {session.user.nome}
-                  </span>
+            <button
+              type="button"
+              className="hover:bg-gray-100 py-1 px-2 active:bg-gray-500 mr-1 mb-1 ease-linear transition-all outline-none duration-150 rounded-full"
+            >
+              <div className="flex items-center gap-2">
+                <div className="bg-gray-100 py-1 px-1 active:bg-gray-100 border shadow-md hover:shadow-none outline-none rounded-full">
+                  <Image
+                    src="/images/user.png"
+                    alt={""}
+                    width={16}
+                    height={16}
+                  />
                 </div>
-              </button>
+
+                <span className="text-gray-900 text-[0.70rem] font-bold uppercase">
+                  {session.user.nome}
+                </span>
+              </div>
+            </button>
           </DropdownMenuPrimitive.Trigger>
           <DropdownMenuPrimitive.Portal>
             <DropdownMenuPrimitive.Content
