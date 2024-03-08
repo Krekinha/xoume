@@ -17,22 +17,17 @@ import { useSidemenuContext } from "@/context/SidemenuContext";
  */
 
 export default function NavTeste({ modulo }: any) {
-  const { isOpen, setIsOpen } = useSidemenuContext();
-  function test() {
-    setIsOpen(!isOpen);
-    console.log(isOpen);
-  }
   return (
     <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-200">
       <div className="px-3 py-3 lg:px-5 lg:pl-3">
         <div className="flex items-end justify-between">
-          <div className="flex items-center justify-start rtl:justify-end">
+          <div className="bg-red-400 gap-2 flex items-end justify-start">
             <button
               data-drawer-target="logo-sidebar"
               data-drawer-toggle="logo-sidebar"
               aria-controls="logo-sidebar"
               type="button"
-              className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+              className="inline-flex items-center p-2 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none"
             >
               <span className="sr-only">Open sidebar</span>
               <svg
@@ -49,27 +44,34 @@ export default function NavTeste({ modulo }: any) {
                 ></path>
               </svg>
             </button>
-            <Link href={"/"} className="flex ms-2 md:me-24">
-              <Image
-                src="/images/logo-aya.png"
-                width={24}
-                height={24}
-                alt="makit"
-                priority
-                className="me-3 h-auto w-auto"
-              />
-              <span
-                className="self-center text-xl sm:text-2xl whitespace-nowrap
-              font-bold align-bottom text-violet-900 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.8)]"
-              >
-                xoume
+            <div className="bg-green-400">
+              <Link href={"/"}>
+                <div className="flex gap-2">
+                  <div className="flex-none">
+                    <Image
+                      src="/images/logo-aya.png"
+                      width={32}
+                      height={32}
+                      alt="makit"
+                      priority
+                    />
+                  </div>
+                  <div>
+                    <span
+                      className="text-2xl
+                      font-bold align-bottom text-violet-900 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)]"
+                    >
+                      xoume
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            </div>
+            <div className="flex bg-yellow-400">
+              <span className="align-bottom text-sm font-semibold text-blue-600 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.2)] uppercase">
+                {modulo}
               </span>
-            </Link>
-          </div>
-          <div>
-            <span className="align-bottom text-sm font-semibold text-blue-600 drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.2)] uppercase">
-              {modulo}
-            </span>
+            </div>
           </div>
 
           <div className="flex items-center">
