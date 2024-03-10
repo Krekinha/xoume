@@ -13,7 +13,7 @@ export const metadata = {
 };
 
 const menu: Sidemenu = {
-  modulo: "[Controle de atendimento]",
+  modulo: "- Controle de atendimento",
   menu: [
     { label: "Menu 1", icon: <SvgComponent /> },
     { label: "Menu 2", icon: <SvgComponent />, notificacao: 5 },
