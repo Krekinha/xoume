@@ -8,6 +8,8 @@ import { Sidemenu } from "@/utils/types";
 import SvgComponent from "./SvgComponent";
 import NavTeste from "../NavTeste";
 import SvgAtendimentos from "./SvgAtendimentos";
+import SvgAtividades from "./SvgAtividades";
+import SvgConfiguracoes from "./SvgConfiguracoes";
 
 export const metadata = {
   title: "XOUME - CONTROLE DE ATENDIMENTO",
@@ -17,8 +19,8 @@ const menu: Sidemenu = {
   modulo: "Controle de atendimento",
   menu: [
     { label: "Atendimentos", icon: <SvgAtendimentos />, notificacao: 3 },
-    { label: "Atividades", icon: <SvgComponent /> },
-    { label: "Configurações", icon: <SvgComponent /> },
+    { label: "Atividades", icon: <SvgAtividades />, notificacao: 4 },
+    { label: "Configurações", icon: <SvgConfiguracoes /> },
   ],
 };
 

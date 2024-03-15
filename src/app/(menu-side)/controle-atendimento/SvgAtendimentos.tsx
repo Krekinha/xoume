@@ -3,7 +3,7 @@ import * as React from "react";
 function SvgAtendimentos() {
   return (
     <svg
-      width={20}
+      width={30}
       height={25}
       viewBox="0 0 164.3763 207.53465"
       xmlns="http://www.w3.org/2000/svg"

@@ -31,8 +31,9 @@ export default function SidebarTeste({ sidemenu, session }: ISidemenu) {
                   href="#"
                   className="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-700 group"
                 >
-                  {menu.icon}
-                  <span className="flex-1 ms-3 whitespace-nowrap">
+                  <div className="border rounded-lg border-blue-100 p-1 shadow-sm">{menu.icon}</div>
+
+                  <span className="flex-1 ms-3 whitespace-nowrap text-gray-800">
                     {menu.label}
                   </span>
                   {menu.notificacao && (
