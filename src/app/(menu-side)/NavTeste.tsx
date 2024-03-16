@@ -1,34 +1,24 @@
 "use client";
 import Link from "next/link";
-import Image from "next/image";
-import {
-  Avatar,
-  Dropdown,
-  DropdownDivider,
-  DropdownHeader,
-  DropdownItem,
-} from "flowbite-react";
-import { useSidemenuContext } from "@/context/SidemenuContext";
 /**
  * Esse Navbar é o menu principal do site. Estará visível em
  * todas as rotas que necessite de login
  * @author Krekinha
  * @version 1.0
  */
-
 export default function NavTeste({ modulo }: any) {
   return (
-    <nav className="fixed top-0 z-50 w-full bg-white border-b border-gray-100">
-      <div className="px-3 pt-2 lg:px-5 lg:pl-3">
-        <div className="flex w-full gap-2 justify-between">
-          <div className="flex gap-2 ">
-            <div className="menu">
+    <div className="border-b border-slate-300 mt-10">
+      <nav className="relative w-full flex flex-wrap py-2 bg-gray-200 text-gray-500 shadow-lg">
+        <div className="grid grid-cols-2 w-full items-center">
+          <div className="flex items-center gap-2">
+            <div>
               <button
-                data-drawer-target="logo-sidebar"
-                data-drawer-toggle="logo-sidebar"
-                aria-controls="logo-sidebar"
+                data-drawer-target="default-sidebar"
+                data-drawer-toggle="default-sidebar"
+                aria-controls="default-sidebar"
                 type="button"
-                className="inline-flex items-center p-1 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none"
+                className="inline-flex items-center p-2 ms-3 md:hidden text-sm text-gray-700 rounded-lg hover:bg-gray-100 focus:outline-none"
               >
                 <span className="sr-only">Open sidebar</span>
                 <svg
@@ -46,71 +36,35 @@ export default function NavTeste({ modulo }: any) {
                 </svg>
               </button>
             </div>
-            <div className="logo self-end flex-none mb-[0.15rem]">
-              <Image
-                src="/images/logo-aya.png"
-                width={32}
-                height={32}
-                alt="makit"
-                priority
-              />
-            </div>
-            <div className="flex items-baseline gap-2 self-end mb-1 sm:mb-0">
-              <div className="xoume">
-                <span
-                  className="text-[1.5rem] font-bold text-violet-900 
-                    drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.3)] hidden sm:flex"
+
+            <div>
+              <Link href={"/"} className="font-medium">
+                <svg
+                  className="w-6 h-6 stroke-current"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
                 >
-                  xoume
-                </span>
-              </div>
-              <div className="divide">
-                <span
-                  className="text-[0.8rem] sm:text-sm text-gray-800 sm:flex hidden
-                   font-semibold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.2)] uppercase"
-                >
-                  -
-                </span>
-              </div>
-              <div className="controle">
-                <span
-                  className="text-[0.8rem] sm:text-sm text-gray-800 flex 
-                  font-semibold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.2)] uppercase"
-                >
-                  {modulo}
-                </span>
-              </div>
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"
+                  />
+                </svg>
+              </Link>
             </div>
           </div>
-
-          <div className="avatar flex flex-none self-end mb-[0.15rem]">
-            <Dropdown
-              arrowIcon={false}
-              inline
-              label={
-                <Avatar
-                  alt="User settings"
-                  size={"sm"}
-                  img="https://flowbite.com/docs/images/people/profile-picture-5.jpg"
-                  rounded
-                />
-              }
-            >
-              <DropdownHeader>
-                <span className="block text-sm">Bonnie Green</span>
-                <span className="block truncate text-sm font-medium">
-                  name@flowbite.com
-                </span>
-              </DropdownHeader>
-              <DropdownItem>Dashboard</DropdownItem>
-              <DropdownItem>Settings</DropdownItem>
-              <DropdownItem>Earnings</DropdownItem>
-              <DropdownDivider />
-              <DropdownItem>Sign out</DropdownItem>
-            </Dropdown>
+          <div className="justify-self-start">
+            <div className="flex gap-2 items-center">
+              <span className="text-gray-600 text-[0.75rem] font-bold">
+                {modulo}
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }

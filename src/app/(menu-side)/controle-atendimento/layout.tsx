@@ -3,13 +3,13 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import { SidemenuContextProvider } from "@/context/SidemenuContext";
-import SidebarTeste from "./SidebarTeste";
+import Sidebar from "../Sidebar";
 import { Sidemenu } from "@/utils/types";
-import SvgComponent from "./SvgComponent";
-import NavTeste from "../NavTeste";
+import NavbarMenuSide from "../NavbarMenuSide";
 import SvgAtendimentos from "./SvgAtendimentos";
 import SvgAtividades from "./SvgAtividades";
 import SvgConfiguracoes from "./SvgConfiguracoes";
+import NavTeste from "../Navteste";
 
 export const metadata = {
   title: "XOUME - CONTROLE DE ATENDIMENTO",
@@ -18,7 +18,7 @@ export const metadata = {
 const menu: Sidemenu = {
   modulo: "Controle de atendimento",
   menu: [
-    { label: "Atendimentos", icon: <SvgAtendimentos />, notificacao: 3 },
+    { label: "Atendimentos", icon: <SvgAtendimentos /> },
     { label: "Atividades", icon: <SvgAtividades />, notificacao: 4 },
     { label: "Configurações", icon: <SvgConfiguracoes /> },
   ],
@@ -45,8 +45,8 @@ export default async function RootLayout({
       <body>
         <NextAuthSessionProvider session={session}>
           <SidemenuContextProvider>
-            <NavTeste modulo={menu.modulo} />
-            <SidebarTeste sidemenu={menu} session={session} />
+            <NavbarMenuSide modulo={menu.modulo} />
+            <Sidebar sidemenu={menu} session={session} />
 
             {children}
           </SidemenuContextProvider>
