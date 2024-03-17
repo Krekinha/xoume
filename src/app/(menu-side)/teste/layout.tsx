@@ -8,6 +8,7 @@ import { SidemenuContextProvider } from "@/context/SidemenuContext";
 import Sidebar from "../Sidebar";
 import { Sidemenu } from "@/utils/types";
 import NavbarMenuSide from "./NavbarMenuSide";
+import { link } from "fs";
 /**
  * Neste arquivo irei determinar o padrão de layout para todas as rotas do grupo (menu)
  * e configurar parâmetros que serão compartilhados com essa rotas (metadados,
@@ -22,7 +23,7 @@ export const metadata: Metadata = {
 
 const menu: Sidemenu = {
   modulo: "Controle de atendimento",
-  menu: [{ label: "Menu 1" }, { label: "Menu 2" }],
+  menu: [{ label: "Menu 1", link:"#" }, { label: "Menu 2", link:"#" }],
 };
 
 export default async function RootLayout({
