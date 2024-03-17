@@ -29,6 +29,5 @@ export type MenuSideList = {
   label?: string;
   icon?: ReactNode;
   notificacao?: number;
-  link?: string;
+  link: string
 };
-

@@ -1,6 +1,8 @@
 "use client";
 
 import { Sidemenu } from "@/utils/types";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 //import { useSidemenuStore } from "@/store/useSidemenuStore";
 interface ISidemenu {
@@ -14,6 +16,7 @@ export default function Sidebar({ sidemenu, session }: ISidemenu) {
    * @author Krekinha
    * @version 1.0
    */
+  const pathname = usePathname();
 
   return (
     <aside
@@ -27,23 +30,26 @@ export default function Sidebar({ sidemenu, session }: ISidemenu) {
           sidemenu.menu.map((menu, i) => (
             <ul key={i} className="space-y-2 font-medium">
               <li>
-                <a
-                  href="#"
-                  className="flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-800 group"
-                >
-                  <div className="border rounded-lg border-gray-700 p-1 shadow-sm">
-                    {menu.icon}
-                  </div>
+                <Link href={menu.link}>
+                  <div className={`${
+                        pathname === menu.link
+                            ? "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-800 group bg-red-500"
+                            : "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-800 group"
+                    } flex items-center py-2 px-4 rounded-lg mb-2`}>
+                    <div className="border rounded-lg border-gray-700 p-1 shadow-sm">
+                      {menu.icon}
+                    </div>
 
-                  <span className="flex-1 ms-3 whitespace-nowrap text-gray-400">
-                    {menu.label}
-                  </span>
-                  {menu.notificacao && (
-                    <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
-                      {menu.notificacao}
+                    <span className="flex-1 ms-3 whitespace-nowrap text-gray-400">
+                      {menu.label}
                     </span>
-                  )}
-                </a>
+                    {menu.notificacao && (
+                      <span className="inline-flex items-center justify-center w-3 h-3 p-3 ms-3 text-sm font-medium text-blue-800 bg-blue-100 rounded-full dark:bg-blue-900 dark:text-blue-300">
+                        {menu.notificacao}
+                      </span>
+                    )}
+                  </div>
+                </Link>
               </li>
             </ul>
           ))}

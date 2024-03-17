@@ -21,7 +21,7 @@ function SvgConfiguracoes() {
         id="circulo-interno"
         d="M3.916 2.53c-.685 0-1.37.462-1.399 1.386.059 1.847 2.738 1.847 2.796 0C5.284 2.992 4.6 2.53 3.916 2.53z"
         display="inline"
-        fill="#ADD8E6"
+        fill="#4054c3"
         fillOpacity={1}
         strokeWidth={0.282898}
       />
