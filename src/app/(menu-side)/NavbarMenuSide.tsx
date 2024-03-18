@@ -8,7 +8,6 @@ import {
   DropdownHeader,
   DropdownItem,
 } from "flowbite-react";
-import { useSidemenuContext } from "@/context/SidemenuContext";
 /**
  * Esse Navbar é o menu principal do site. Estará visível em
  * todas as rotas que necessite de login

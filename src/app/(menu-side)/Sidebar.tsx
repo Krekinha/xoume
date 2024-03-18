@@ -21,7 +21,7 @@ export default function Sidebar({ sidemenu, session }: ISidemenu) {
   return (
     <aside
       id="logo-sidebar"
-      className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-gray-900 border-r border-gray-200 sm:translate-x-0"
+      className="fixed top-0 left-0 z-40 w-64 h-screen pt-20 transition-transform -translate-x-full bg-gray-900 border-r border-gray-700 sm:translate-x-0"
       aria-label="Sidebar"
       aria-hidden="true"
     >
@@ -31,11 +31,13 @@ export default function Sidebar({ sidemenu, session }: ISidemenu) {
             <ul key={i} className="space-y-2 font-medium">
               <li>
                 <Link href={menu.link}>
-                  <div className={`${
-                        pathname === menu.link
-                            ? "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-800 group bg-red-500"
-                            : "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-800 group"
-                    } flex items-center py-2 px-4 rounded-lg mb-2`}>
+                  <div
+                    className={`${
+                      pathname === menu.link
+                        ? "flex items-center p-2 text-gray-900 rounded-lg hover:bg-violet-500/15 group bg-violet-500/15"
+                        : "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-800 group"
+                    } flex items-center py-2 px-4 rounded-lg mb-2`}
+                  >
                     <div className="border rounded-lg border-gray-700 p-1 shadow-sm">
                       {menu.icon}
                     </div>

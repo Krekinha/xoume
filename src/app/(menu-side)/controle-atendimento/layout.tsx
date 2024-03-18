@@ -15,11 +15,24 @@ export const metadata = {
 };
 
 const menu: Sidemenu = {
-  modulo: "Controle de atendimento",
+  modulo: "Controle de atendimentos",
   menu: [
-    { label: "Atendimentos", icon: <SvgAtendimentos />, link: "/controle-atendimento" },
-    { label: "Atividades", icon: <SvgAtividades />, notificacao: 4, link:"/controle-atendimento/atividades" },
-    { label: "Configurações", icon: <SvgConfiguracoes/>, link:"#"},
+    {
+      label: "Atendimentos",
+      icon: <SvgAtendimentos />,
+      link: "/controle-atendimento",
+    },
+    {
+      label: "Atividades",
+      icon: <SvgAtividades />,
+      notificacao: 4,
+      link: "/controle-atendimento/atividades",
+    },
+    {
+      label: "Configurações",
+      icon: <SvgConfiguracoes />,
+      link: "/controle-atendimento/configuracoes",
+    },
   ],
 };
 
