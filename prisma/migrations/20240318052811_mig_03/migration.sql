@@ -1,0 +1,9 @@
+-- AlterTable
+ALTER TABLE "Atendimento" ALTER COLUMN "prazo" DROP NOT NULL,
+ALTER COLUMN "extra" DROP NOT NULL,
+ALTER COLUMN "proximaAtuacao" DROP NOT NULL;
+
+-- AlterTable
+ALTER TABLE "Cliente" ALTER COLUMN "tipoCliente" DROP NOT NULL,
+ALTER COLUMN "nome" DROP NOT NULL,
+ALTER COLUMN "cnpjCpf" DROP NOT NULL;

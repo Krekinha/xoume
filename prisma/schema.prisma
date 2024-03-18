@@ -14,6 +14,11 @@ model User {
   email String @unique
   roles Role[] @default([COLAB])
   senha String
+
+  atendimentoCriado     Atendimento[] @relation("atendimentoCriado")
+  atendimentoAtualizado Atendimento[] @relation("atendimentoAtualizado")
+  clienteCriado         Cliente[]     @relation("clienteCriado")
+  clienteAtualizado     Cliente[]     @relation("clienteAtualizado")
 }
 
 enum Role {
@@ -21,4 +26,135 @@ enum Role {
   DEV
   COLAB
   FINANCE
+}
+
+model Atendimento {
+  id        String @id @default(cuid())
+  ordem     Int    @unique
+  descricao String
+
+  prazo          DateTime?
+  extra          Boolean?
+  situacao       SituacaoAtendimento[]
+  proximaAtuacao DateTime?
+
+  criadoEm     DateTime? @default(now())
+  atualizadoEm DateTime?
+
+  // Relacionamentos
+  cliente       Cliente?             @relation("atendimentoCliente", fields: [clienteId], references: [id])
+  responsavel   Colaborador[]        @relation("responsavelAtendimento")
+  evolucao      EvolucaoAtendimento?
+  criadoPor     User?                @relation("atendimentoCriado", fields: [userCriouId], references: [id])
+  atualizadoPor User?                @relation("atendimentoAtualizado", fields: [userAtualizouId], references: [id])
+
+  // Chave
+  clienteId       String?
+  userCriouId     String?
+  userAtualizouId String?
+}
+
+enum SituacaoAtendimento {
+  ENCERRADO
+  ANDAMENTO
+}
+
+model Cliente {
+  id          String       @id @default(cuid())
+  tipoCliente TipoCliente?
+  razaoNome   String
+  nome        String?
+  cnpjCpf     String?      @unique
+
+  //Pessoa física
+  estadoCivilPf String?
+  rgPf          String?
+  dnPf          DateTime?
+
+  //Pessoa jurídica
+  logradouroPj       String?
+  numeroLogradouroPj String?
+  bairroPj           String?
+  complementoPj      String?
+  cepPj              String?
+  cidadePj           String?
+  ufPj               String?
+  telefonePj         String?
+
+  //Responsável
+  nomeResponsavel             String?
+  cpfResponsavel              String?
+  estadoCivilResponsavel      String?
+  rgResponsavel               String?
+  dnResponsavel               DateTime?
+  logradouroResponsavel       String?
+  numeroLogradouroResponsavel String?
+  bairroResponsavel           String?
+  cepResponsavel              String?
+  cidadeResponsavel           String?
+  ufResponsavel               String?
+  telefoneResponsavel         String?
+
+  //Comum
+  email         String?
+  codigoSimples String?
+  codigoEcac    String?
+
+  criadoEm     DateTime? @default(now())
+  atualizadoEm DateTime?
+
+  // Relacionamentos
+  criadoPor          User?         @relation("clienteCriado", fields: [userCriouId], references: [id])
+  atualizadoPor      User?         @relation("clienteAtualizado", fields: [userAtualizouId], references: [id])
+  atendimentoCliente Atendimento[] @relation("atendimentoCliente")
+
+  // Chave
+  userCriouId     String?
+  userAtualizouId String?
+}
+
+enum TipoCliente {
+  PFISICA
+  PJURIDICA
+}
+
+model Colaborador {
+  id   String @id @default(cuid())
+  nome String
+
+  // Relacionamentos
+  responsavelAtendimento Atendimento[] @relation("responsavelAtendimento")
+
+  // Chave
+  atendimentoId String?
+}
+
+model EvolucaoAtendimento {
+  id            String                      @id @default(cuid())
+  ordem         Int
+
+  // Relacionamentos
+  eventos       EventoEvolucaoAtendimento[]
+  atendimento   Atendimento                 @relation(fields: [atendimentoId], references: [id])
+  
+  // Chave
+  atendimentoId String                      @unique
+}
+
+model EventoEvolucaoAtendimento {
+  id         String                            @id @default(cuid())
+  descricao  String
+  situacao   SituacaoEventoEvolucaoAtendimento
+  dataEvento DateTime
+
+  // Relacionamentos
+  evolucaoAtendimento EvolucaoAtendimento? @relation(fields: [evolucaoAtendimentoId], references: [id])
+
+  // Chave
+  evolucaoAtendimentoId String?
+}
+
+enum SituacaoEventoEvolucaoAtendimento {
+  CONCLUIDO
+  ANDAMENTO
 }
