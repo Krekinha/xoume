@@ -14,7 +14,7 @@ export async function POST(req: Request, res: Response) {
     // Obter o últmo Atendimento cadastrado
     const ultimoAtendimento = await prisma.atendimento.findFirst({
       orderBy: {
-        criadoEm: "desc",
+        ordem: "desc",
       },
     });
     // Se o Atendimento existir atribui o numero de ordem à novaOrdem

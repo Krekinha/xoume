@@ -25,7 +25,6 @@ const menu: Sidemenu = {
     {
       label: "Atividades",
       icon: <SvgAtividades />,
-      notificacao: 4,
       link: "/controle-atendimento/atividades",
     },
     {

@@ -14,6 +14,14 @@ export function formatarData(data: Date | undefined) {
   }
 }
 
+export function formatarDataHora(data: Date | undefined) {
+  if (data != null && data != undefined) {
+    return moment(data).format("DD/MM/YY hh:mm");
+  } else {
+    return undefined;
+  }
+}
+
 export function formatarDataByMY(data: Date | undefined) {
   if (data != null && data != undefined) {
     return moment(data).locale("pt-br").format("MMMM/YYYY");
