@@ -1,6 +1,4 @@
 "use client";
-import { getAtendimentos } from "@/services/atendimentos/get-atendimentos";
-import { use } from "react";
 import { GrAdd } from "react-icons/gr";
 import { DataTable } from "./data-table";
 import { columns } from "./columns";
@@ -25,7 +23,7 @@ export default function Home({ atendimentos }: props) {
         <span className="ml-2 text-sm">Adicionar atendimento</span>
       </nav>
       <div className="p-4 sm:ml-64 mt-8">
-        <div className="mt-14">
+        <div className="mt-12">
           <div className="container mx-auto">
             <DataTable columns={columns} data={atendimentos} />
           </div>

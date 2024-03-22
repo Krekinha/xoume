@@ -16,7 +16,7 @@ export function formatarData(data: Date | undefined) {
 
 export function formatarDataHora(data: Date | undefined) {
   if (data != null && data != undefined) {
-    return moment(data).format("DD/MM/YY hh:mm");
+    return moment(data).locale("pt-br").format("DD/MM/YY HH:mm");
   } else {
     return undefined;
   }
@@ -38,9 +38,15 @@ export function formatarDataByDM(data: Date | undefined) {
   }
 }
 
-export function formatarDataByDMAndAddDays(data: Date | undefined, dias: number) {
+export function formatarDataByDMAndAddDays(
+  data: Date | undefined,
+  dias: number
+) {
   if (data != null && data != undefined) {
-    return moment(data).add(dias, "days").locale("pt-br").format("DD [de] MMMM");
+    return moment(data)
+      .add(dias, "days")
+      .locale("pt-br")
+      .format("DD [de] MMMM");
   } else {
     return undefined;
   }

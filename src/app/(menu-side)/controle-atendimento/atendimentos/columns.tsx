@@ -8,10 +8,16 @@ export const columns: ColumnDef<Atendimento>[] = [
   {
     accessorKey: "ordem",
     header: () => <div className="">Ordem</div>,
+    cell: ({ row }) => {
+      return <div className=" text-xs">{row.getValue("ordem")}</div>;
+    },
   },
   {
     accessorKey: "descricao",
-    header: () => <div className="text-left">Descrição</div>,
+    header: () => <div className=" text-left">Descrição</div>,
+    cell: ({ row }) => {
+      return <div className="">{row.getValue("descricao")}</div>;
+    },
   },
   {
     accessorKey: "criadoEm",

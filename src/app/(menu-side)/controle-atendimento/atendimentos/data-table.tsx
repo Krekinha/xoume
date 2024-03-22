@@ -15,6 +15,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import { GrStatusGood } from "react-icons/gr";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,42 +35,28 @@ export function DataTable<TData, TValue>({
   return (
     <div className="">
       <Table>
-        <TableHeader>
-          {table.getHeaderGroups().map((headerGroup) => (
-            <TableRow key={headerGroup.id} className="grid grid-cols-3">
-              {headerGroup.headers.map((header) => {
-                return (
-                  <TableHead key={header.id} className="">
-                    {header.isPlaceholder
-                      ? null
-                      : flexRender(
-                          header.column.columnDef.header,
-                          header.getContext()
-                        )}
-                  </TableHead>
-                );
-              })}
-            </TableRow>
-          ))}
-        </TableHeader>
-        <TableBody className="">
+        <TableBody>
           {table.getRowModel().rows?.length ? (
             table.getRowModel().rows.map((row) => (
               <TableRow
                 key={row.id}
                 data-state={row.getIsSelected() && "selected"}
-                className=" grid grid-cols-3 bg-violet-50 border rounded-lg border-gray-200 my-2"
+                className="bg-violet-100 rounded-lg grid grid-rows-3 w-full my-3
+                 shadow-sm shadow-gray-100 border p-1.5"
               >
-                {row.getVisibleCells().map((cell) => (
-                  <TableCell key={cell.id} className="">
-                    {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                  </TableCell>
-                ))}
+                <div className="row-start-1 bg-blue-200 flex gap-2 items-center">
+                  <div>
+                    <GrStatusGood className="text-green-500 h-4 w-4" />
+                  </div>
+                  <div className="textsm">{row.getValue("descricao")}</div>
+
+                  {/*{flexRender(cell.column.columnDef.cell, cell.getContext())}*/}
+                </div>
               </TableRow>
             ))
           ) : (
-            <TableRow className=" ">
-              <TableCell colSpan={columns.length} className="h-24 text-left">
+            <TableRow>
+              <TableCell colSpan={columns.length} className="h-24 text-center">
                 No results.
               </TableCell>
             </TableRow>
