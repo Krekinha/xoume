@@ -1,14 +1,15 @@
 "use client";
 import { GrAdd } from "react-icons/gr";
 import { DataTable } from "./data-table";
-import { columns } from "./columns";
 import { Atendimento } from "@/utils/types";
+import { useAtendimentoStore } from "@/store/useAtendimentoStore";
 
 interface props {
   atendimentos: Atendimento[];
 }
 
-export default function Home({ atendimentos }: props) {
+export default function Home() {
+  const {atendimentos} = useAtendimentoStore()
   console.log(atendimentos);
   return (
     <>
@@ -25,7 +26,9 @@ export default function Home({ atendimentos }: props) {
       <div className="p-4 sm:ml-64 mt-8">
         <div className="mt-12">
           <div className="container mx-auto">
-            <DataTable columns={columns} data={atendimentos} />
+            <div className="relative w-full overflow-auto">
+              <DataTable data={atendimentos} />
+            </div>
           </div>
         </div>
       </div>

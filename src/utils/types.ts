@@ -33,6 +33,7 @@ export type MenuSideList = {
 };
 
 export interface Atendimento {
+  id?: string;
   ordem: number;
   descricao: string;
   prazo?: Date;
@@ -113,15 +114,15 @@ export interface EvolucaoAtendimento {
 }
 
 export interface EventoEvolucaoAtendimento {
-  descricao:  string;
-  situacao:   SituacaoEventoEvolucaoAtendimento;
+  descricao: string;
+  situacao: SituacaoEventoEvolucaoAtendimento;
   dataEvento: Date;
 
   // Relacionamentos
-  evolucaoAtendimento: EvolucaoAtendimento
+  evolucaoAtendimento: EvolucaoAtendimento;
 }
 
 enum SituacaoEventoEvolucaoAtendimento {
   CONCLUIDO,
-  ANDAMENTO
+  ANDAMENTO,
 }

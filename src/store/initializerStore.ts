@@ -1,18 +1,18 @@
 "use client";
 import { useRef } from "react";
-import { useSidemenuStore } from "./useSidemenuStore";
-import { Sidemenu } from "@/utils/types";
+import { Atendimento} from "@/utils/types";
+import { useAtendimentoStore } from "./useAtendimentoStore";
 
-interface ISidemenuStore {
-  sidemenu: Sidemenu;
+interface IAtendimentoStore {
+  atendimentos: Atendimento[];
 }
 
-const InitializerStore = ({ sidemenu }: ISidemenuStore) => {
+const InitializerStore = ({ atendimentos }: IAtendimentoStore) => {
   const initializer = useRef(false);
 
   if (!initializer.current) {
-    useSidemenuStore.setState({
-      sidemenu,
+    useAtendimentoStore.setState({
+      atendimentos,
     });
     initializer.current = true;
   }

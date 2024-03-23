@@ -1,5 +1,7 @@
+import { useAtendimentoStore } from "@/store/useAtendimentoStore";
 import Home from "./atendimentos/Home";
 import { baseUrl } from "@/utils/constants";
+import InitializerStore from "@/store/initializerStore";
 
 async function getAtendimentos() {
   const res = await fetch(`${baseUrl("/api/atendimento/get-all")}`, {
@@ -19,11 +21,13 @@ export default async function Page() {
    * @version 1.0
    */
   const atendimentos = await getAtendimentos();
+  useAtendimentoStore.getState().setAtendimentos(atendimentos);
   console.log(atendimentos);
 
   return (
     <>
-      <Home atendimentos={atendimentos} />
+      <InitializerStore atendimentos={atendimentos} />
+      <Home />
     </>
   );
 }

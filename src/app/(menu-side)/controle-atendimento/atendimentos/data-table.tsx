@@ -1,68 +1,35 @@
 "use client";
 
-import {
-  ColumnDef,
-  flexRender,
-  getCoreRowModel,
-  useReactTable,
-} from "@tanstack/react-table";
-
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Atendimento } from "@/utils/types";
 import { GrStatusGood } from "react-icons/gr";
 
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
+interface DataTableProps {
+  data: Atendimento[];
 }
 
-export function DataTable<TData, TValue>({
-  columns,
-  data,
-}: DataTableProps<TData, TValue>) {
-  const table = useReactTable({
-    data,
-    columns,
-    getCoreRowModel: getCoreRowModel(),
-  });
-
+export function DataTable({ data }: DataTableProps) {
   return (
-    <div className="">
-      <Table>
-        <TableBody>
-          {table.getRowModel().rows?.length ? (
-            table.getRowModel().rows.map((row) => (
-              <TableRow
-                key={row.id}
-                data-state={row.getIsSelected() && "selected"}
-                className="bg-violet-100 rounded-lg grid grid-rows-3 w-full my-3
-                 shadow-sm shadow-gray-100 border p-1.5"
+    <>
+      {data && (
+        <table className="w-full">
+          <tbody>
+            {data.map((atendimento, i) => (
+              <tr
+                key={atendimento.id}
+                className="hover:bg-muted/50 data-[state=selected]:bg-muted my-3 grid w-full grid-rows-3 rounded-lg border bg-violet-100 p-1.5 shadow-sm shadow-gray-100 transition-colors"
+                data-state="false"
               >
-                <div className="row-start-1 bg-blue-200 flex gap-2 items-center">
+                <div className="row-start-1 flex items-center gap-2 bg-blue-200">
                   <div>
-                    <GrStatusGood className="text-green-500 h-4 w-4" />
+                    <GrStatusGood className="text-green-600" />
                   </div>
-                  <div className="textsm">{row.getValue("descricao")}</div>
-
-                  {/*{flexRender(cell.column.columnDef.cell, cell.getContext())}*/}
+                  <div className="text-sm">{atendimento.descricao}</div>
                 </div>
-              </TableRow>
-            ))
-          ) : (
-            <TableRow>
-              <TableCell colSpan={columns.length} className="h-24 text-center">
-                No results.
-              </TableCell>
-            </TableRow>
-          )}
-        </TableBody>
-      </Table>
-    </div>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
+    </>
   );
 }
