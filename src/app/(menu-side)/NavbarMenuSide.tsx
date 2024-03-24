@@ -21,7 +21,7 @@ export default function NavbarMenuSide({ modulo }: any) {
       <div className="px-3 pt-2 lg:px-5 lg:pl-3">
         <div className="flex w-full gap-2 justify-between">
           <div className="flex gap-2 ">
-            <div className="menu">
+            <div role="menu">
               <button
                 data-drawer-target="logo-sidebar"
                 data-drawer-toggle="logo-sidebar"
@@ -45,14 +45,16 @@ export default function NavbarMenuSide({ modulo }: any) {
                 </svg>
               </button>
             </div>
-            <div className="logo self-end flex-none mb-[0.15rem]">
-              <Image
-                src="/images/logo-aya.png"
-                width={32}
-                height={32}
-                alt="makit"
-                priority
-              />
+            <div role="logo" className="self-end flex-none mb-[0.15rem]">
+              <Link href={"/"}>
+                <Image
+                  src="/images/logo-aya.png"
+                  width={32}
+                  height={32}
+                  alt="makit"
+                  priority
+                />
+              </Link>
             </div>
             <div className="flex items-baseline gap-2 self-end mb-1 sm:mb-0">
               <div className="xoume">
@@ -71,7 +73,7 @@ export default function NavbarMenuSide({ modulo }: any) {
                   -
                 </span>
               </div>
-              <div className="controle">
+              <div role="controle">
                 <span
                   className="text-[0.8rem] sm:text-sm text-violet-300 flex 
                   font-semibold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.2)] shadow-slate-500 uppercase"
