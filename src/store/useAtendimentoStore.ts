@@ -1,3 +1,4 @@
+import { atendimentoService } from "@/services/atendimentoService";
 import { Atendimento } from "../utils/types";
 
 import { create } from "zustand";
@@ -9,6 +10,7 @@ type State = {
 };
 
 type Actions = {
+  getAtendimentos: () => void;
   setAtendimentos: (_atendimentos: Atendimento[]) => void;
   addAtendimento: (_atendimento: Atendimento) => void;
   setOpen: (_open: boolean) => void;
@@ -25,6 +27,14 @@ export const useAtendimentoStore = create<State & Actions>()((set, get) => ({
 
   // Actions
 
+  getAtendimentos: async () => {
+    const data = (await atendimentoService.get()) as Atendimento[];
+
+    console.log("getAtendimento: ", data);
+    set({
+      atendimentos: data,
+    });
+  },
   setAtendimentos: (_atendimentos: Atendimento[]) => {
     set({
       atendimentos: _atendimentos,

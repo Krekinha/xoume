@@ -26,8 +26,14 @@ const formSchema = z.object({
 });
 
 export function FormAddAtendimento() {
-  const { open, setOpen, addAtendimento, atendimentos, setAtendimentos } =
-    useAtendimentoStore();
+  const {
+    open,
+    setOpen,
+    addAtendimento,
+    atendimentos,
+    setAtendimentos,
+    getAtendimentos,
+  } = useAtendimentoStore();
 
   // 1. Define o formulário
   const form = useForm<z.infer<typeof formSchema>>({
@@ -41,10 +47,8 @@ export function FormAddAtendimento() {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
       const response = await atendimentoService.add(values);
-      const data = await atendimentoService.get();
-      setAtendimentos(data);
-      console.log("atendimentos: ", data);
-      setOpen(false);
+      getAtendimentos();
+      setOpen(false)
     } catch (error) {
       console.error("Erro ao adicionar o atendimento:", error);
       // Aqui você pode adicionar um tratamento de erro, como mostrar uma mensagem de erro na interface do usuário.

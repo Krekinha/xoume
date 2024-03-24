@@ -3,13 +3,18 @@
 import { Atendimento } from "@/utils/types";
 import { GrStatusGood } from "react-icons/gr";
 import { unstable_noStore as nostore } from "next/cache";
+import { useAtendimentoStore } from "@/store/useAtendimentoStore";
 
 interface ListAtendimentosProps {
   data: Atendimento[];
 }
 
-export function ListAtendimentos({ data }: ListAtendimentosProps) {
+export function ListAtendimentos() {
   nostore();
+
+  const { atendimentos } = useAtendimentoStore();
+  const data = atendimentos;
+  console.log(data);
   return (
     <>
       {data &&

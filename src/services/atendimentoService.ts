@@ -1,4 +1,4 @@
-"use client"
+
 import { baseUrl } from "@/utils/constants";
 import { Atendimento } from "@/utils/types";
 
@@ -61,7 +61,7 @@ async function add(values: any) {
       console.error("Error:", error);
       return error;
     });
-    console.log("res: ", res);
+  console.log("res: ", res);
 
   return res;
 }
