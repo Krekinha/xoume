@@ -1,3 +1,4 @@
+"use client"
 import { baseUrl } from "@/utils/constants";
 import { Atendimento } from "@/utils/types";
 
