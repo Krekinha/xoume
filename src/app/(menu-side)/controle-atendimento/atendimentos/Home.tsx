@@ -6,12 +6,14 @@ import { useAtendimentoStore } from "@/store/useAtendimentoStore";
 import { Suspense } from "react";
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import { DialogAddAtendimento } from "./DialogAddAtendimento";
+import { unstable_noStore as nostore } from "next/cache";
 
 interface props {
   atendimentos: Atendimento[];
 }
 
 export default function Home({ atendimentos }: props) {
+  nostore();
   console.log("atendimentos inicial: ", atendimentos);
   return (
     <>
