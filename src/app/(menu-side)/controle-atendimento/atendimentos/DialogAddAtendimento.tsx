@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/dialog";
 import { GrAdd } from "react-icons/gr";
 import { FormAddAtendimento } from "./FormAddAtendimento";
-import { useState } from "react";
 import { useAtendimentoStore } from "@/store/useAtendimentoStore";
 
 export function DialogAddAtendimento() {

@@ -24,7 +24,7 @@ export function ListAtendimentos() {
                 </div>
 
                 <div role="menu-dropdown" className="justify-self-end">
-                  <DropdownAtendimento />
+                  <DropdownAtendimento atendimento={atendimento}/>
                 </div>
               </div>
               <div className="h-6 bg-green-500"></div>

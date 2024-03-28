@@ -30,7 +30,6 @@ export const useAtendimentoStore = create<State & Actions>()((set, get) => ({
   getAtendimentos: async () => {
     const data = (await atendimentoService.get()) as Atendimento[];
 
-    console.log("getAtendimento: ", data);
     set({
       atendimentos: data,
     });

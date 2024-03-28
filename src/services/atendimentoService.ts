@@ -1,10 +1,10 @@
-
 import { baseUrl } from "@/utils/constants";
 import { Atendimento } from "@/utils/types";
 
 export const atendimentoService = {
   get,
   add,
+  delete: _delete,
 };
 
 /*async function update(values: ConfigEscala) {
@@ -27,12 +27,13 @@ export const atendimentoService = {
   return res;
 }*/
 
-async function get() {
-  const url = baseUrl("/api/atendimento/get-all");
+async function _delete(id: string) {
+  const url = baseUrl("/api/atendimento/delete");
   const res = await fetch(url, {
-    method: "GET",
+    method: "DELETE",
     cache: "no-store",
-    //next: { revalidate: 1 },
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(id),
   })
     .then((response) => {
       return response.json();
@@ -63,5 +64,23 @@ async function add(values: any) {
     });
   console.log("res: ", res);
 
+  return res;
+}
+
+async function get() {
+  const url = baseUrl("/api/atendimento/get-all");
+  const res = await fetch(url, {
+    method: "GET",
+    cache: "no-store",
+    //next: { revalidate: 1 },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .catch((error) => {
+      console.error("Erro:", error);
+      return error;
+    });
+  //return res;
   return res;
 }
