@@ -35,7 +35,7 @@ export function DropdownAtendimento({ atendimento }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <button
-          className="inline-flex h-8 w-8 p-0 hover:bg-gray-200 active:bg-gray-300 ease-linear transition-all 
+          className="inline-flex h-6 w-6 p-0 hover:bg-gray-200 active:bg-gray-300 ease-linear transition-all 
                      cursor-pointer duration-150 select-none items-center justify-center whitespace-nowrap rounded-md"
         >
           <span className="sr-only">Open menu</span>

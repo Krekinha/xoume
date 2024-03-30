@@ -14,11 +14,14 @@ model User {
   email String @unique
   roles Role[] @default([COLAB])
   senha String
+  avatar String?
 
-  atendimentoCriado     Atendimento[] @relation("atendimentoCriado")
-  atendimentoAtualizado Atendimento[] @relation("atendimentoAtualizado")
-  clienteCriado         Cliente[]     @relation("clienteCriado")
-  clienteAtualizado     Cliente[]     @relation("clienteAtualizado")
+  // Relacionamentos
+  atendimentoCriado      Atendimento[] @relation("atendimentoCriado")
+  atendimentoAtualizado  Atendimento[] @relation("atendimentoAtualizado")
+  clienteCriado          Cliente[]     @relation("clienteCriado")
+  clienteAtualizado      Cliente[]     @relation("clienteAtualizado")
+  responsavelAtendimento Atendimento[] @relation("responsavelAtendimento")
 }
 
 enum Role {
@@ -29,10 +32,11 @@ enum Role {
 }
 
 model Atendimento {
-  id        String @id @default(cuid())
-  ordem     Int    @unique
-  descricao String
+  id     String @id @default(cuid())
+  ordem  Int    @unique
+  titulo String @default("titulo")
 
+  descricao      String?
   prazo          DateTime?
   extra          Boolean?
   situacao       SituacaoAtendimento[]
@@ -43,7 +47,7 @@ model Atendimento {
 
   // Relacionamentos
   cliente       Cliente?             @relation("atendimentoCliente", fields: [clienteId], references: [id])
-  responsavel   Colaborador[]        @relation("responsavelAtendimento")
+  responsavel   User[]               @relation("responsavelAtendimento")
   evolucao      EvolucaoAtendimento?
   criadoPor     User?                @relation("atendimentoCriado", fields: [userCriouId], references: [id])
   atualizadoPor User?                @relation("atendimentoAtualizado", fields: [userAtualizouId], references: [id])
@@ -99,6 +103,7 @@ model Cliente {
   email         String?
   codigoSimples String?
   codigoEcac    String?
+  pasta         String?
 
   criadoEm     DateTime? @default(now())
   atualizadoEm DateTime?
@@ -118,27 +123,16 @@ enum TipoCliente {
   PJURIDICA
 }
 
-model Colaborador {
-  id   String @id @default(cuid())
-  nome String
-
-  // Relacionamentos
-  responsavelAtendimento Atendimento[] @relation("responsavelAtendimento")
-
-  // Chave
-  atendimentoId String?
-}
-
 model EvolucaoAtendimento {
-  id            String                      @id @default(cuid())
-  ordem         Int
+  id    String @id @default(cuid())
+  ordem Int
 
   // Relacionamentos
-  eventos       EventoEvolucaoAtendimento[]
-  atendimento   Atendimento                 @relation(fields: [atendimentoId], references: [id])
-  
+  eventos     EventoEvolucaoAtendimento[]
+  atendimento Atendimento                 @relation(fields: [atendimentoId], references: [id])
+
   // Chave
-  atendimentoId String                      @unique
+  atendimentoId String @unique
 }
 
 model EventoEvolucaoAtendimento {

@@ -35,7 +35,8 @@ export type MenuSideList = {
 export interface Atendimento {
   id?: string;
   ordem: number;
-  descricao: string;
+  titulo: string;
+  descricao?: string;
   prazo?: Date;
   extra?: boolean;
   situacao?: SituacaoAtendimento[];
@@ -46,7 +47,7 @@ export interface Atendimento {
 
   // Relacionamentos
   cliente?: Cliente;
-  responsavel: Colaborador[];
+  responsavel: User[];
   evolucao: EvolucaoAtendimento;
   criadoPor: User;
   atualizadoPor: User;
@@ -88,6 +89,7 @@ export interface Cliente {
   email?: string;
   codigoSimples?: string;
   codigoEcac?: string;
+  pasta?: string;
   criadoEm?: Date;
   atualizadoEm?: Date;
 
@@ -99,11 +101,6 @@ export interface Cliente {
 enum TipoCliente {
   PFISICA,
   PJURIDICA,
-}
-
-export interface Colaborador {
-  nome: string;
-  responsavelAtendimento: Atendimento[];
 }
 
 export interface EvolucaoAtendimento {

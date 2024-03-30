@@ -17,7 +17,7 @@ export async function GET(req: Request) {
      */
     const atendimentos = await prisma.atendimento.findMany({
       include: {
-        //escalaInversaConf: true,
+        cliente: true,
       },
     });
 

@@ -38,6 +38,14 @@ export function formatarDataByDM(data: Date | undefined) {
   }
 }
 
+export function formatarDataByWDM(data: Date | undefined) {
+  if (data != null && data != undefined) {
+    return moment(data).locale("pt-br").format("ddd, DD MMMM");
+  } else {
+    return undefined;
+  }
+}
+
 export function formatarDataByDMAndAddDays(
   data: Date | undefined,
   dias: number
