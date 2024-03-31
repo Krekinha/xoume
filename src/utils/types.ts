@@ -119,7 +119,7 @@ export interface EventoEvolucaoAtendimento {
   evolucaoAtendimento: EvolucaoAtendimento;
 }
 
-enum SituacaoEventoEvolucaoAtendimento {
+export enum SituacaoEventoEvolucaoAtendimento {
   CONCLUIDO,
   ANDAMENTO,
 }

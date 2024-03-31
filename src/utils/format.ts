@@ -1,5 +1,9 @@
 import moment from "moment";
 import "moment/locale/pt-br";
+import {
+  EventoEvolucaoAtendimento,
+  SituacaoEventoEvolucaoAtendimento,
+} from "./types";
 /**
  * O objetivo desse arquivo é agrupar utilitários referentes
  * a dormatção de dados como data, moeda, porcentagem, etc.
@@ -40,7 +44,10 @@ export function formatarDataByDM(data: Date | undefined) {
 
 export function formatarDataByWDM(data: Date | undefined) {
   if (data != null && data != undefined) {
-    return moment(data).locale("pt-br").format("ddd, DD MMMM");
+    return moment(data)
+      .locale("pt-br")
+      .format("ddd, DD/MM/YY")
+      .replace(/^./, (match) => match.toUpperCase());
   } else {
     return undefined;
   }
@@ -104,4 +111,12 @@ export function initialDate(data: Date) {
   } else {
     return undefined;
   }
+}
+
+export function formatarEvolucao(eventos: EventoEvolucaoAtendimento[]) {
+  const total = eventos.length;
+  const concluidos = eventos.filter(
+    (evento) => evento.situacao.toString() === "CONCLUIDO"
+  ).length;
+  return `${concluidos}/${total}`;
 }

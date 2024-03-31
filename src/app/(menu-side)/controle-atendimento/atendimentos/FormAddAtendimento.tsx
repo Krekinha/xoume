@@ -19,7 +19,7 @@ import { Atendimento } from "@/utils/types";
 import { useAtendimentoStore } from "@/store/useAtendimentoStore";
 
 const formSchema = z.object({
-  descricao: z
+  titulo: z
     .string()
     .min(2, { message: "Este campo precisa ter no mínimo 2 caracteres" })
     .max(50),
@@ -39,7 +39,7 @@ export function FormAddAtendimento() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      descricao: "",
+      titulo: "",
     },
   });
 
@@ -60,14 +60,14 @@ export function FormAddAtendimento() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="descricao"
+          name="titulo"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Descrição</FormLabel>
+              <FormLabel>Atendimento</FormLabel>
               <FormControl>
                 <Input
                   className="border-gray-300"
-                  placeholder="Descrição"
+                  placeholder="Atendimento"
                   {...field}
                 />
               </FormControl>

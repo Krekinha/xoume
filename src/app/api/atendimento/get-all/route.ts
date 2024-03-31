@@ -18,6 +18,7 @@ export async function GET(req: Request) {
     const atendimentos = await prisma.atendimento.findMany({
       include: {
         cliente: true,
+        evolucao: { include: { eventos: true } },
       },
     });
 

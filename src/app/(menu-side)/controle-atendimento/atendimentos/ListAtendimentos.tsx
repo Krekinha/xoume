@@ -3,12 +3,16 @@
 import { GrStatusGood } from "react-icons/gr";
 import { CgHashtag } from "react-icons/cg";
 import { FaHandshake } from "react-icons/fa6";
-import { IoCalendarNumber } from "react-icons/io5";
+import { FaRegHandshake } from "react-icons/fa6";
 import { RiCalendar2Line } from "react-icons/ri";
+import { FaListCheck } from "react-icons/fa6";
 import { useAtendimentoStore } from "@/store/useAtendimentoStore";
-import { LuCalendarDays } from "react-icons/lu";
 import { DropdownAtendimento } from "./DropdownAtendimento";
-import { formatarData, formatarDataByWDM } from "@/utils/format";
+import {
+  formatarData,
+  formatarDataByWDM,
+  formatarEvolucao,
+} from "@/utils/format";
 import { Separator } from "@/components/ui/separator";
 
 export function ListAtendimentos() {
@@ -24,13 +28,17 @@ export function ListAtendimentos() {
               role="atendimento"
               className="grid grid-flow-row auto-rows-auto w-full my-3 rounded-lg border border-gray-200 bg-violet-50/30 p-1.5 shadow-sm-light shadow-gray-100"
             >
+              {/* Título/Menu */}
               <div
                 role="titulo-menu"
                 className="grid grid-flow-col items-center"
               >
                 <div className="flex gap-2 items-center">
                   <GrStatusGood className="text-green-600" />
-                  <div role="titulo" className="text-sm">
+                  <div
+                    role="titulo"
+                    className="text-[0.790rem] "
+                  >
                     {atendimento.titulo}
                   </div>
                 </div>
@@ -39,46 +47,79 @@ export function ListAtendimentos() {
                   <DropdownAtendimento atendimento={atendimento} />
                 </div>
               </div>
+
+              {/* Descrição */}
               <div
                 role="descricao"
-                className=" text-xs truncate text-gray-500 ml-6"
+                className=" text-xs truncate text-gray-500/75 ml-6 mr-1"
               >
                 {atendimento.descricao}
               </div>
+
               <div
                 role="tags"
-                className="flex flex-row gap-2.5 items-center mt-3 text-gray-700"
+                className="flex flex-row gap-2.5 items-center mt-3 text-gray-700/85"
               >
+                {/* TAG - Ordem */}
                 <div role="ordem" title="Ordem" className="flex items-center">
-                  <CgHashtag className="text-sky-600" />
-                  <div role="ordem" className="text-xs">
+                  <CgHashtag className="text-sky-600 w-3 h-3" />
+                  <div role="ordem" className="text-[0.70rem] font-medium">
                     {atendimento.ordem}
                   </div>
                 </div>
-                <Separator orientation="vertical" className="bg-gray-200"/>
-                <div
-                  role="prazo"
-                  title={
-                    "Data de vencimento: " + formatarData(atendimento.prazo)
-                  }
-                  className="flex items-center gap-1 "
-                >
-                  <RiCalendar2Line className="text-sky-600" />
-                  <div role="ordem" className="text-[0.70rem]">
-                    {formatarDataByWDM(atendimento.prazo)}
-                  </div>
-                </div>
-                <Separator orientation="vertical" className="bg-gray-200"/>
-                <div
-                  role="cliente"
-                  title="Cliente"
-                  className="flex items-center gap-1"
-                >
-                  <FaHandshake className="text-sky-600" />
-                  <div role="razao" className="text-[0.70rem]">
-                    {atendimento.cliente?.razaoNome}
-                  </div>
-                </div>
+
+                {/* TAG - Evolucao */}
+                {atendimento.evolucao?.eventos && (
+                  <>
+                    <Separator orientation="vertical" className="bg-gray-200" />
+                    <div
+                      role="evolucao"
+                      title="Evolução do atendimento"
+                      className="flex items-center gap-1 "
+                    >
+                      <FaListCheck className="text-sky-600 w-3 h-3" />
+                      <div role="eventos" className="text-[0.70rem]">
+                        {formatarEvolucao(atendimento.evolucao?.eventos)}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* TAG - Prazo */}
+                {atendimento.prazo && (
+                  <>
+                    <Separator orientation="vertical" className="bg-gray-200" />
+                    <div
+                      role="prazo"
+                      title={
+                        "Data de vencimento: " + formatarData(atendimento.prazo)
+                      }
+                      className="flex items-center gap-1 "
+                    >
+                      <RiCalendar2Line className="text-sky-600 w-3 h-3" />
+                      <div role="ordem" className="text-[0.70rem]">
+                        {formatarDataByWDM(atendimento.prazo)}
+                      </div>
+                    </div>
+                  </>
+                )}
+
+                {/* TAG - Cliente */}
+                {atendimento.cliente && (
+                  <>
+                    <Separator orientation="vertical" className="bg-gray-200" />
+                    <div
+                      role="cliente"
+                      title="Cliente"
+                      className="flex items-center gap-1"
+                    >
+                      <FaRegHandshake className="text-sky-600 w-3 h-3" />
+                      <div role="razao" className="text-[0.65rem]">
+                        {atendimento.cliente?.razaoNome}
+                      </div>
+                    </div>
+                  </>
+                )}
               </div>
             </div>
           </ul>

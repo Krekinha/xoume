@@ -31,7 +31,7 @@ export async function POST(req: Request, res: Response) {
     const novoAtendimento = await prisma.atendimento.create({
       data: {
         ordem: novaOrdem,
-        descricao: data.descricao,
+        titulo: data.titulo,
         /*responsavel: {
       connect: responsavelIds.map(id => ({ id })),
     },*/
