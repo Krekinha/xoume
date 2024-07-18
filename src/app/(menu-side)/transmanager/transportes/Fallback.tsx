@@ -1,14 +1,30 @@
 "use client"
 
-export function FallbackFetch({ error, resetErrorBoundary }: any) {
+import FetchFailedError from "@/utils/apiErrors";
+
+interface FallbackFetchProps {
+    error: FetchFailedError
+    resetErrorBoundary: ()=> void
+}
+
+interface ErrorCustom {
+    message?: string;
+    statusCode?: number;
+    statusText?: string;
+}
+
+export function FallbackFetch({ error, resetErrorBoundary }: FallbackFetchProps) {
     // Call resetErrorBoundary() to reset the error boundary and retry the render.
-    console.log(error)
+
+    const err: ErrorCustom = JSON.parse(error.message)
+    console.log(err);
+
   
     return (
       <div role="alert">
-        <p>Algo deu errado:</p>
-        <pre style={{ color: "red" }}>{error.message}</pre>
-        <pre style={{ color: "red" }}>{error.statusText}</pre>
+        <pre style={{ color: "red" }}>{err.message}</pre>
+        <pre style={{ color: "red" }}>Code: {err.statusCode}</pre>
+        <pre style={{ color: "red" }}>Response: {err.statusText}</pre>
       </div>
     );
   }

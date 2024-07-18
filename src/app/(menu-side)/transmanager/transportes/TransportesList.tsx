@@ -5,20 +5,25 @@ import { RiCalendar2Line } from "react-icons/ri";
 import { FaListCheck } from "react-icons/fa6";
 import { Separator } from "@/components/ui/separator";
 import { Transporte } from "@/utils/types";
-import { FetchFailedError, ErrorTest } from "@/utils/apiErrors";
-import { fetchServerResponse } from "next/dist/client/components/router-reducer/fetch-server-response";
+import FetchFailedError from "@/utils/apiErrors";
+
+interface ErrorCustom {
+    message?: string;
+    statusCode?: number;
+    statusText?: string;
+}
 
 export const TransportesList = async () => {
 
   let transportes: Transporte[] = [];
+  let err: ErrorCustom = {}
 
     // "https://transmanager-node.vercel.app/transportes"
     // "http://localhost:3333/transportes"
     const res = await fetch("https://transmanager-node.vercel.app/transportess");
     console.log(res);
-
     // if (res.status != 200) throw new FetchFailedError('Falha ao buscar transportes', res.status, res.statusText);
-    if (res.status != 200) throw new FetchFailedError('Falha ao buscar transportes', res.status, res.statusText);
+    if (res.status != 200) throw new FetchFailedError(`{"message": "Erro ao buscar transportes", "statusCode": ${res.status}, "statusText": "${res.statusText}"}`);
 
     const responseObj = await res.json();
 
