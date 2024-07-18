@@ -1,4 +1,5 @@
 import { ReactNode } from "react";
+import { Decimal } from "@prisma/client/runtime/library";
 
 export type User = {
   id?: string;
@@ -122,4 +123,19 @@ export interface EventoEvolucaoAtendimento {
 export enum SituacaoEventoEvolucaoAtendimento {
   CONCLUIDO,
   ANDAMENTO,
+}
+
+// TRANSPORTE TYPES
+
+export interface Transporte {
+  id?: string;
+  empresa?: Empresa;
+  motorista?: string;
+  val_frete?: Decimal;
+}
+
+export interface Empresa {
+  id?: string;
+  razaoNome?: string;
+  cnpjCpf?: String;
 }

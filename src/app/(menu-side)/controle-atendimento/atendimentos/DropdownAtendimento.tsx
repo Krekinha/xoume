@@ -24,7 +24,8 @@ export function DropdownAtendimento({ atendimento }: Props) {
   async function excluirAtendimento() {
     try {
       const response = await atendimentoService.delete(atendimento.id || "");
-      getAtendimentos();
+      console.log(response)
+      //getAtendimentos();
     } catch (error) {
       console.error("Erro ao exluir atendimento:", error);
       // Aqui eu posso adicionar um tratamento de erro, como mostrar uma mensagem de erro na interface do usuário.

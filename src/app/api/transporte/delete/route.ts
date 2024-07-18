@@ -9,14 +9,14 @@ export async function DELETE(req: Request, res: Response) {
     const data = await req.json();
     console.log("data: ", data);
 
-    // Excluir o atendimento com o id informado
-    const novoAtendimento = await prisma.atendimento.delete({
+    // Excluir o transporte com o id informado
+    const novoTransporte = await prisma.transporte.delete({
       where: {
         id: data.id,
       },
     });
 
-    return new Response(JSON.stringify(novoAtendimento));
+    return new Response(JSON.stringify(novoTransporte));
   } catch (error: PrismaClientValidationError | any) {
     return new Response(error, { status: 500 });
   }

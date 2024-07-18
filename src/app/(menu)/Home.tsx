@@ -1,4 +1,5 @@
 import ControleAtendimentoCard from "../(menu-side)/ControleAtendimentoCard";
+import TransmanagerCard from "../(menu-side)/TransmanagerCard";
 
 /**
  * Home é o componente de entrada do app.
@@ -10,6 +11,7 @@ import ControleAtendimentoCard from "../(menu-side)/ControleAtendimentoCard";
 export default function Home() {
   return (
     <div className="flex justify-start ml-3 mt-3 max-sm:flex-col max-sm:items-center gap-2">
+      <TransmanagerCard/>
       <ControleAtendimentoCard />
     </div>
   );

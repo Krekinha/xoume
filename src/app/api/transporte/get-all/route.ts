@@ -4,7 +4,7 @@ import { unstable_noStore as nostore } from "next/cache";
 
 export const dynamic = "force-dynamic";
 /**
- * API que busca exibe as todos os elementos na tabela Atendimento
+ * API que busca exibe as todos os elementos na tabela Transporte
  * @author Krekinha
  * @version 1.0
  */
@@ -16,15 +16,14 @@ export async function GET(req: Request) {
      * entre os objetos, do contrário, os elementos sem o include não
      * irão aparecer em componentes visuais como lista e tabelas
      */
-    const atendimentos = await prisma.atendimento.findMany({
+    const transportes = await prisma.transporte.findMany({
       include: {
-        cliente: true,
-        evolucao: { include: { eventos: true } },
+        empresa: true,
       },
     });
 
-    console.log("GET-ALL OK: ", atendimentos);
-    return new Response(JSON.stringify(atendimentos));
+    console.log("GET-ALL OK: ", transportes);
+    return new Response(JSON.stringify(transportes));
   } catch (error: PrismaClientValidationError | any) {
     console.log("GET-ALL ERRO: ", error);
     return new Response(error, { status: 500 });

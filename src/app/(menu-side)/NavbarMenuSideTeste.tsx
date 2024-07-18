@@ -1,7 +1,6 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import Script from "next/script";
 import { Modal } from "flowbite";
 /**
  * Esse Navbar é o menu principal do site. Estará visível em

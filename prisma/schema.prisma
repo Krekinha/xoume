@@ -152,3 +152,27 @@ enum SituacaoEventoEvolucaoAtendimento {
   CONCLUIDO
   ANDAMENTO
 }
+
+model Transporte {
+  id     String @id @default(cuid())
+  motorista String?
+  val_frete Decimal?
+
+  criadoEm     DateTime? @default(now())
+  atualizadoEm DateTime?
+
+  // Relacionamentos
+  empresa Empresa?  @relation("transporteEmpresa", fields: [empresaId], references: [id])
+
+  // Chave
+  empresaId       String?
+}
+
+model Empresa {
+  id          String       @id @default(cuid())
+  razaoNome   String
+  cnpjCpf     String?      @unique
+
+  // Relacionamentos
+  transporteEmpresa Transporte[] @relation("transporteEmpresa")
+}

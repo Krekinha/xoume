@@ -8,7 +8,7 @@ export default function LoadingSkeleton({ model }: props) {
   return (
     <>
       {model == 1 && (
-        <div className="flex flex-col relative mt-10 items-center justify-center">
+        <div className="flex flex-col relative mt-30 items-center justify-center">
           <div
             className="text-blue-500 inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-current border-r-transparent align-[-0.125em] motion-reduce:animate-[spin_1.5s_linear_infinite]"
             role="status"

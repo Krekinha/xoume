@@ -1,6 +1,6 @@
 import { baseUrl } from "@/utils/constants";
 
-export const atendimentoService = {
+export const transporteService = {
   get,
   add,
   delete: _delete,
@@ -27,7 +27,7 @@ export const atendimentoService = {
 }*/
 
 async function _delete(id: string) {
-  const url = baseUrl("/api/atendimento/delete");
+  const url = baseUrl("/api/transporte/delete");
   const res = await fetch(url, {
     method: "DELETE",
     cache: "no-store",
@@ -46,7 +46,7 @@ async function _delete(id: string) {
 }
 
 async function add(values: any) {
-  const url = baseUrl("/api/atendimento/add");
+  const url = baseUrl("/api/transporte/add");
 
   const res = await fetch(url, {
     method: "POST",
@@ -67,7 +67,7 @@ async function add(values: any) {
 }
 
 async function get() {
-  const url = baseUrl("/api/atendimento/get-all");
+  const url = baseUrl("/api/transporte/get-all");
   const res = await fetch(url, {
     method: "GET",
     cache: "no-store",

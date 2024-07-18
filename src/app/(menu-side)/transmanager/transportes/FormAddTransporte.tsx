@@ -14,43 +14,39 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { DialogClose } from "@radix-ui/react-dialog";
-import { atendimentoService } from "@/services/atendimentoService";
-import { useAtendimentoStore } from "@/store/useAtendimentoStore";
+import { transporteService } from "@/services/transporteService";
+import { useTransporteStore } from "@/store/useTransporteStore";
 
 const formSchema = z.object({
-  titulo: z
+  motorista: z
     .string()
     .min(2, { message: "Este campo precisa ter no mínimo 2 caracteres" })
     .max(50),
 });
 
-export function FormAddAtendimento() {
+export function FormAddTransporte() {
   const {
-    open,
     setOpen,
-    addAtendimento,
-    atendimentos,
-    setAtendimentos,
-    getAtendimentos,
-  } = useAtendimentoStore();
+    getTransportes,
+  } = useTransporteStore();
 
   // 1. Define o formulário
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      titulo: "",
+      motorista: "",
     },
   });
 
   // 2. Define a o evento submit
   async function onSubmit(values: z.infer<typeof formSchema>) {
     try {
-      const response = await atendimentoService.add(values);
-      getAtendimentos();
+      const response = await transporteService.add(values);
+      getTransportes();
       setOpen(false)
     } catch (error) {
-      console.error("Erro ao adicionar o atendimento:", error);
-      // Aqui você pode adicionar um tratamento de erro, como mostrar uma mensagem de erro na interface do usuário.
+      console.error("Erro ao adicionar o transporte:", error);
+      // Aqui eu posso adicionar um tratamento de erro, como por exemplo mostrar uma mensagem de erro na interface do usuário.
     }
   }
 
@@ -59,14 +55,14 @@ export function FormAddAtendimento() {
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
         <FormField
           control={form.control}
-          name="titulo"
+          name="motorista"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Atendimento</FormLabel>
+              <FormLabel>Transporte</FormLabel>
               <FormControl>
                 <Input
                   className="border-gray-300"
-                  placeholder="Atendimento"
+                  placeholder="Transporte"
                   {...field}
                 />
               </FormControl>

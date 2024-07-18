@@ -1,36 +1,33 @@
-"use client";
-
 import { GrStatusGood } from "react-icons/gr";
 import { CgHashtag } from "react-icons/cg";
-import { FaHandshake } from "react-icons/fa6";
 import { FaRegHandshake } from "react-icons/fa6";
 import { RiCalendar2Line } from "react-icons/ri";
 import { FaListCheck } from "react-icons/fa6";
-import { useAtendimentoStore } from "@/store/useAtendimentoStore";
-import { DropdownAtendimento } from "./DropdownAtendimento";
-import {
-  formatarData,
-  formatarDataByWDM,
-  formatarEvolucao,
-} from "@/utils/format";
 import { Separator } from "@/components/ui/separator";
-import { Atendimento } from "@/utils/types";
+import { Transporte } from "@/utils/types";
 
-interface ListAtendimentosProps {
-  atendimentos: Atendimento[];
- }
+export const TransportesList = async () => {
 
-export function ListAtendimentos({atendimentos}: ListAtendimentosProps) {
-  //const { atendimentos } = useAtendimentoStore();
-  const data = atendimentos;
-  console.log(data);
+  let transportes: Transporte[] = [];
+
+    // "https://transmanager-node.vercel.app/transportes"
+    // "http://localhost:3333/transportes"
+    const res = await fetch("https://transmanager-node.vercel.app/transportess");
+    console.log(res);
+
+    const responseObj = await res.json();
+    transportes = responseObj.transportes
+    console.log(transportes)
+
+
   return (
-    <>
-      {data &&
-        data.map((atendimento, i) => (
-          <ul key={atendimento.id}>
+    <div>
+      
+      {//res ? 
+        transportes.map((transporte: Transporte) => (
+          <ul key={transporte.id}>
             <div
-              role="atendimento"
+              role="transporte"
               className="grid grid-flow-row auto-rows-auto w-full my-3 rounded-lg border border-gray-200 bg-violet-50/30 p-1.5 shadow-sm-light shadow-gray-100"
             >
               {/* Título/Menu */}
@@ -44,12 +41,11 @@ export function ListAtendimentos({atendimentos}: ListAtendimentosProps) {
                     role="titulo"
                     className="text-[0.790rem] "
                   >
-                    {atendimento.titulo}
+                    {transporte.id}
                   </div>
                 </div>
 
                 <div role="menu-dropdown" className="justify-self-end">
-                  <DropdownAtendimento atendimento={atendimento} />
                 </div>
               </div>
 
@@ -58,7 +54,7 @@ export function ListAtendimentos({atendimentos}: ListAtendimentosProps) {
                 role="descricao"
                 className=" text-xs truncate text-gray-500/75 ml-6 mr-1"
               >
-                {atendimento.descricao}
+                {transporte.empresa?.razaoNome}
               </div>
 
               <div
@@ -69,48 +65,48 @@ export function ListAtendimentos({atendimentos}: ListAtendimentosProps) {
                 <div role="ordem" title="Ordem" className="flex items-center">
                   <CgHashtag className="text-sky-600 w-3 h-3" />
                   <div role="ordem" className="text-[0.70rem] font-medium">
-                    {atendimento.ordem}
+                    {transporte.empresa?.cnpjCpf}
                   </div>
                 </div>
 
                 {/* TAG - Evolucao */}
-                {atendimento.evolucao?.eventos && (
+                {transporte.val_frete && (
                   <>
                     <Separator orientation="vertical" className="bg-gray-200" />
                     <div
                       role="evolucao"
-                      title="Evolução do atendimento"
+                      title="Evolução do transporte"
                       className="flex items-center gap-1 "
                     >
                       <FaListCheck className="text-sky-600 w-3 h-3" />
                       <div role="eventos" className="text-[0.70rem]">
-                        {formatarEvolucao(atendimento.evolucao?.eventos)}
+                        {transporte.motorista}
                       </div>
                     </div>
                   </>
                 )}
 
                 {/* TAG - Prazo */}
-                {atendimento.prazo && (
+                {transporte.val_frete && (
                   <>
                     <Separator orientation="vertical" className="bg-gray-200" />
                     <div
                       role="prazo"
                       title={
-                        "Data de vencimento: " + formatarData(atendimento.prazo)
+                        "Data de vencimento: "
                       }
                       className="flex items-center gap-1 "
                     >
                       <RiCalendar2Line className="text-sky-600 w-3 h-3" />
                       <div role="ordem" className="text-[0.70rem]">
-                        {formatarDataByWDM(atendimento.prazo)}
+                        {transporte.motorista}
                       </div>
                     </div>
                   </>
                 )}
 
                 {/* TAG - Cliente */}
-                {atendimento.cliente && (
+                {transporte.empresa && (
                   <>
                     <Separator orientation="vertical" className="bg-gray-200" />
                     <div
@@ -120,7 +116,7 @@ export function ListAtendimentos({atendimentos}: ListAtendimentosProps) {
                     >
                       <FaRegHandshake className="text-sky-600 w-3 h-3" />
                       <div role="razao" className="text-[0.65rem]">
-                        {atendimento.cliente?.razaoNome}
+                        {transporte.empresa.id}
                       </div>
                     </div>
                   </>
@@ -128,7 +124,9 @@ export function ListAtendimentos({atendimentos}: ListAtendimentosProps) {
               </div>
             </div>
           </ul>
-        ))}
-    </>
-  );
+        )
+        )}
+        
+    </div>
+  )
 }

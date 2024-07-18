@@ -10,13 +10,13 @@ interface IAtendimentoStore {
 const InitializerStore = ({ atendimentos }: IAtendimentoStore) => {
   const initializer = useRef(false);
 
-  if (!initializer.current) {
-    useAtendimentoStore.setState({
-      atendimentos,
-    });
-    initializer.current = true;
-  }
-  return null;
+  // if (!initializer.current) {
+  //   useAtendimentoStore.setState({
+  //     atendimentos,
+  //   });
+  //   initializer.current = true;
+  // }
+  // return null;
 };
 
 export default InitializerStore;
