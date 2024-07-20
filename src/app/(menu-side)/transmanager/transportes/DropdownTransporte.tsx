@@ -1,6 +1,6 @@
 "use client";
-import { atendimentoService } from "@/services/atendimentoService";
-import { useAtendimentoStore } from "@/store/useAtendimentoStore";
+
+import { transporteService } from "@/services/transporteService";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiFillEdit } from "react-icons/ai";
 import { MoreHorizontal } from "lucide-react";
@@ -12,21 +12,20 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Atendimento } from "@/utils/types";
+import type { Transporte } from "@/utils/types";
 
 interface Props {
-	atendimento: Atendimento;
+	transporte: Transporte;
 }
 
-export function DropdownAtendimento({ atendimento }: Props) {
-
-	async function excluirAtendimento() {
+export function DropdownTransporte({ transporte }: Props) {
+	async function excluirTransporte() {
 		try {
-			const response = await atendimentoService.delete(atendimento.id || "");
+			const response = await transporteService.delete(transporte.id || "");
 			console.log(response);
-			//getAtendimentos();
+			//getTransportes();
 		} catch (error) {
-			console.error("Erro ao exluir atendimento:", error);
+			console.error("Erro ao exluir transporte:", error);
 			// Aqui eu posso adicionar um tratamento de erro, como mostrar uma mensagem de erro na interface do usuário.
 		}
 	}
@@ -43,7 +42,7 @@ export function DropdownAtendimento({ atendimento }: Props) {
 				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="bg-white">
-				<DropdownMenuLabel>Atendimento</DropdownMenuLabel>
+				<DropdownMenuLabel>Transporte</DropdownMenuLabel>
 				<DropdownMenuSeparator className="bg-gray-300" />
 				<DropdownMenuItem
 					onClick={() => {}}
@@ -53,7 +52,7 @@ export function DropdownAtendimento({ atendimento }: Props) {
 					Editar
 				</DropdownMenuItem>
 				<DropdownMenuItem
-					onClick={() => excluirAtendimento()}
+					onClick={() => excluirTransporte()}
 					className="hover:bg-gray-300 cursor-pointer rounded gap-2"
 				>
 					<RiDeleteBin6Line className="text-red-600" />
