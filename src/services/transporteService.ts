@@ -26,8 +26,8 @@ export const transporteService = {
   return res;
 }*/
 
-async function _delete(id: string) {
-  const url = baseUrl("/api/transporte/delete");
+async function _delete(id: number) {
+  const url = baseUrl(`/transportes/del/${id}`);
   const res = await fetch(url, {
     method: "DELETE",
     cache: "no-store",

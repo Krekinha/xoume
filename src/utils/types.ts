@@ -128,7 +128,7 @@ export enum SituacaoEventoEvolucaoAtendimento {
 // TRANSPORTE TYPES
 
 export interface Transporte {
-	id?: number;
+	id: number;
 
 	nota?: number;
 	cte?: number;

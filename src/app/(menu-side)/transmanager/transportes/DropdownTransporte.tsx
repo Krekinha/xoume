@@ -21,7 +21,7 @@ interface Props {
 export function DropdownTransporte({ transporte }: Props) {
 	async function excluirTransporte() {
 		try {
-			const response = await transporteService.delete(transporte.id || "");
+			const response = await transporteService.delete(transporte.id);
 			console.log(response);
 			//getTransportes();
 		} catch (error) {
