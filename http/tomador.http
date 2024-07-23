@@ -1,0 +1,89 @@
+# GET ALL (LOCAL)
+GET http://localhost:3333/tomadores HTTP/1.1
+
+
+###
+
+
+# GET ALL (SERVER)
+GET https://transmanager-node.vercel.app/tomadores HTTP/1.1
+
+
+###
+
+
+# GET UNIQUE (LOCAL)
+GET http://localhost:3333/tomadores/3 HTTP/1.1
+
+
+###
+
+
+# GET UNIQUE (SERVER)
+GET http://localhost:3333/tomadores/4 HTTP/1.1
+
+
+###
+
+
+# ADD ONE (LOCAL)
+POST http://localhost:3333/tomadores/add HTTP/1.1
+Content-Type: application/json
+
+{
+    "razaoNome": "CAJUGRAN KIO",
+    "cnpjCpf": "45456545555"
+}
+
+
+###
+
+
+# ADD ONE (SERVER)
+POST https://transmanager-node.vercel.app/tomadores/add HTTP/1.1
+Content-Type: application/json
+
+{
+    "razaoNome": "DAVENE",
+    "cnpjCpf": "333777",
+    "motoristaId": [1,6]
+}
+
+
+###
+
+
+# UPDATE ONE (LOCAL)
+PUT http://localhost:3333/tomadores/update/2 HTTP/1.1
+Content-Type: application/json
+
+{
+    //"razaoNome": "MERC OURICO",
+    "cnpjCpf": "123456789"
+}
+
+###
+
+
+# UPDATE ONE (SERVER)
+PUT https://transmanager-node.vercel.app/tomadores/update/7 HTTP/1.1
+Content-Type: application/json
+
+{
+    //"razaoNome": "MERC OURICO",
+    "cnpjCpf": "123456789"
+}
+
+
+###
+
+
+# DELETE ONE (LOCAL)
+DELETE http://localhost:3333/tomadores/del/6 HTTP/1.1
+
+
+###
+
+
+# DELETE ONE (SERVER)
+DELETE https://transmanager-node.vercel.app/tomadores/del/7 HTTP/1.1

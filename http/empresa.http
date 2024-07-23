@@ -1,0 +1,138 @@
+# GET ALL (LOCAL)
+GET http://localhost:3333/empresas HTTP/1.1
+
+
+###
+
+
+# GET ALL (SERVER)
+GET https://transmanager-node.vercel.app/empresas HTTP/1.1
+
+
+###
+
+# GET UNIQUE (LOCAL)
+GET http://localhost:3333/empresas/1 HTTP/1.1
+
+
+###
+
+
+# GET UNIQUE (SERVER)
+GET http://localhost:3333/empresas/4 HTTP/1.1
+
+
+###
+
+
+# ADD (LOCAL)
+POST http://localhost:3333/empresas/add HTTP/1.1
+Content-Type: application/json
+
+{
+    "razaoNome": "DAVENE",
+    "cnpjCpf": "333777",
+    "motoristaId": [1,5]
+}
+
+
+###
+
+
+# ADD (SERVER)
+POST https://transmanager-node.vercel.app/empresas/add HTTP/1.1
+Content-Type: application/json
+
+{
+    "razaoNome": "DAVENE",
+    "cnpjCpf": "333777",
+    "motoristaId": [1,6]
+}
+
+
+###
+
+
+# UPDATE ONE (LOCAL)
+PUT http://localhost:3333/empresas/update/4 HTTP/1.1
+Content-Type: application/json
+
+{
+    "razaoNome": "MERC OURICO",
+    "cnpjCpf": "654321"
+    //"motoristaId": [1,5]
+}
+
+###
+
+
+# UPDATE ONE (SERVER)
+PUT https://transmanager-node.vercel.app/empresas/update/7 HTTP/1.1
+Content-Type: application/json
+
+{
+    "nome": "BONES"
+    //"cpf": "2024"
+}
+
+
+###
+
+
+# UPDATE CONNECT MOTORISTA (LOCAL)
+PUT http://localhost:3333/empresas/connect-motorista/2 HTTP/1.1
+Content-Type: application/json
+
+{
+    "motoristaId": 3
+}
+
+
+###
+
+
+# UPDATE CONNECT MOTORISTA (SERVER)
+PUT https://transmanager-node.vercel.app/empresas/connect-motorista/9 HTTP/1.1
+Content-Type: application/json
+
+{
+    "motoristaId": 5
+}
+
+
+###
+
+
+# UPDATE DISCONNECT MOTORISTA (LOCAL)
+PUT http://localhost:3333/empresas/disconnect-motorista/9 HTTP/1.1
+Content-Type: application/json
+
+{
+    "motoristaId": 1
+}
+
+
+###
+
+
+# UPDATE DISCONNECT MOTORISTA (SERVER)
+PUT https://transmanager-node.vercel.app/empresas/disconnect-motorista/9 HTTP/1.1
+Content-Type: application/json
+
+{
+    "motoristaId": [5]
+}
+
+
+###
+
+
+# DELETE ONE (LOCAL)
+DELETE http://localhost:3333/empresas/del/7 HTTP/1.1
+
+
+###
+
+
+# DELETE ONE (SERVER)
+DELETE https://transmanager-node.vercel.app/empresas/del/7 HTTP/1.1

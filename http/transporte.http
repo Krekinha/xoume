@@ -1,0 +1,123 @@
+# GET ALL (LOCAL)
+GET http://localhost:3333/transportes HTTP/1.1
+
+
+###
+
+
+# GET ALL (SERVER)
+GET https://transmanager-node.vercel.app/transportes HTTP/1.1
+
+
+###
+
+
+# GET UNIQUE (LOCAL)
+GET http://localhost:3333/transportes/1 HTTP/1.1
+
+
+###
+
+
+# GET UNIQUE (SERVER)
+GET https://transmanager-node.vercel.app/transportes/1 HTTP/1.1
+
+
+###
+
+
+# ADD ONE (LOCAL)
+POST http://localhost:3333/transportes/add HTTP/1.1
+Content-Type: application/json
+
+{
+    "nota": 15,
+    //"cte": 1337,
+    //"peso": 12356.55,
+    //"val_tonelada": 230,
+    //"val_frete": 5650.25,
+    //"val_cte": 4000,
+    //"aliquota_icms": 12,
+    //"val_icms": 864.13,
+    "empresaId": 2,
+    "motoristaId": 3
+}
+
+
+###
+
+
+# ADD ONE (SERVER)
+POST https://transmanager-node.vercel.app/transportes/add HTTP/1.1
+Content-Type: application/json
+{
+    "nota": 5358,
+    "cte": 1337,
+    "peso": 12356.55,
+    "val_tonelada": 230,
+    "val_frete": 5650.25,
+    "val_cte": 4000,
+    "aliquota_icms": 12,
+    "val_icms": 864.13,
+    "empresaId": 2,
+    "motoristaId": 5
+}
+
+
+###
+
+
+# UPDATE ONE (LOCAL)
+PUT http://localhost:3333/transportes/update/3 HTTP/1.1
+Content-Type: application/json
+
+{
+    "nota": 53458,
+    "cte": 1327,
+    "peso": 32580,
+    "val_tonelada": 260,
+    "val_frete": 6333.96,
+    "val_cte": 5000,
+    "aliquota_icms": 12,
+    "val_icms": 480.66,
+    "motoristaId": 1,
+    //"empresaId": 2,
+    "tomadorId": 1,
+}
+
+###
+
+
+# UPDATE ONE (SERVER)
+PUT https://transmanager-node.vercel.app/transportes/update/3 HTTP/1.1
+Content-Type: application/json
+
+{
+    //"nota": 1515,
+    //"cte": 396,
+    //"peso": 30140.73,
+    //"val_tonelada": 250,
+    //"val_frete": 8520.60,
+    //"val_cte": 7000,
+    //"aliquota_icms": 12,
+    //"val_icms": 630.44,
+    //"motoristaId": 5,
+    //"empresaId": 2,
+    "tomadorId": 2
+}
+
+###
+
+
+# DELETE ONE (LOCAL)
+DELETE http://localhost:3333/transportes/del/4 HTTP/1.1
+
+
+###
+
+
+# DELETE ONE (SERVER)
+DELETE https://transmanager-node.vercel.app/transportes/del/4 HTTP/1.1
+
+
+###

@@ -1,141 +1,173 @@
-import { ReactNode } from "react";
-import { Decimal } from "@prisma/client/runtime/library";
+import type { ReactNode } from "react";
+import type { Decimal } from "@prisma/client/runtime/library";
 
 export type User = {
-  id?: string;
-  nome?: string;
-  email?: string;
-  senha?: string;
-  roles?: Role[];
+	id?: string;
+	nome?: string;
+	email?: string;
+	senha?: string;
+	roles?: Role[];
 };
 
 enum Role {
-  ADMIN,
-  DEV,
-  COLAB,
-  FINANCE,
+	ADMIN = 0,
+	DEV = 1,
+	COLAB = 2,
+	FINANCE = 3,
 }
 
 export type ILogin = {
-  email: string;
-  senha: string;
+	email: string;
+	senha: string;
 };
 
 export type Sidemenu = {
-  modulo?: string;
-  menu?: MenuSideList[];
+	modulo?: string;
+	menu?: MenuSideList[];
 };
 
 export type MenuSideList = {
-  label?: string;
-  icon?: ReactNode;
-  notificacao?: number;
-  link: string;
+	label?: string;
+	icon?: ReactNode;
+	notificacao?: number;
+	link: string;
 };
 
 export interface Atendimento {
-  id?: string;
-  ordem: number;
-  titulo: string;
-  descricao?: string;
-  prazo?: Date;
-  extra?: boolean;
-  situacao?: SituacaoAtendimento[];
-  proximaAtuacao?: Date;
+	id?: string;
+	ordem: number;
+	titulo: string;
+	descricao?: string;
+	prazo?: Date;
+	extra?: boolean;
+	situacao?: SituacaoAtendimento[];
+	proximaAtuacao?: Date;
 
-  criadoEm: Date;
-  atualizadoEm?: Date;
+	criadoEm: Date;
+	atualizadoEm?: Date;
 
-  // Relacionamentos
-  cliente?: Cliente;
-  responsavel: User[];
-  evolucao: EvolucaoAtendimento;
-  criadoPor: User;
-  atualizadoPor: User;
+	// Relacionamentos
+	cliente?: Cliente;
+	responsavel: User[];
+	evolucao: EvolucaoAtendimento;
+	criadoPor: User;
+	atualizadoPor: User;
 }
 
 enum SituacaoAtendimento {
-  ENCERRADO,
-  ANDAMENTO,
+	ENCERRADO = 0,
+	ANDAMENTO = 1,
 }
 
 export interface Cliente {
-  tipoCliente?: TipoCliente;
-  razaoNome: string;
-  nome?: string;
-  cnpjCpf?: string;
-  estadoCivilPf?: string;
-  rgPf?: string;
-  dnPf?: Date;
-  logradouroPj?: string;
-  numeroLogradouroPj?: string;
-  bairroPj?: string;
-  complementoPj?: string;
-  cepPj?: string;
-  cidadePj?: string;
-  ufPj?: string;
-  telefonePj?: string;
-  nomeResponsavel?: string;
-  cpfResponsavel?: string;
-  estadoCivilResponsavel?: string;
-  rgResponsavel?: string;
-  dnResponsavel?: Date;
-  logradouroResponsavel?: string;
-  numeroLogradouroResponsavel?: string;
-  bairroResponsavel?: string;
-  cepResponsavel?: string;
-  cidadeResponsavel?: string;
-  ufResponsavel?: string;
-  telefoneResponsavel?: string;
-  email?: string;
-  codigoSimples?: string;
-  codigoEcac?: string;
-  pasta?: string;
-  criadoEm?: Date;
-  atualizadoEm?: Date;
+	tipoCliente?: TipoCliente;
+	razaoNome: string;
+	nome?: string;
+	cnpjCpf?: string;
+	estadoCivilPf?: string;
+	rgPf?: string;
+	dnPf?: Date;
+	logradouroPj?: string;
+	numeroLogradouroPj?: string;
+	bairroPj?: string;
+	complementoPj?: string;
+	cepPj?: string;
+	cidadePj?: string;
+	ufPj?: string;
+	telefonePj?: string;
+	nomeResponsavel?: string;
+	cpfResponsavel?: string;
+	estadoCivilResponsavel?: string;
+	rgResponsavel?: string;
+	dnResponsavel?: Date;
+	logradouroResponsavel?: string;
+	numeroLogradouroResponsavel?: string;
+	bairroResponsavel?: string;
+	cepResponsavel?: string;
+	cidadeResponsavel?: string;
+	ufResponsavel?: string;
+	telefoneResponsavel?: string;
+	email?: string;
+	codigoSimples?: string;
+	codigoEcac?: string;
+	pasta?: string;
+	criadoEm?: Date;
+	atualizadoEm?: Date;
 
-  criadoPor: User;
-  atualizadoPor: User;
-  atendimentoCliente: Atendimento[];
+	criadoPor: User;
+	atualizadoPor: User;
+	atendimentoCliente: Atendimento[];
 }
 
 enum TipoCliente {
-  PFISICA,
-  PJURIDICA,
+	PFISICA = 0,
+	PJURIDICA = 1,
 }
 
 export interface EvolucaoAtendimento {
-  ordem: number;
+	ordem: number;
 
-  eventos: EventoEvolucaoAtendimento[];
-  atendimento: Atendimento;
+	eventos: EventoEvolucaoAtendimento[];
+	atendimento: Atendimento;
 }
 
 export interface EventoEvolucaoAtendimento {
-  descricao: string;
-  situacao: SituacaoEventoEvolucaoAtendimento;
-  dataEvento: Date;
+	descricao: string;
+	situacao: SituacaoEventoEvolucaoAtendimento;
+	dataEvento: Date;
 
-  // Relacionamentos
-  evolucaoAtendimento: EvolucaoAtendimento;
+	// Relacionamentos
+	evolucaoAtendimento: EvolucaoAtendimento;
 }
 
 export enum SituacaoEventoEvolucaoAtendimento {
-  CONCLUIDO,
-  ANDAMENTO,
+	CONCLUIDO = 0,
+	ANDAMENTO = 1,
 }
 
 // TRANSPORTE TYPES
 
 export interface Transporte {
-  id?: string;
-  empresa?: Empresa;
-  motorista?: string;
-  val_frete?: Decimal;
+	id?: number;
+
+	nota?: number;
+	cte?: number;
+	peso?: Decimal;
+	val_tonelada?: Decimal;
+	val_frete?: Decimal;
+	val_cte?: Decimal;
+	aliquota_icms?: Decimal;
+	val_icms?: Decimal;
+	criadoEm?: Date;
+	atualizadoEm?: Date;
+
+	empresa?: Empresa;
+	motorista?: Motorista;
+	tomador?: Tomador;
+}
+
+export interface Motorista {
+	id?: number;
+	nome?: string;
+	cpf?: string;
+
+	empresas: Empresa[];
+	transportes: Transporte[];
 }
 
 export interface Empresa {
-  id?: string;
-  razaoNome?: string;
-  cnpjCpf?: String;
+	id?: number;
+	razaoNome?: string;
+	cnpjCpf?: string;
+
+	motoristas?: Motorista[];
+	transporteEmpresa?: Transporte[];
+}
+
+export interface Tomador {
+	id?: number;
+	razaoNome?: string;
+	cnpjCpf?: string;
+
+	transporteTomador: Transporte[];
 }

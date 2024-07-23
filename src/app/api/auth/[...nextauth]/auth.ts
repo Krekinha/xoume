@@ -32,10 +32,10 @@ export const config = {
       },
       // API que irei usar para validar os dados (poderia ser também uma função)
       async authorize(credentials, req) {
-        const url =
-          process.env.NODE_ENV === "production"
-            ? `${process.env.SITE_URL}/api/users/login`
-            : `${process.env.NEXTAUTH_URL}/api/users/login`;
+        const url = `${process.env.API_TRANSMANAGER_URL}/users/login`;
+          // process.env.NODE_ENV === "production"
+          //   ? `${process.env.SITE_URL}/api/users/login`
+          //   : `${process.env.NEXTAUTH_URL}/api/users/login`;
         const response = await fetch(url, {
           method: "POST",
           headers: {
@@ -46,6 +46,8 @@ export const config = {
             senha: credentials?.senha,
           }),
         });
+
+        console.log("RESPONSE: ", response)
 
         // Se a resposta à API der algum erro, captura o erro personalizado no cabeçalho
         // da resposta e envia o mesmo erro para a função que chamou o Signin (o formulário de login)
