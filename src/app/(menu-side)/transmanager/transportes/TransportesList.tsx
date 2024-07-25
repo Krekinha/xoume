@@ -1,3 +1,6 @@
+import { FaRegIdBadge } from "react-icons/fa";
+import { FaUser } from "react-icons/fa6";
+import { FaIdCardClip } from "react-icons/fa6";
 import { PiInvoiceBold } from "react-icons/pi";
 import { RiWeightFill } from "react-icons/ri";
 import { MdFactory } from "react-icons/md";
@@ -26,7 +29,7 @@ export const TransportesList = async () => {
 		<div>
 			{transportes.map((transporte: Transporte) => (
 				<ul key={transporte.id}>
-					<div className="grid grid-flow-row auto-rows-auto w-full my-3 rounded-lg border border-gray-200 bg-violet-50/30 p-1.5 shadow-sm-light shadow-gray-100">
+					<div className="grid grid-flow-row auto-rows-auto w-full my-3 rounded-lg border border-gray-200 bg-violet-50/30 dark:bg-zinc-800 p-1.5 shadow-sm-light shadow-gray-100">
 						{/* EMPRESA */}
 						<div className="grid grid-flow-col items-center">
 							<div className="flex gap-2 items-center">
@@ -41,9 +44,39 @@ export const TransportesList = async () => {
 							</div>
 						</div>
 
-						{/* MOTORISTA */}
-						<div className=" text-xs truncate text-gray-700/80 ml-6 mr-1">
-							{transporte.motorista?.nome}
+						<div title="Tomador" className="flex items-center gap-1">
+							{/* MOTORISTA */}
+							{transporte.motorista && (
+								<>
+									<FaUser className="text-gray-700 w-3 h-3" />
+									<div className=" text-xs truncate text-gray-700/80">
+										{transporte.motorista?.nome}
+									</div>
+								</>
+							)}
+
+							{/* ORIGEM (CIDADE-UF) */}
+							{transporte.cidade_origem && (
+								<>
+									<Separator
+										orientation="vertical"
+										className="bg-gray-200 mx-1"
+									/>
+									<div className="text-xs truncate text-gray-700/80">
+										{transporte.cidade_origem}-{transporte.uf_origem}
+									</div>
+								</>
+							)}
+
+							{/* DESTINO (CIDADE-UF) */}
+							{transporte.cidade_destino && (
+								<>
+									<div className="text-xs text-gray-700/80">x</div>
+									<div className="text-xs truncate text-gray-700/80">
+										{transporte.cidade_destino}-{transporte.uf_destino}
+									</div>
+								</>
+							)}
 						</div>
 
 						<div className="flex flex-row gap-2.5 items-center mt-3">

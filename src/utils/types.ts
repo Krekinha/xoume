@@ -132,6 +132,10 @@ export interface Transporte {
 
 	nota?: number;
 	cte?: number;
+	uf_origem?: string;
+	cidade_origem?: string;
+	uf_destino?: string;
+	cidade_destino?: string;
 	peso?: Decimal;
 	val_tonelada?: Decimal;
 	val_frete?: Decimal;

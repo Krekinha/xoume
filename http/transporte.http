@@ -50,6 +50,7 @@ Content-Type: application/json
 # ADD ONE (SERVER)
 POST https://transmanager-node.vercel.app/transportes/add HTTP/1.1
 Content-Type: application/json
+
 {
     "nota": 5358,
     "cte": 1337,
@@ -89,12 +90,26 @@ Content-Type: application/json
 
 
 # UPDATE ONE (SERVER)
-PUT https://transmanager-node.vercel.app/transportes/update/3 HTTP/1.1
+PUT https://transmanager-node.vercel.app/transportes/update/2 HTTP/1.1
 Content-Type: application/json
 
 {
     //"nota": 1515,
     //"cte": 396,
+    //"nota": 15,
+    //"cte": 1337,
+    "uf_origem": "MG",
+    "cidade_origem": "SAO GONCALO DO RIO PRETO",
+    "uf_destino": "ES",
+	"cidade_destino": "CACHOEIRO DE ITAPEMIRIM"
+    //"peso": 12356.55,
+    //"val_tonelada": 230,
+    //"val_frete": 5650.25,
+    //"val_cte": 4000,
+    //"aliquota_icms": 12,
+    //"val_icms": 864.13,
+    //"empresaId": 2,
+    //"motoristaId": 3
     //"peso": 30140.73,
     //"val_tonelada": 250,
     //"val_frete": 8520.60,
@@ -103,7 +118,7 @@ Content-Type: application/json
     //"val_icms": 630.44,
     //"motoristaId": 5,
     //"empresaId": 2,
-    "tomadorId": 2
+    //"tomadorId": 2
 }
 
 ###
