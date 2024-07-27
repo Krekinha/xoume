@@ -8,7 +8,6 @@ import {
 	DropdownHeader,
 	DropdownItem,
 } from "flowbite-react";
-import { SwitchDemo } from "@/components/ui/switch";
 import { ToggleTheme } from "@/components/ui/toggle-theme";
 /**
  * Esse Navbar é o menu principal do site. Estará visível em
@@ -17,11 +16,11 @@ import { ToggleTheme } from "@/components/ui/toggle-theme";
  * @version 1.0
  */
 
-export default function NavbarMenuSide({ modulo }: any) {
-	function checked() {
-		//if (localStorage.theme === "dark") return false;
-		return true;
-	}
+interface MainNavbarProps {
+	modulo?: string;
+}
+
+export default function NavbarMenuSide({ modulo }: MainNavbarProps) {
 	return (
 		<nav className="fixed top-0 z-50 w-full bg-gray-900 border-b border-gray-700">
 			<div className="px-3 pt-2 lg:px-5 lg:pl-3">
