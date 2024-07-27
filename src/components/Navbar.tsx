@@ -2,6 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import AvatarDropDownMenu from "./AvatarDownMenu";
+import { ToggleTheme } from "./ui/toggle-theme";
 /**
  * Esse Navbar é o menu principal do site. Estará visível em
  * todas as rotas que necessite de login
@@ -28,6 +29,7 @@ export default function Navbar({ user }: any) {
           </div>
           <div className="justify-self-end">
             <div className="flex gap-2 items-center">
+              <ToggleTheme/>
               <span className="text-sky-600 text-[0.75rem] font-bold">
                 {user?.nome}
               </span>

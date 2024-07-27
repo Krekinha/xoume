@@ -6,8 +6,8 @@ export default function TransmanagerCard() {
 	return (
 		<>
 			<div className="max-w-[15rem] ">
-				<Link href={"/transmanager"} className="text-gray-400 mb-4">
-					<div className="flex-col min-h-[10rem]  p-6 mr-3 rounded-lg shadow-lg shadow-black bg-slate-900">
+				<Link href={"/transmanager"} className="dark:text-gray-400 text-gray-900 mb-4">
+					<div className="flex-col min-h-[10rem]  p-6 mr-3 rounded-lg shadow-lg shadow-black bg-gray-400 dark:bg-slate-900">
 						<div className="flex">
 							{/* <div className="">
                 <Image
@@ -21,7 +21,7 @@ export default function TransmanagerCard() {
 							<FcInTransit className="w-[25px] h-[25px]" />
 
 							<div className="flex ml-1">
-								<span className="text-amber-600 text-sm font-medium  pt-1">
+								<span className="dark:text-amber-600 text-sm font-medium  pt-1">
 									Transmanager
 								</span>
 							</div>

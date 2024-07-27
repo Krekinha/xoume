@@ -35,7 +35,7 @@ export default async function RootLayout({
    */
   return (
     <html lang="en">
-      <body className="bg-gray-800 h-screen flex flex-col">
+      <body className="h-screen flex flex-col">
         <NextAuthSessionProvider session={session}>
           <Navbar user={session.user} />
           {children}

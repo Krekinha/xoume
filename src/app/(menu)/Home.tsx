@@ -10,7 +10,7 @@ import TransmanagerCard from "../(menu-side)/TransmanagerCard";
  */
 export default function Home() {
   return (
-    <div className="flex justify-start ml-3 mt-3 max-sm:flex-col max-sm:items-center gap-2">
+    <div className="dark:bg-gray-800 bg-red-700 flex justify-start ml-3 mt-3 max-sm:flex-col max-sm:items-center gap-2">
       <TransmanagerCard/>
       <ControleAtendimentoCard />
     </div>
