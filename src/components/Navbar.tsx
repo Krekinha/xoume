@@ -2,7 +2,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import AvatarDropDownMenu from "./AvatarDownMenu";
-import { ToggleTheme } from "./ui/toggle-theme";
+import { ToggleTheme } from "./ToggleTheme";
 /**
  * Esse Navbar é o menu principal do site. Estará visível em
  * todas as rotas que necessite de login

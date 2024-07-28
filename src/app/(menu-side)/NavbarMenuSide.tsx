@@ -1,14 +1,7 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-// import {
-// 	Avatar,
-// 	Dropdown,
-// 	DropdownDivider,
-// 	DropdownHeader,
-// 	DropdownItem,
-// } from "flowbite-react";
-import { ToggleTheme } from "@/components/ui/toggle-theme";
+import { ToggleTheme } from "@/components/ToggleTheme";
 /**
  * Esse Navbar é o menu principal do site. Estará visível em
  * todas as rotas que necessite de login
