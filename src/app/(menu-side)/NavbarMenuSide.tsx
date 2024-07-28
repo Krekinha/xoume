@@ -1,13 +1,13 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import {
-	Avatar,
-	Dropdown,
-	DropdownDivider,
-	DropdownHeader,
-	DropdownItem,
-} from "flowbite-react";
+// import {
+// 	Avatar,
+// 	Dropdown,
+// 	DropdownDivider,
+// 	DropdownHeader,
+// 	DropdownItem,
+// } from "flowbite-react";
 import { ToggleTheme } from "@/components/ui/toggle-theme";
 /**
  * Esse Navbar é o menu principal do site. Estará visível em
@@ -95,7 +95,7 @@ export default function NavbarMenuSide({ modulo }: MainNavbarProps) {
 						</div>
 
 						<div className="avatar flex flex-none mb-[0.15rem]">
-							<Dropdown
+							{/* <Dropdown
 								arrowIcon={false}
 								inline
 								label={
@@ -118,7 +118,7 @@ export default function NavbarMenuSide({ modulo }: MainNavbarProps) {
 								<DropdownItem>Earnings</DropdownItem>
 								<DropdownDivider />
 								<DropdownItem>Sign out</DropdownItem>
-							</Dropdown>
+							</Dropdown> */}
 						</div>
 					</div>
 				</div>

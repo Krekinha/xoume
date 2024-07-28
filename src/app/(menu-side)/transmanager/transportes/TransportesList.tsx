@@ -18,12 +18,12 @@ export const TransportesList = async () => {
 	const res = await fetch(`${process.env.API_TRANSMANAGER_URL}/transportes`, {
 		cache: "no-store",
 	});
-	console.log(res);
+	//console.log(res);
 
 	const responseObj = await res.json();
 
 	transportes = responseObj.transportes;
-	console.log(transportes);
+	//console.log(transportes);
 
 	return (
 		<div>
