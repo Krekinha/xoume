@@ -5,7 +5,7 @@ import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import { SidemenuContextProvider } from "@/context/SidemenuContext";
 import Sidebar from "../../../components/Sidebar";
 import type { Sidemenu } from "@/utils/types";
-import NavbarMenuSide from "../../../components/NavbarMenuSide";
+import MainNavbar from "../../../components/MainNavbar";
 import SvgConfiguracoes from "../../../components/svg/SvgConfiguracoes";
 
 export const metadata = {
@@ -49,7 +49,7 @@ export default async function Layout({
 			<body>
 				<NextAuthSessionProvider session={session}>
 					<SidemenuContextProvider>
-						<NavbarMenuSide modulo={menu.modulo} />
+						<MainNavbar modulo={menu.modulo} />
 						<Sidebar sidemenu={menu} session={session} />
 
 						{children}

@@ -10,7 +10,7 @@ import ControleAtendimentoCard from "@/components/ControleAtendimentoCard";
  */
 export default function Home() {
 	return (
-		<div className="dark:bg-gray-800 bg-red-700 flex justify-start ml-3 mt-3 max-sm:flex-col max-sm:items-center gap-2">
+		<div className="dark:bg-gray-800 pt-14 bg-red-700 flex justify-start ml-3 mt-3 max-sm:flex-col max-sm:items-center gap-2">
 			<TransmanagerCard />
 			<ControleAtendimentoCard />
 		</div>

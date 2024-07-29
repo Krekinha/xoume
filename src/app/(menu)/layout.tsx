@@ -4,8 +4,8 @@ import type { Metadata } from "next";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
-import Navbar from "@/components/Navbar";
 import { ThemeProvider } from "@/context/ThemeContext";
+import MainNavbar from "@/components/MainNavbar";
 /**
  * Neste arquivo irei determinar o padrão de layout para todas as rotas do grupo (menu)
  * e configurar parâmetros que serão compartilhados com essa rotas (metadados,
@@ -44,7 +44,7 @@ export default async function RootLayout({
 					disableTransitionOnChange
 				>
 					<NextAuthSessionProvider session={session}>
-						<Navbar user={session.user} />
+						<MainNavbar/>
 						{children}
 					</NextAuthSessionProvider>
 				</ThemeProvider>
