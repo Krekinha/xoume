@@ -1,5 +1,7 @@
+"use client"
 import TransmanagerCard from "@/components/TransmanagerCard";
 import ControleAtendimentoCard from "@/components/ControleAtendimentoCard";
+import { Button } from "@/components/ui/button";
 
 /**
  * Home é o componente de entrada do app.

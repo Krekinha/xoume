@@ -1,5 +1,5 @@
 import "@/globals.css";
-import "react-toastify/dist/ReactToastify.css";
+
 import type { Metadata } from "next";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
@@ -24,6 +24,7 @@ export default async function RootLayout({
 	children: React.ReactNode;
 }) {
 	const session = await auth();
+	//console.log("session: ", session);
 
 	if (!session) {
 		redirect("/login");
@@ -44,7 +45,7 @@ export default async function RootLayout({
 					disableTransitionOnChange
 				>
 					<NextAuthSessionProvider session={session}>
-						<MainNavbar/>
+						<MainNavbar />
 						{children}
 					</NextAuthSessionProvider>
 				</ThemeProvider>
