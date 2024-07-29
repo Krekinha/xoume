@@ -3,10 +3,10 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import { SidemenuContextProvider } from "@/context/SidemenuContext";
-import Sidebar from "../Sidebar";
+import Sidebar from "../../../components/Sidebar";
 import type { Sidemenu } from "@/utils/types";
-import NavbarMenuSide from "../NavbarMenuSide";
-import SvgConfiguracoes from "./SvgConfiguracoes";
+import NavbarMenuSide from "../../../components/NavbarMenuSide";
+import SvgConfiguracoes from "../../../components/svg/SvgConfiguracoes";
 
 export const metadata = {
 	title: "XOUME - TRANSMANAGER",
@@ -55,10 +55,6 @@ export default async function Layout({
 						{children}
 					</SidemenuContextProvider>
 				</NextAuthSessionProvider>
-				<script
-					src="https://cdnjs.cloudflare.com/ajax/libs/flowbite/2.3.0/flowbite.js"
-					async
-				/>
 			</body>
 		</html>
 	);

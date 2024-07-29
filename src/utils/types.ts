@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Decimal } from "@prisma/client/runtime/library";
 
+// USER TYPES
 export type User = {
 	id?: string;
 	nome?: string;
@@ -21,18 +22,12 @@ export type ILogin = {
 	senha: string;
 };
 
-export type Sidemenu = {
-	modulo?: string;
-	menu?: MenuSideList[];
+export type Session = {
+	user?: User;
+	token?: string;
 };
 
-export type MenuSideList = {
-	label?: string;
-	icon?: ReactNode;
-	notificacao?: number;
-	link: string;
-};
-
+// ATENDIMENTO TYPES
 export interface Atendimento {
 	id?: string;
 	ordem: number;
@@ -175,3 +170,15 @@ export interface Tomador {
 
 	transporteTomador: Transporte[];
 }
+
+export type Sidemenu = {
+	modulo?: string;
+	menu?: MenuSideList[];
+};
+
+export type MenuSideList = {
+	label?: string;
+	icon?: ReactNode;
+	notificacao?: number;
+	link: string;
+};
