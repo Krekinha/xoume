@@ -1,6 +1,6 @@
 import * as React from "react";
 
-function SvgAtividades() {
+export function SvgAtividades() {
   return (
     <svg
       width={30}
@@ -9,6 +9,7 @@ function SvgAtividades() {
       id="svg1"
       xmlns="http://www.w3.org/2000/svg"
     >
+      <title>Atividades</title>
       <path
         id="documento"
         d="M91.241 4.046a65 65 0 0126.226 18h68.24a8.995 8.995 0 009-9 8.995 8.995 0 00-9-9zm36.378 33.514a65 65 0 015.393 18h52.695a8.995 8.995 0 009-9 8.995 8.995 0 00-9-9zm5.65 33.514a65 65 0 01-4.347 18h56.785a8.995 8.995 0 009-9 8.995 8.995 0 00-9-9zm-13.213 33.515a65 65 0 01-21.535 18h57.362a8.995 8.995 0 009-9 8.995 8.995 0 00-9-9z"
@@ -43,5 +44,3 @@ function SvgAtividades() {
     </svg>
   );
 }
-
-export default SvgAtividades;

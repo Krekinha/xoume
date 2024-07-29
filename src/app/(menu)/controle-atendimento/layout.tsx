@@ -1,4 +1,3 @@
-import "@/globals.css";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
@@ -7,8 +6,8 @@ import Sidebar from "../../../components/Sidebar";
 import type { Sidemenu } from "@/utils/types";
 import MainNavbar from "../../../components/MainNavbar";
 import SvgAtendimentos from "./SvgAtendimentos";
-import SvgAtividades from "./SvgAtividades";
-import SvgConfiguracoes from "./SvgConfiguracoes";
+import {SvgAtividades} from "@/components/svg/SvgAtividades";
+import {SvgConfiguracoes} from "@/components/svg/SvgConfiguracoes";
 
 export const metadata = {
 	title: "XOUME - CONTROLE DE ATENDIMENTO",

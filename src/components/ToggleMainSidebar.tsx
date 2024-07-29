@@ -2,11 +2,10 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheett";
 import { SvgToggleSidebar } from "./svg/SvgToggleSidebar";
-import Sidebar from "./Sidebar";
 import type { Sidemenu } from "@/utils/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import SvgConfiguracoes from "./svg/SvgConfiguracoes";
+import { SvgConfiguracoes } from "./svg/SvgConfiguracoes";
 
 const sidemenu: Sidemenu = {
 	modulo: "Transmanager",
