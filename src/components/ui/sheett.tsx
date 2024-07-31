@@ -66,6 +66,19 @@ const SheetContent = React.forwardRef<
 ));
 SheetContent.displayName = SheetPrimitive.Content.displayName;
 
+const SheetTitle = React.forwardRef<
+  React.ElementRef<typeof SheetPrimitive.Title>,
+  React.ComponentPropsWithoutRef<typeof SheetPrimitive.Title>
+>(({ className, ...props }, ref) => (
+  <SheetPrimitive.Title
+    ref={ref}
+    className={cn("text-lg font-semibold text-zinc-950 dark:text-zinc-50", className)}
+    {...props}
+  />
+))
+SheetTitle.displayName = SheetPrimitive.Title.displayName
+
+
 export {
 	Sheet,
 	SheetPortal,
@@ -73,4 +86,5 @@ export {
 	SheetTrigger,
 	SheetClose,
 	SheetContent,
+	SheetTitle,
 };

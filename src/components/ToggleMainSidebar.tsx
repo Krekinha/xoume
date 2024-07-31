@@ -1,6 +1,11 @@
 "use cliente";
 import { Button } from "@/components/ui/button";
-import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheett";
+import {
+	Sheet,
+	SheetContent,
+	SheetTitle,
+	SheetTrigger,
+} from "@/components/ui/sheett";
 import { SvgToggleSidebar } from "./svg/SvgToggleSidebar";
 import type { Sidemenu } from "@/utils/types";
 import Link from "next/link";
@@ -38,6 +43,7 @@ export function ToggleMainSidebar() {
 				</Button>
 			</SheetTrigger>
 			<SheetContent side={"left"} className="bg-gray-900">
+				<SheetTitle />
 				<div className="h-full px-3 pb-4 overflow-y-auto">
 					{sidemenu?.menu?.map((menu) => (
 						<ul key={menu.link} className="space-y-2 font-medium">
