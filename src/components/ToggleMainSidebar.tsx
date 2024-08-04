@@ -5,7 +5,7 @@ import {
 	SheetContent,
 	SheetTitle,
 	SheetTrigger,
-} from "@/components/ui/sheett";
+} from "@/components/ui/sidebar";
 import { SvgToggleSidebar } from "./svg/SvgToggleSidebar";
 import type { Sidemenu } from "@/utils/types";
 import Link from "next/link";
@@ -31,7 +31,7 @@ const sidemenu: Sidemenu = {
 export function ToggleMainSidebar() {
 	const pathname = usePathname();
 	return (
-		<Sheet>
+		<Sheet modal={false}>
 			<SheetTrigger asChild>
 				<Button
 					size={null}
@@ -42,7 +42,7 @@ export function ToggleMainSidebar() {
 					<SvgToggleSidebar />
 				</Button>
 			</SheetTrigger>
-			<SheetContent side={"left"} className="bg-gray-900">
+			<SheetContent side={"left"} aria-describedby={undefined} className="bg-gray-900">
 				<SheetTitle />
 				<div className="h-full px-3 pb-4 overflow-y-auto">
 					{sidemenu?.menu?.map((menu) => (

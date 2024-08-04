@@ -12,7 +12,7 @@ import { Button } from "@/components/ui/button";
  */
 export default function Home() {
 	return (
-		<div className="dark:bg-gray-800 pt-14 bg-red-700 flex justify-start ml-3 mt-3 max-sm:flex-col max-sm:items-center gap-2">
+		<div className=" h-screen dark:bg-gray-800 pt-14 bg-red-700 flex justify-start mt-3 max-sm:flex-col max-sm:items-center gap-2">
 			<TransmanagerCard />
 			<ControleAtendimentoCard />
 		</div>

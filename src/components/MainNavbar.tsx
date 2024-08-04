@@ -3,7 +3,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { ToggleTheme } from "@/components/ToggleTheme";
 import { ToggleMainSidebar } from "./ToggleMainSidebar";
-import { TogglePopover } from "./TogglePopover";
 /**
  * Esse Navbar é o menu principal do site. Estará visível em
  * todas as rotas que necessite de login
@@ -22,8 +21,7 @@ export default function MainNavbar({ modulo }: MainNavbarProps) {
 				<div className="flex w-full gap-2 justify-between">
 					<div className="flex gap-2 ">
 						<div>
-							{/* <ToggleMainSidebar /> */}
-							<TogglePopover/>
+							<ToggleMainSidebar />
 						</div>
 						<div className="self-end flex-none mb-[0.15rem]">
 							<Link href={"/"}>
