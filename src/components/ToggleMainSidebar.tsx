@@ -28,6 +28,10 @@ const sidemenu: Sidemenu = {
 	],
 };
 
+function isVisible() {
+	return true;
+}
+
 export function ToggleMainSidebar() {
 	const pathname = usePathname();
 	return (
@@ -36,13 +40,18 @@ export function ToggleMainSidebar() {
 				<Button
 					size={null}
 					variant={"ghost"}
-					className="inline-flex items-center p-1 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none"
+					className={`${pathname === "/" ? "hidden" : "inline-flex"} 
+					items-center p-1 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none`}
 				>
-					<span className="sr-only">Open sidebar</span>
+					{/* <span className="sr-only">Open sidebar</span> */}
 					<SvgToggleSidebar />
 				</Button>
 			</SheetTrigger>
-			<SheetContent side={"left"} aria-describedby={undefined} className="bg-gray-900">
+			<SheetContent
+				side={"left"}
+				aria-describedby={undefined}
+				className="bg-gray-900"
+			>
 				<SheetTitle />
 				<div className="h-full px-3 pb-4 overflow-y-auto">
 					{sidemenu?.menu?.map((menu) => (

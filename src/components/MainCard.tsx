@@ -1,32 +1,40 @@
+import { cn } from "@/lib/utils";
 import Link from "next/link";
+import type React from "react";
 import type { ElementType, ReactNode } from "react";
-import type { IconType } from "react-icons/lib";
+
+/**
+ * Componente card personalizado para exibir os módulos da aplicação.
+ * Criado usando o método pattern de composição
+ * @author Krekinha
+ */
 
 export const MainCard = {
-    Root: MainCardRoot,
+	Root: MainCardRoot,
 	Header: MainCardHeader,
 	Icon: MainCardIcon,
 	Titulo: MainCardTitulo,
 	Conteudo: MainCardConteudo,
 };
 
-interface MainCardRootProps {
+interface MainCardRootProps extends React.HtmlHTMLAttributes<"div"> {
 	link?: string;
 	children: ReactNode;
 }
-export function MainCardRoot({ link = "/", children }: MainCardRootProps) {
+export function MainCardRoot({
+	link = "/",
+	children,
+	className,
+}: MainCardRootProps) {
 	return (
-		<div className="max-w-[15rem] min-w-[15rem] ">
+		<div className="max-w-[15rem] min-w-[15rem]">
 			<Link href={link} className="dark:text-gray-400 text-gray-900 mb-4">
-				<div className="flex-col min-h-[10rem]  p-6 mr-3 rounded-lg shadow-lg shadow-black bg-gray-400 dark:bg-slate-900">
-					{/* <div className="flex">
-						<MainCardIcon />
-
-						<MainCardTitulo />
-					</div>
-
-					<hr className="mb-2 mt-1 border-slate-800" />
-					<MainCardDescricao/> */}
+				<div
+					className={cn(
+						"flex-col min-h-[10rem] p-6 rounded-lg shadow-lg shadow-black bg-gray-400 dark:bg-slate-900",
+						className,
+					)}
+				>
 					{children}
 				</div>
 			</Link>
@@ -67,7 +75,7 @@ interface MainCardHeaderProps {
 export function MainCardHeader({ children }: MainCardHeaderProps) {
 	return (
 		<>
-			<div className="flex">{children}</div>
+			<div className="flex gap-2">{children}</div>
 			<hr className="mb-2 mt-1 border-slate-800" />
 		</>
 	);
