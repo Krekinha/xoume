@@ -8,9 +8,11 @@ import { TransportesList } from "./transportes/TransportesList";
 export default function Page() {
 	return (
 		<>
-			<nav className="navbar p-4 sm:ml-64 fixed top-0 w-full mt-11 py-2 shadow-sm bg-white">
+			<nav className="navbar p-4 sm:ml-64 fixed top-0 w-full mt-11 py-2 shadow-sm bg-white dark:bg-zinc-900">
 				<DialogAddTransporte />
-				<span className="ml-2 text-sm text-black">Novo transporte</span>
+				<span className="ml-2 text-sm dark:text-green-300">
+					Novo transporte
+				</span>
 			</nav>
 			{/* em telas sm a margem recua 256px apartir da esquerda para entrada do sidebar */}
 			<div className="p-4 sm:ml-64 mt-20">

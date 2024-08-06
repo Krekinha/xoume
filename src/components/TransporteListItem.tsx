@@ -42,7 +42,7 @@ export function TransporteListItemRoot({
 	className,
 }: TransporteListItemRootProps) {
 	return (
-		<div className="grid grid-flow-row auto-rows-max w-full rounded-lg border border-gray-200 bg-violet-50/30 dark:bg-zinc-800 p-1.5 shadow-sm-light shadow-gray-100">
+		<div className="container w-full rounded-lg border border-gray-200 bg-violet-50/30 dark:bg-zinc-800 dark:border-gray-700 p-1.5 shadow-sm-light shadow-gray-100">
 			{children}
 		</div>
 	);
@@ -72,8 +72,8 @@ export function TransporteListItemEmpresa({
 	empresa,
 }: TransporteListItemEmpresaProps) {
 	return (
-		<div className="flex gap-2 items-center">
-			<Icon className="text-blue-700" />
+		<div className="flex gap-2 items-center dark:text-slate-200">
+			<Icon className="text-blue-500" />
 			<div className="text-[0.650rem] font-semibold">{empresa}</div>
 		</div>
 	);
@@ -104,7 +104,11 @@ interface TransporteListItemContentProps {
 export function TransporteListItemContent({
 	children,
 }: TransporteListItemContentProps) {
-	return <div className="flex items-center gap-1">{children}</div>;
+	return (
+		<div className="flex items-center gap-1 dark:text-slate-300">
+			{children}
+		</div>
+	);
 }
 
 /**
@@ -122,8 +126,8 @@ export function TransporteListItemMotorista({
 		<>
 			{motorista && (
 				<>
-					<Icon className="text-gray-700 w-3 h-3" />
-					<div className=" text-xs truncate text-gray-700/80">{motorista}</div>
+					<Icon className="text-amber-600 w-3 h-3" />
+					<div className="text-xs truncate">{motorista}</div>
 				</>
 			)}
 		</>
@@ -146,7 +150,7 @@ export function TransporteListItemOrigem({
 			{cidadeOrigem && (
 				<>
 					<Separator orientation="vertical" className="bg-gray-200 mx-1" />
-					<div className="text-xs truncate text-gray-700/80">
+					<div className="text-xs truncate">
 						{cidadeOrigem}-{ufOrigem}
 					</div>
 				</>
@@ -170,8 +174,8 @@ export function TransporteListItemDestino({
 		<>
 			{cidadeDestino && (
 				<>
-					<div className="text-xs text-gray-700/80">x</div>
-					<div className="text-xs truncate text-gray-700/80">
+					<div className="text-xs">x</div>
+					<div className="text-xs truncate">
 						{cidadeDestino}-{ufDestino}
 					</div>
 				</>
@@ -190,7 +194,7 @@ export function TransporteListItemFooter({
 	children,
 }: TransporteListItemFooterProps) {
 	return (
-		<div className="flex flex-row gap-2.5 items-center mt-3 text-[0.65rem]">
+		<div className="flex flex-row gap-2.5 items-center mt-3 text-[0.65rem] text-slate-400">
 			{children}
 		</div>
 	);
@@ -211,8 +215,8 @@ export function TransporteListItemTomador({
 		<>
 			{tomador && (
 				<div className="flex items-center gap-1">
-					<Icon className="text-gray-700 w-3 h-3" />
-					<div className="font-medium text-gray-500">{tomador}</div>
+					<Icon className="text-amber-600 w-3 h-3" />
+					<div className="font-medium">{tomador}</div>
 				</div>
 			)}
 		</>
@@ -234,8 +238,8 @@ export function TransporteListItemNotas({
 		<>
 			{notas && (
 				<div className="flex items-center gap-1">
-					<Icon className="text-gray-700 w-3 h-3" />
-					<div className="font-medium text-gray-500">
+					<Icon className="text-amber-600 w-3 h-3" />
+					<div className="font-medium">
 						{notas.map((nota, index) => (
 							<span key={nota}>
 								{nota}
@@ -264,10 +268,10 @@ export function TransporteListItemCte({
 		<>
 			{cte && (
 				<div title={"CT-e "} className="flex items-center gap-1 ">
-					<div className="text-gray-700 w-4 h-3 text-[0.55rem] text-center font-extrabold">
+					<div className="text-amber-600 w-4 h-3 text-[0.55rem] text-center font-extrabold">
 						CTe
 					</div>
-					<div className="font-medium text-gray-500">{cte}</div>
+					<div className="font-medium">{cte}</div>
 				</div>
 			)}
 		</>
@@ -289,8 +293,8 @@ export function TransporteListItemPeso({
 		<>
 			{peso && (
 				<div title="Peso" className="flex items-center gap-1">
-					<Icon className="text-gray-700 w-3 h-3" />
-					<div className="font-medium text-gray-500">{peso.toString()}</div>
+					<Icon className="text-amber-600 w-3 h-3" />
+					<div className="font-medium">{peso.toString()}</div>
 				</div>
 			)}
 		</>
@@ -312,10 +316,8 @@ export function TransporteListItemValTonelada({
 		<>
 			{valTonelada && (
 				<div title="Valor/tonelada" className="flex items-center gap-1">
-					<Icon className="text-gray-700 w-3 h-3" />
-					<div className="font-medium text-gray-500">
-						{valTonelada.toString()}
-					</div>
+					<Icon className="text-amber-600 w-3 h-3" />
+					<div className="font-medium">{valTonelada.toString()}</div>
 				</div>
 			)}
 		</>
