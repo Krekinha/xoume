@@ -125,7 +125,7 @@ export enum SituacaoEventoEvolucaoAtendimento {
 export interface Transporte {
 	id: number;
 
-	nota?: number;
+	notas?: number[];
 	cte?: number;
 	uf_origem?: string;
 	cidade_origem?: string;
