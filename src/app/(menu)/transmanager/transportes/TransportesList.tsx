@@ -1,5 +1,9 @@
 import type { Transporte } from "@/utils/types";
 import { TransporteListItem } from "@/components/TransporteListItem";
+import { MdFactory } from "react-icons/md";
+import { FaFileAlt } from "react-icons/fa";
+import { RiWeightFill } from "react-icons/ri";
+import { PiInvoiceBold } from "react-icons/pi";
 
 export const TransportesList = async () => {
 	let transportes: Transporte[] = [];
@@ -40,17 +44,78 @@ export const TransportesList = async () => {
 								ufDestino={transporte.uf_destino}
 							/>
 						</TransporteListItem.Content>
+
 						<TransporteListItem.Footer>
-							<TransporteListItem.Tomador
-								tomador={transporte.tomador?.razaoNome}
+							<TransporteListItem.Tag
+								tag={transporte.tomador?.razaoNome}
+								icon={MdFactory}
+								title="Tomador"
 							/>
-							<TransporteListItem.Notas notas={transporte.notas} />
-							<TransporteListItem.Cte cte={transporte.cte} />
-							<TransporteListItem.Peso peso={transporte.peso} />
-							<TransporteListItem.ValTonelada
-								valTonelada={transporte.val_tonelada}
+							<TransporteListItem.Tag
+								tag={transporte.notas?.join("/")}
+								icon={FaFileAlt}
+								title="Notas fiscais"
+							/>
+							<TransporteListItem.Tag
+								tag={transporte.cte?.toString()}
+								title="CTe"
+							/>
+							<TransporteListItem.Tag
+								tag={transporte.peso?.toString()}
+								icon={RiWeightFill}
+								title="Peso"
+							/>
+							<TransporteListItem.Tag
+								tag={transporte.val_tonelada?.toString()}
+								icon={PiInvoiceBold}
+								title="Valor por tonelada"
 							/>
 						</TransporteListItem.Footer>
+
+						<TransporteListItem.Complemento
+							complemento={transporte.cteComplementar}
+						>
+							<TransporteListItem.Tag
+								tag={transporte.cteComplementar?.cte?.toString()}
+								title="CTe"
+							/>
+
+							<TransporteListItem.Tag
+								tag={transporte.cteComplementar?.peso?.toString()}
+								icon={RiWeightFill}
+								title="Peso"
+							/>
+
+							<TransporteListItem.Tag
+								tag={transporte.cteComplementar?.val_tonelada?.toString()}
+								icon={PiInvoiceBold}
+								title="Valor por tonelada"
+							/>
+
+							<TransporteListItem.Tag
+								tag={transporte.cteComplementar?.val_frete?.toString()}
+								icon={PiInvoiceBold}
+								title="Valor total do frete"
+							/>
+
+							<TransporteListItem.Tag
+								tag={transporte.cteComplementar?.val_cte?.toString()}
+								icon={PiInvoiceBold}
+								title="Valor do CTe"
+							/>
+
+							<TransporteListItem.Tag
+								tag={transporte.cteComplementar?.aliquota_icms?.toString()}
+								icon={PiInvoiceBold}
+								title="Alíquota ICMS"
+							/>
+
+							<TransporteListItem.Tag
+								tag={transporte.cteComplementar?.val_icms?.toString()}
+								icon={PiInvoiceBold}
+								title="Valor do ICMS"
+							/>
+						</TransporteListItem.Complemento>
 					</TransporteListItem.Root>
 				</ul>
 			))}

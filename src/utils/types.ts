@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import type { Decimal } from "@prisma/client/runtime/library";
+import { number } from "zod";
 
 // USER TYPES
 export type User = {
@@ -140,9 +141,29 @@ export interface Transporte {
 	criadoEm?: Date;
 	atualizadoEm?: Date;
 
+	cteComplementar?: CteComplementar;
 	empresa?: Empresa;
 	motorista?: Motorista;
 	tomador?: Tomador;
+}
+
+export interface CteComplementar {
+	id: number;
+	cte?: number;
+	peso?: Decimal;
+	val_tonelada?: Decimal;
+	val_frete?: Decimal;
+	val_cte?: Decimal;
+	aliquota_icms?: Decimal;
+	val_icms?: Decimal;
+
+	criadoEm?: Date;
+	atualizadoEm?: Date;
+
+	// Relacionamentos
+	transporte?: Transporte;
+	// Chave
+	transporteId?: number;
 }
 
 export interface Motorista {

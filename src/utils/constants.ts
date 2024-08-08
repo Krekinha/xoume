@@ -5,7 +5,7 @@
  * @version 1.0
  */
 export function baseUrl(url?: string) {
-
-  if (process.env.NODE_ENV === "development")return `${process.env.NEXTAUTH_URL}${url}`; 
-  return `${process.env.SITE_URL}${url}`;
+	if (process.env.NODE_ENV === "development")
+		return `${process.env.API_TRANSMANAGER_URL}${url}`;
+	return `${process.env.API_TRANSMANAGER_URL}${url}`;
 }

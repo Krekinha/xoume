@@ -2,14 +2,11 @@ import { DropdownTransporte } from "@/app/(menu)/transmanager/transportes/Dropdo
 import { cn } from "@/lib/utils";
 import type { Transporte } from "@/utils/types";
 import type React from "react";
-import type { ElementType, ReactNode } from "react";
+import { useState, type ElementType, type ReactNode } from "react";
 import { FaTruck, FaUser } from "react-icons/fa6";
+import { FaHashtag } from "react-icons/fa";
 import { Separator } from "./ui/separator";
-import { MdFactory } from "react-icons/md";
-import { FaFileAlt } from "react-icons/fa";
-import { RiWeightFill } from "react-icons/ri";
-import { PiInvoiceBold } from "react-icons/pi";
-import type { Decimal } from "@prisma/client/runtime/library";
+import { ComplementoItem } from "./ComplementoItem";
 
 /**
  * Item da lista de transportes/viagens cadastradas.
@@ -26,12 +23,9 @@ export const TransporteListItem = {
 	Motorista: TransporteListItemMotorista,
 	Origem: TransporteListItemOrigem,
 	Destino: TransporteListItemDestino,
+	Complemento: ComplementoItem,
 	Footer: TransporteListItemFooter,
-	Tomador: TransporteListItemTomador,
-	Notas: TransporteListItemNotas,
-	Cte: TransporteListItemCte,
-	Peso: TransporteListItemPeso,
-	ValTonelada: TransporteListItemValTonelada,
+	Tag: TransporteListItemTag,
 };
 
 interface TransporteListItemRootProps extends React.HtmlHTMLAttributes<"div"> {
@@ -126,7 +120,7 @@ export function TransporteListItemMotorista({
 		<>
 			{motorista && (
 				<>
-					<Icon className="text-amber-600 w-3 h-3" />
+					<Icon className="text-blue-600 w-3 h-3" />
 					<div className="text-xs truncate">{motorista}</div>
 				</>
 			)}
@@ -201,123 +195,24 @@ export function TransporteListItemFooter({
 }
 
 /**
- *  FOOTER: ICON | TOMADOR
+ *  FOOTER: TAG (ICON | STRING)
  */
-interface TransporteListItemTomadorProps {
+interface TransporteListItemTagProps {
 	icon?: ElementType;
-	tomador?: string;
+	tag?: string;
+	title?: string;
 }
-export function TransporteListItemTomador({
-	icon: Icon = MdFactory,
-	tomador,
-}: TransporteListItemTomadorProps) {
+export function TransporteListItemTag({
+	icon: Icon = FaHashtag,
+	tag,
+	title,
+}: TransporteListItemTagProps) {
 	return (
 		<>
-			{tomador && (
-				<div className="flex items-center gap-1">
+			{tag && (
+				<div title={title} className="flex items-center gap-1">
 					<Icon className="text-amber-600 w-3 h-3" />
-					<div className="font-medium">{tomador}</div>
-				</div>
-			)}
-		</>
-	);
-}
-
-/**
- *  FOOTER: ICON | NOTAS
- */
-interface TransporteListItemNotasProps {
-	icon?: ElementType;
-	notas?: number[];
-}
-export function TransporteListItemNotas({
-	icon: Icon = FaFileAlt,
-	notas,
-}: TransporteListItemNotasProps) {
-	return (
-		<>
-			{notas && (
-				<div className="flex items-center gap-1">
-					<Icon className="text-amber-600 w-3 h-3" />
-					<div className="font-medium">
-						{notas.map((nota, index) => (
-							<span key={nota}>
-								{nota}
-								{index < notas.length - 1 ? "/" : ""}
-							</span>
-						))}
-					</div>
-				</div>
-			)}
-		</>
-	);
-}
-
-/**
- *  FOOTER: ICON | CTE
- */
-interface TransporteListItemCteProps {
-	icon?: ElementType;
-	cte?: number;
-}
-export function TransporteListItemCte({
-	icon: Icon = FaFileAlt,
-	cte,
-}: TransporteListItemCteProps) {
-	return (
-		<>
-			{cte && (
-				<div title={"CT-e "} className="flex items-center gap-1 ">
-					<div className="text-amber-600 w-4 h-3 text-[0.55rem] text-center font-extrabold">
-						CTe
-					</div>
-					<div className="font-medium">{cte}</div>
-				</div>
-			)}
-		</>
-	);
-}
-
-/**
- *  FOOTER: ICON | PESO
- */
-interface TransporteListItemPesoProps {
-	icon?: ElementType;
-	peso?: Decimal;
-}
-export function TransporteListItemPeso({
-	icon: Icon = RiWeightFill,
-	peso,
-}: TransporteListItemPesoProps) {
-	return (
-		<>
-			{peso && (
-				<div title="Peso" className="flex items-center gap-1">
-					<Icon className="text-amber-600 w-3 h-3" />
-					<div className="font-medium">{peso.toString()}</div>
-				</div>
-			)}
-		</>
-	);
-}
-
-/**
- *  FOOTER: ICON | VALOR/TONELADA
- */
-interface TransporteListItemValToneladaProps {
-	icon?: ElementType;
-	valTonelada?: Decimal;
-}
-export function TransporteListItemValTonelada({
-	icon: Icon = PiInvoiceBold,
-	valTonelada,
-}: TransporteListItemValToneladaProps) {
-	return (
-		<>
-			{valTonelada && (
-				<div title="Valor/tonelada" className="flex items-center gap-1">
-					<Icon className="text-amber-600 w-3 h-3" />
-					<div className="font-medium">{valTonelada.toString()}</div>
+					<div className="font-medium">{tag}</div>
 				</div>
 			)}
 		</>

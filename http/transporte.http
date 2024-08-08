@@ -40,7 +40,7 @@ Content-Type: application/json
     //"aliquota_icms": 12,
     //"val_icms": 864.13,
     "empresaId": 2,
-    "motoristaId": 3
+    "motoristaId": 1
 }
 
 
@@ -52,16 +52,16 @@ POST https://transmanager-node.vercel.app/transportes/add HTTP/1.1
 Content-Type: application/json
 
 {
-    "nota": 5358,
-    "cte": 1337,
-    "peso": 12356.55,
-    "val_tonelada": 230,
-    "val_frete": 5650.25,
-    "val_cte": 4000,
-    "aliquota_icms": 12,
-    "val_icms": 864.13,
-    "empresaId": 2,
-    "motoristaId": 5
+    //"nota": 5358,
+    //"cte": 1337,
+    //"peso": 12356.55,
+    //"val_tonelada": 230,
+    //"val_frete": 5650.25,
+    //"val_cte": 4000,
+    //"aliquota_icms": 12,
+    //"val_icms": 864.13,
+    "empresaId": 2
+    //"motoristaId": 5
 }
 
 
