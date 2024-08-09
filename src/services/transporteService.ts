@@ -1,5 +1,6 @@
 import { baseUrl } from "@/utils/constants";
 import type { Transporte } from "@/utils/types";
+import type { Decimal } from "@prisma/client/runtime/library";
 
 export const transporteService = {
 	get,
@@ -7,56 +8,40 @@ export const transporteService = {
 	delete: _delete,
 };
 
-/*async function update(values: ConfigEscala) {
-  const url = baseUrl("/api/escala/config/update");
+const local_add = "http://localhost:3333/transportes/add";
 
-  const res = await fetch(url, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(values),
-  })
-    .then((response) => {
-      return response.json();
-    })
-    .catch((error) => {
-      console.error("Error:", error);
-      return error;
-    });
-    console.log("res: ", res);
-
-  return res;
-}*/
-
+/** DELETE
+ */
 async function _delete(id: number) {
 	const url = baseUrl(`/transportes/del/${id}`);
-	const res = await fetch(url, {
-		method: "DELETE",
-		cache: "no-store",
-		headers: { "Content-Type": "application/json" },
-		body: JSON.stringify(id),
-	})
-		.then((response) => {
-			return response.json();
-		})
-		.catch((error) => {
-			console.error("Erro:", error);
-			return error;
+	const local_del = `http://localhost:3333/transportes/del/${id}`;
+
+	try {
+		const res = await fetch(local_del, {
+			method: "DELETE",
 		});
-	//return res;
-	return res;
+
+		if (!res.ok) {
+			throw new Error(`HTTP error! status: ${res.status}`);
+		}
+
+		const data = await res.json();
+		console.log(data);
+
+		return data;
+	} catch (error) {
+		console.log("Erro ao deletar o transporte:", error);
+		throw error;
+	}
 }
 
-async function add(values: object) {
-	const api = process.env.API_TRANSMANAGER_URL;
+async function add(values: Transporte) {
 	const url = baseUrl("/transportes/add");
-	const url2 = "http://localhost:3333/transportes/add";
 
-	console.log(url);
-	console.log(JSON.stringify(values));
-	const res = await fetch(url2, {
+	const res = await fetch(local_add, {
 		method: "POST",
-		//cache: "no-store",
-		//headers: { "Content-Type": "application/json" },
+		cache: "no-store",
+		headers: { "Content-Type": "application/json" },
 		body: JSON.stringify(values),
 	})
 		.then((response) => {

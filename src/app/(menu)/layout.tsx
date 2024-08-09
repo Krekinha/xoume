@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
 import MainNavbar from "@/components/MainNavbar";
+import ReactQueryClientProvider from "@/context/ReactQueryClienteProvider";
 /**
  * Neste arquivo irei determinar o padrão de layout para todas as rotas do grupo (menu)
  * e configurar parâmetros que serão compartilhados com essa rotas (metadados,
@@ -18,11 +19,7 @@ export const metadata: Metadata = {
 	title: "Xoume Assistente",
 };
 
-export default async function RootLayout({
-	children,
-}: {
-	children: React.ReactNode;
-}) {
+export default async function RootLayout({ children }: any) {
 	const session = await auth();
 	//console.log("session: ", session);
 
@@ -38,6 +35,7 @@ export default async function RootLayout({
 	return (
 		<html lang="en" suppressHydrationWarning>
 			<body>
+				{/* <ReactQueryClientProvider> */}
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"
@@ -49,6 +47,7 @@ export default async function RootLayout({
 						{children}
 					</NextAuthSessionProvider>
 				</ThemeProvider>
+				{/* </ReactQueryClientProvider> */}
 			</body>
 		</html>
 	);

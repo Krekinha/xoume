@@ -124,7 +124,7 @@ export enum SituacaoEventoEvolucaoAtendimento {
 // TRANSPORTE TYPES
 
 export interface Transporte {
-	id: number;
+	id?: number;
 
 	notas?: number[];
 	cte?: number;
@@ -145,6 +145,10 @@ export interface Transporte {
 	empresa?: Empresa;
 	motorista?: Motorista;
 	tomador?: Tomador;
+
+	empresaId?: number;
+	motoristaId?: number;
+	tomadorId?: number;
 }
 
 export interface CteComplementar {

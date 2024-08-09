@@ -1,4 +1,4 @@
-import { DropdownTransporte } from "@/app/(menu)/transmanager/transportes/DropdownTransporte";
+import { DropdownTransporte } from "@/components/DropdownTransporte";
 import { cn } from "@/lib/utils";
 import type { Transporte } from "@/utils/types";
 import type React from "react";

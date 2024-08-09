@@ -1,11 +1,7 @@
 "use client";
-import { SessionProvider } from "next-auth/react";
+import type React from "react";
 import { SidemenuContextProvider } from "./SidemenuContext";
 
 export default function Providers({ children }: any) {
-  return (
-    <SessionProvider>
-      <SidemenuContextProvider>{children}</SidemenuContextProvider>
-    </SessionProvider>
-  );
+	return <SidemenuContextProvider>{children}</SidemenuContextProvider>;
 }

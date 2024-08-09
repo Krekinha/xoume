@@ -1,28 +1,40 @@
+"use client";
 import type { Transporte } from "@/utils/types";
 import { TransporteListItem } from "@/components/TransporteListItem";
 import { MdFactory } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";
 import { RiWeightFill } from "react-icons/ri";
 import { PiInvoiceBold } from "react-icons/pi";
+import { useQuery } from "@tanstack/react-query";
+import { getTransportes } from "@/lib/utils";
 
-export const TransportesList = async () => {
-	let transportes: Transporte[] = [];
+export async function TransportesList() {
+	//const transportes = await getTransportes();
+	// const { data, error } = useQuery({
+	// 	queryKey: ["transportes"],
+	// 	queryFn: getTransportes,
+	// 	initialData: transportes,
+	// });
 
-	// `${process.env.API_TRANSMANAGER_URL}/transportes`)
-	// "http://localhost:3333/transportes"
 	const res = await fetch(`${process.env.API_TRANSMANAGER_URL}/transportes`, {
 		cache: "no-store",
 	});
-	//console.log(res);
 
 	const responseObj = await res.json();
 
-	transportes = responseObj.transportes;
-	//console.log(transportes);
+	const transportes = responseObj.transportes;
 
+	const { data, error } = useQuery({
+		queryKey: ["transportes"],
+		queryFn: getTransportes,
+		initialData: transportes,
+	});
+
+	//if (error) <h2>{error.message}</h2>;
+	//if (data)
 	return (
 		<div className="space-y-3">
-			{transportes.map((transporte: Transporte) => (
+			{transportes?.map((transporte: Transporte) => (
 				<ul key={transporte.id}>
 					<TransporteListItem.Root>
 						<TransporteListItem.Header>
@@ -31,6 +43,7 @@ export const TransportesList = async () => {
 							/>
 							<TransporteListItem.Menu transporte={transporte} />
 						</TransporteListItem.Header>
+
 						<TransporteListItem.Content>
 							<TransporteListItem.Motorista
 								motorista={transporte.motorista?.nome}
@@ -121,4 +134,4 @@ export const TransportesList = async () => {
 			))}
 		</div>
 	);
-};
+}

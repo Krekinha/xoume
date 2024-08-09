@@ -1,10 +1,11 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
-import { SidemenuContextProvider } from "@/context/SidemenuContext";
 import Sidebar from "@/components/Sidebar";
 import type { Sidemenu } from "@/utils/types";
 import { SvgConfiguracoes } from "@/components/svg/SvgConfiguracoes";
+import Providers from "@/context/Providers";
+import ReactQueryClientProvider from "@/context/ReactQueryClienteProvider";
 
 export const metadata = {
 	title: "XOUME - TRANSMANAGER",
@@ -44,12 +45,15 @@ export default async function Layout({
 	 */
 	return (
 		<section>
-			<NextAuthSessionProvider session={session}>
-				<SidemenuContextProvider>
-					<Sidebar sidemenu={menu} session={session} />
-					{children}
-				</SidemenuContextProvider>
-			</NextAuthSessionProvider>
+			<ReactQueryClientProvider>
+				<Providers>
+					<NextAuthSessionProvider session={session}>
+						<Sidebar sidemenu={menu} session={session} />
+						{children}
+						{/* {children} */}
+					</NextAuthSessionProvider>
+				</Providers>
+			</ReactQueryClientProvider>
 		</section>
 	);
 }
