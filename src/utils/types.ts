@@ -123,7 +123,7 @@ export enum SituacaoEventoEvolucaoAtendimento {
 
 // TRANSPORTE TYPES
 
-export interface Transporte {
+export type Transporte = {
 	id?: number;
 
 	notas?: number[];
@@ -149,7 +149,7 @@ export interface Transporte {
 	empresaId?: number;
 	motoristaId?: number;
 	tomadorId?: number;
-}
+};
 
 export interface CteComplementar {
 	id: number;

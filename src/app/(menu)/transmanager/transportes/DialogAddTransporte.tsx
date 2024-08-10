@@ -11,6 +11,7 @@ import {
 import { GrAdd } from "react-icons/gr";
 import { FormAddTransporte } from "./FormAddTransporte";
 import { useAtendimentoStore } from "@/store/useAtendimentoStore";
+import { FormServer } from "./FormServer";
 
 export function DialogAddTransporte() {
 	const { open, setOpen } = useAtendimentoStore();
@@ -32,6 +33,7 @@ export function DialogAddTransporte() {
 					<DialogDescription />
 				</DialogHeader>
 				<FormAddTransporte />
+				{/* <FormServer /> */}
 			</DialogContent>
 		</Dialog>
 	);

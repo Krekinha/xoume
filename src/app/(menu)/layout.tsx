@@ -6,7 +6,6 @@ import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
 import MainNavbar from "@/components/MainNavbar";
-import ReactQueryClientProvider from "@/context/ReactQueryClienteProvider";
 /**
  * Neste arquivo irei determinar o padrão de layout para todas as rotas do grupo (menu)
  * e configurar parâmetros que serão compartilhados com essa rotas (metadados,

@@ -1,4 +1,4 @@
-"use client";
+"use server";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,7 +27,7 @@ const initialState = {
 	message: "",
 };
 
-export function FormAddTransporte() {
+export async function FormServer() {
 	//const { setOpen, getTransportes } = useTransporteStore();
 	const url = baseUrl("/transportes/add");
 

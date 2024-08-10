@@ -13,6 +13,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { Transporte } from "@/utils/types";
+import { delTransporte } from "@/server/TransporteActions";
 
 interface Props {
 	transporte: Transporte;
@@ -21,7 +22,7 @@ interface Props {
 export function DropdownTransporte({ transporte }: Props) {
 	async function excluirTransporte() {
 		try {
-			const response = await transporteService.delete(transporte.id || 0);
+			const response = await delTransporte(transporte.id || 0);
 			console.log(response);
 			//getTransportes();
 		} catch (error) {

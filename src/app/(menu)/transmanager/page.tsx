@@ -4,8 +4,10 @@ import { FallbackFetch } from "./transportes/FallbackFetch";
 import { Suspense } from "react";
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import { TransportesList } from "./transportes/TransportesList";
+import { getTransportes } from "@/server/TransporteActions";
 
-export default function Page() {
+export default async function Page() {
+	const transportes = await getTransportes();
 	return (
 		<>
 			<nav className="navbar p-4 sm:ml-64 fixed top-0 w-full mt-11 py-2 shadow-sm bg-white dark:bg-zinc-900">
@@ -18,7 +20,7 @@ export default function Page() {
 			<div className="p-4 sm:ml-64 mt-20">
 				<ErrorBoundary FallbackComponent={FallbackFetch}>
 					<Suspense fallback={<LoadingSkeleton model={1} />}>
-						<TransportesList />
+						<TransportesList transportes={transportes} />
 					</Suspense>
 				</ErrorBoundary>
 			</div>

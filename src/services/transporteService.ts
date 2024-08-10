@@ -17,7 +17,7 @@ async function _delete(id: number) {
 	const local_del = `http://localhost:3333/transportes/del/${id}`;
 
 	try {
-		const res = await fetch(local_del, {
+		const res = await fetch(url, {
 			method: "DELETE",
 		});
 
@@ -38,7 +38,7 @@ async function _delete(id: number) {
 async function add(values: Transporte) {
 	const url = baseUrl("/transportes/add");
 
-	const res = await fetch(local_add, {
+	const res = await fetch(url, {
 		method: "POST",
 		cache: "no-store",
 		headers: { "Content-Type": "application/json" },

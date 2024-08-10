@@ -5,7 +5,6 @@ import Sidebar from "@/components/Sidebar";
 import type { Sidemenu } from "@/utils/types";
 import { SvgConfiguracoes } from "@/components/svg/SvgConfiguracoes";
 import Providers from "@/context/Providers";
-import ReactQueryClientProvider from "@/context/ReactQueryClienteProvider";
 
 export const metadata = {
 	title: "XOUME - TRANSMANAGER",
@@ -45,15 +44,13 @@ export default async function Layout({
 	 */
 	return (
 		<section>
-			<ReactQueryClientProvider>
-				<Providers>
-					<NextAuthSessionProvider session={session}>
-						<Sidebar sidemenu={menu} session={session} />
-						{children}
-						{/* {children} */}
-					</NextAuthSessionProvider>
-				</Providers>
-			</ReactQueryClientProvider>
+			<Providers>
+				<NextAuthSessionProvider session={session}>
+					<Sidebar sidemenu={menu} session={session} />
+					{children}
+					{/* {children} */}
+				</NextAuthSessionProvider>
+			</Providers>
 		</section>
 	);
 }
