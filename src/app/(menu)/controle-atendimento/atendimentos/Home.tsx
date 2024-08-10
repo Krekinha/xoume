@@ -3,8 +3,8 @@ import { ListAtendimentos } from "./ListAtendimentos";
 import { useAtendimentoStore } from "@/store/useAtendimentoStore";
 import { DialogAddAtendimento } from "./DialogAddAtendimento";
 import { prisma } from "@/utils/prisma";
-import { PrismaClientValidationError } from "@prisma/client/runtime/library";
-import { Atendimento } from "@/utils/types";
+import type { PrismaClientValidationError } from "@prisma/client/runtime/library";
+import type { Atendimento } from "@/utils/types";
 //import { use } from 'react';
 export const dynamic = 'force-dynamic'
 import { unstable_noStore as nostore } from "next/cache";

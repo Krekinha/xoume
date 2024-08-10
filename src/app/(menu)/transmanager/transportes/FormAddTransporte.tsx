@@ -13,29 +13,44 @@ import {
 	FormLabel,
 	FormMessage,
 } from "@/components/ui/form";
+import {
+	Select,
+	SelectContent,
+	SelectItem,
+	SelectTrigger,
+	SelectValue,
+} from "@/components/ui/select";
 import { DialogClose } from "@radix-ui/react-dialog";
 import { baseUrl } from "@/utils/constants";
-import { addTransporte, getTransportes } from "@/server/TransporteActions";
+import { addTransporte } from "@/server/TransporteActions";
+import type { Empresa } from "@/utils/types";
 
 const formSchema = z.object({
 	empresaId: z.coerce
 		.number()
-		.max(9, { message: "Este campo deve ter no máximo 1 caractere" }),
+		.positive({ message: "Selecione uma opção válida" }),
 });
 
-const initialState = {
-	message: "",
-};
+interface FormAddTransporteProps {
+	empresas: Empresa[];
+}
 
-export function FormAddTransporte() {
+export function FormAddTransporte({ empresas }: FormAddTransporteProps) {
 	//const { setOpen, getTransportes } = useTransporteStore();
 	const url = baseUrl("/transportes/add");
+	console.log(empresas);
+
+	// async function getEmpresass() {
+	// 	const empresas = await getEmpresas();
+	// 	console.log(empresas);
+	// 	return empresas;
+	// }
 
 	// 1. Define o formulário
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			empresaId: undefined,
+			empresaId: 0,
 		},
 	});
 
@@ -59,13 +74,27 @@ export function FormAddTransporte() {
 					render={({ field }) => (
 						<FormItem>
 							<FormLabel>Empresa</FormLabel>
-							<FormControl>
-								<Input
-									className="border-gray-300"
-									placeholder="Empresa"
-									{...field}
-								/>
-							</FormControl>
+							<Select
+								onValueChange={field.onChange}
+								defaultValue={field.value.toString()}
+							>
+								<FormControl>
+									<SelectTrigger>
+										<SelectValue placeholder="Selecione uma empresa" />
+									</SelectTrigger>
+								</FormControl>
+								<SelectContent>
+									<SelectItem value="0">Selecione uma empresa</SelectItem>
+									{empresas?.map((empresa: Empresa) => (
+										<SelectItem
+											key={empresa.id}
+											value={empresa.id?.toString() || "0"}
+										>
+											{empresa.razaoNome}
+										</SelectItem>
+									))}
+								</SelectContent>
+							</Select>
 							<FormMessage className="text-red-600 ml-1 text-xs" />
 						</FormItem>
 					)}

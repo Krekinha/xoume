@@ -1,13 +1,12 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
-import { SidemenuContextProvider } from "@/context/SidemenuContext";
-import Sidebar from "../../../components/Sidebar";
+import Sidebar from "@/components/Sidebar";
 import type { Sidemenu } from "@/utils/types";
-import MainNavbar from "../../../components/MainNavbar";
 import SvgAtendimentos from "./SvgAtendimentos";
-import {SvgAtividades} from "@/components/svg/SvgAtividades";
-import {SvgConfiguracoes} from "@/components/svg/SvgConfiguracoes";
+import { SvgAtividades } from "@/components/svg/SvgAtividades";
+import { SvgConfiguracoes } from "@/components/svg/SvgConfiguracoes";
+import Providers from "@/context/Providers";
 
 export const metadata = {
 	title: "XOUME - CONTROLE DE ATENDIMENTO",
@@ -51,17 +50,11 @@ export default async function RootLayout({
 	 * a sessão como parâmetro, que será compartilhadas nas demais rotas
 	 */
 	return (
-		<html lang="en">
-			<body>
-				<NextAuthSessionProvider session={session}>
-					<SidemenuContextProvider>
-						<MainNavbar modulo={menu.modulo} />
-						<Sidebar sidemenu={menu} session={session} />
-
-						{children}
-					</SidemenuContextProvider>
-				</NextAuthSessionProvider>
-			</body>
-		</html>
+		<Providers>
+			<NextAuthSessionProvider session={session}>
+				<Sidebar sidemenu={menu} session={session} />
+				{children}
+			</NextAuthSessionProvider>
+		</Providers>
 	);
 }

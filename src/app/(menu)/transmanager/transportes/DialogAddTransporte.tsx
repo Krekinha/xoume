@@ -1,5 +1,4 @@
 "use client";
-
 import {
 	Dialog,
 	DialogContent,
@@ -11,9 +10,12 @@ import {
 import { GrAdd } from "react-icons/gr";
 import { FormAddTransporte } from "./FormAddTransporte";
 import { useAtendimentoStore } from "@/store/useAtendimentoStore";
-import { FormServer } from "./FormServer";
+import type { Empresa } from "@/utils/types";
 
-export function DialogAddTransporte() {
+interface DialogAddTransporteProps {
+	empresas: Empresa[];
+}
+export function DialogAddTransporte({ empresas }: DialogAddTransporteProps) {
 	const { open, setOpen } = useAtendimentoStore();
 
 	return (
@@ -32,7 +34,7 @@ export function DialogAddTransporte() {
 					<DialogTitle>Adicionar transporte</DialogTitle>
 					<DialogDescription />
 				</DialogHeader>
-				<FormAddTransporte />
+				<FormAddTransporte empresas={empresas} />
 				{/* <FormServer /> */}
 			</DialogContent>
 		</Dialog>

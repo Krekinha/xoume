@@ -67,3 +67,14 @@ export async function delTransporte(id: number) {
 		throw error;
 	}
 }
+
+export async function getEmpresas() {
+	const res = await fetch(`${process.env.API_TRANSMANAGER_URL}/empresas`, {
+		next: { tags: ["empresas"] },
+	});
+
+	const response = await res.json();
+	const empresas = response.empresas;
+	//console.log(empresas);
+	return empresas;
+}
