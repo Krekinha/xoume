@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import type { Decimal } from "@prisma/client/runtime/library";
-import { number } from "zod";
+import { number, type ZodIssue } from "zod";
 
 // USER TYPES
 export type User = {
@@ -206,4 +206,15 @@ export type MenuSideList = {
 	icon?: ReactNode;
 	notificacao?: number;
 	link: string;
+};
+
+export type Message = {
+	type?: string;
+	text?: string;
+	status?: number;
+	response?: object;
+};
+export type ResponseAction = {
+	errors: ZodIssue[];
+	message?: Message;
 };

@@ -11,6 +11,8 @@ import { GrAdd } from "react-icons/gr";
 import { FormAddTransporte } from "./FormAddTransporte";
 import { useAtendimentoStore } from "@/store/useAtendimentoStore";
 import type { Empresa } from "@/utils/types";
+import { FormAddTransporteAction } from "./FormAddTransporteAction";
+import { FormTeste } from "./FormTeste";
 
 interface DialogAddTransporteProps {
 	empresas: Empresa[];
@@ -34,8 +36,12 @@ export function DialogAddTransporte({ empresas }: DialogAddTransporteProps) {
 					<DialogTitle>Adicionar transporte</DialogTitle>
 					<DialogDescription />
 				</DialogHeader>
-				<FormAddTransporte empresas={empresas} />
-				{/* <FormServer /> */}
+				{<FormTeste />}
+				{/* <FormAddTransporteAction
+					empresas={empresas}
+					action={addTransporteAction}
+				/> */}
+				{/* <FormAddTransporte empresas={empresas} /> */}
 			</DialogContent>
 		</Dialog>
 	);

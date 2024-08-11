@@ -1,4 +1,4 @@
-"use client";
+//"use client";
 
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -57,48 +57,83 @@ export function FormAddTransporte({ empresas }: FormAddTransporteProps) {
 	// 2. Define a o evento submit
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		try {
-			const response = await addTransporte(values);
-			console.log(response);
+			//const response = await addTransporte(values);
+			//console.log(response);
 		} catch (error) {
-			console.error("Erro ao adicionar o transporte:", error);
+			//console.error("Erro ao adicionar o transporte:", error);
 			// Aqui eu posso adicionar um tratamento de erro, como por exemplo mostrar uma mensagem de erro na interface do usuário.
 		}
 	}
 
 	return (
+		// <Form {...form}>
+		// 	<form action={addTransporte} className="space-y-8">
+		// 		<FormField
+		// 			control={form.control}
+		// 			name="empresaId"
+		// 			render={({ field }) => (
+		// 				<FormItem>
+		// 					<FormLabel>Empresa</FormLabel>
+		// 					<Select
+		// 						onValueChange={field.onChange}
+		// 						defaultValue={field.value.toString()}
+		// 					>
+		// 						<FormControl>
+		// 							<SelectTrigger>
+		// 								<SelectValue placeholder="Selecione uma empresa" />
+		// 							</SelectTrigger>
+		// 						</FormControl>
+		// 						<SelectContent>
+		// 							<SelectItem value="0">Selecione uma empresa</SelectItem>
+		// 							{empresas?.map((empresa: Empresa) => (
+		// 								<SelectItem
+		// 									key={empresa.id}
+		// 									value={empresa.id?.toString() || "0"}
+		// 								>
+		// 									{empresa.razaoNome}
+		// 								</SelectItem>
+		// 							))}
+		// 						</SelectContent>
+		// 					</Select>
+		// 					<FormMessage className="text-red-600 ml-1 text-xs" />
+		// 				</FormItem>
+		// 			)}
+		// 		/>
+		// 		<Button
+		// 			type="submit"
+		// 			className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white"
+		// 		>
+		// 			Salvar
+		// 		</Button>
+
+		// 		<DialogClose asChild>
+		// 			<Button
+		// 				type="button"
+		// 				variant="destructive"
+		// 				className="bg-red-600 dark:bg-red-600 dark:hover:bg-red-500 text-white ml-2"
+		// 			>
+		// 				Cancelar
+		// 			</Button>
+		// 		</DialogClose>
+		// 	</form>
+		// </Form>
+
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+			<form action={addTransporte}>
 				<FormField
 					control={form.control}
 					name="empresaId"
 					render={({ field }) => (
 						<FormItem>
-							<FormLabel>Empresa</FormLabel>
-							<Select
-								onValueChange={field.onChange}
-								defaultValue={field.value.toString()}
-							>
-								<FormControl>
-									<SelectTrigger>
-										<SelectValue placeholder="Selecione uma empresa" />
-									</SelectTrigger>
-								</FormControl>
-								<SelectContent>
-									<SelectItem value="0">Selecione uma empresa</SelectItem>
-									{empresas?.map((empresa: Empresa) => (
-										<SelectItem
-											key={empresa.id}
-											value={empresa.id?.toString() || "0"}
-										>
-											{empresa.razaoNome}
-										</SelectItem>
-									))}
-								</SelectContent>
-							</Select>
-							<FormMessage className="text-red-600 ml-1 text-xs" />
+							<FormLabel>Username</FormLabel>
+							<FormControl>
+								<Input placeholder="shadcn" {...field} />
+							</FormControl>
+							<FormMessage />
 						</FormItem>
 					)}
 				/>
+
 				<Button
 					type="submit"
 					className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white"
