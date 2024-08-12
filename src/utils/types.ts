@@ -218,3 +218,8 @@ export type ResponseAction = {
 	errors: ZodIssue[];
 	message?: Message;
 };
+
+export interface SelectItemProps {
+	label: string;
+	value: string;
+}

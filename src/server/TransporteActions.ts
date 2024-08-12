@@ -41,6 +41,7 @@ export async function addTransporte(
 	const validation = schema.safeParse({
 		empresaId: formData.get("empresaId"),
 		motoristaId: formData.get("motoristaId"),
+		tomadorId: formData.get("tomadorId"),
 	});
 
 	if (validation.success) {

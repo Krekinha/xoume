@@ -5,7 +5,6 @@ import {
 	CollapsibleContent,
 	CollapsibleTrigger,
 } from "@/components/ui/collapsible";
-import { Button } from "@/components/ui/button";
 import type { CteComplementar } from "@/utils/types";
 
 interface TransporteListItemComplementoProps {
@@ -29,8 +28,8 @@ export function ComplementoItem({
 					<CollapsibleTrigger asChild>
 						<button
 							className="py-1 px-2 rounded-md bg-fuchsia-800 hover:bg-fuchsia-700 text-[9px] 
-		shadow-md shadow-slate-900 focus:shadow-lg ease-linear 
-		transition-all duration-150 select-none"
+	shadow-md shadow-slate-900 focus:shadow-lg ease-linear 
+	transition-all duration-150 select-none"
 						>
 							<span className="sr-only">Toggle</span>COMPLEMENTO
 						</button>
