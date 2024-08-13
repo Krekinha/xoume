@@ -1,4 +1,4 @@
-import { FormTeste } from "../transportes/FormTeste";
+import { FormAddTransporte } from "../transportes/FormAddTransporte";
 
 export default async function Page() {
 	/**
@@ -10,7 +10,7 @@ export default async function Page() {
 	return (
 		<div className="p-4 sm:ml-64">
 			<div className="p-4 border-2 border-gray-200 border-dashed rounded-lg mt-14">
-				<FormTeste />
+				<FormAddTransporte />
 				Configurações
 			</div>
 		</div>

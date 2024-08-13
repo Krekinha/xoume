@@ -1,6 +1,5 @@
 "use client";
 import type { SelectItemProps } from "@/utils/types";
-import { FormLabel } from "./FormLabel";
 import {
 	Controller,
 	type Control,
@@ -16,6 +15,7 @@ import {
 } from "../ui/select";
 import { FieldError } from "./FieldError";
 import { CommandInput } from "../ui/command";
+import { Label } from "../ui/label";
 
 interface SelectFieldProps {
 	name: string;
@@ -36,7 +36,7 @@ export function SelectField({
 }: SelectFieldProps) {
 	return (
 		<>
-			<FormLabel className="mb-2">Motorista</FormLabel>
+			<Label className="mb-2">Motorista</Label>
 			<Controller
 				name={name}
 				control={control}

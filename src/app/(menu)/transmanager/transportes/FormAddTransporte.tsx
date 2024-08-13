@@ -1,156 +1,120 @@
-//"use client";
-
-import { z } from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import { Input } from "@/components/ui/input";
+"use client";
+import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
-import {
-	Form,
-	FormControl,
-	FormField,
-	FormItem,
-	FormLabel,
-	FormMessage,
-} from "@/components/ui/form";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/select";
-import { DialogClose } from "@radix-ui/react-dialog";
-import { baseUrl } from "@/utils/constants";
+
+import type {
+	Empresa,
+	Motorista,
+	ResponseAction,
+	SelectItemProps,
+} from "@/utils/types";
 import { addTransporte } from "@/server/TransporteActions";
-import type { Empresa } from "@/utils/types";
+import { useFormState } from "react-dom";
+import { FieldError } from "@/components/form/FieldError";
+import { Input } from "@/components/ui/input";
+import { SelectField } from "@/components/form/SelectField";
+import { useState } from "react";
+import { ReactSelect } from "@/components/form/ReactSelect";
+import { Label } from "@/components/ui/label";
 
-const formSchema = z.object({
-	empresaId: z.coerce
-		.number()
-		.positive({ message: "Selecione uma opção válida" }),
-});
-
-interface FormAddTransporteProps {
-	empresas: Empresa[];
+interface IFormInput {
+	empresaId: string;
+	motoristaId: string;
+	tomadorId: string;
 }
 
-export function FormAddTransporte({ empresas }: FormAddTransporteProps) {
-	//const { setOpen, getTransportes } = useTransporteStore();
-	const url = baseUrl("/transportes/add");
-	console.log(empresas);
+const initialState: ResponseAction = {
+	errors: [],
+	message: {},
+};
 
-	// async function getEmpresass() {
-	// 	const empresas = await getEmpresas();
-	// 	console.log(empresas);
-	// 	return empresas;
-	// }
-
-	// 1. Define o formulário
-	const form = useForm<z.infer<typeof formSchema>>({
-		resolver: zodResolver(formSchema),
+export function FormAddTransporte() {
+	const [state, formAction] = useFormState(addTransporte, initialState);
+	const { register, control, getValues, setValue } = useForm<IFormInput>({
 		defaultValues: {
-			empresaId: 0,
+			motoristaId: "0",
+			tomadorId: "0",
 		},
 	});
 
-	// 2. Define a o evento submit
-	async function onSubmit(values: z.infer<typeof formSchema>) {
-		try {
-			//const response = await addTransporte(values);
-			//console.log(response);
-		} catch (error) {
-			//console.error("Erro ao adicionar o transporte:", error);
-			// Aqui eu posso adicionar um tratamento de erro, como por exemplo mostrar uma mensagem de erro na interface do usuário.
-		}
+	function getControl() {
+		console.log(control);
+		console.log(register);
+		console.log(getValues());
 	}
 
+	const motoristas: SelectItemProps[] = [
+		{ label: "JOAO LUIZ", value: "1" },
+		{ label: "RENIVALDO", value: "3" },
+		{ label: "GENILTON", value: "5" },
+	];
+
+	const empresas: SelectItemProps[] = [
+		{ label: "JOAO LUIZ", value: "1" },
+		{ label: "RENIVALDO", value: "3" },
+		{ label: "GENILTON", value: "5" },
+	];
+
+	const options = [
+		{ label: "JOAO LUIZ", value: "1" },
+		{ label: "RENIVALDO", value: "3" },
+		{ label: "GENILTON", value: "5" },
+	];
+
+	interface StateOption {
+		readonly options: any[];
+	}
+
+	const tomadores: readonly StateOption[] = [
+		{
+			options: [
+				{ label: "MAGBAN", value: "1" },
+				{ label: "GRANSENA", value: "3" },
+			],
+		},
+	];
+
+	console.log(state);
+
 	return (
-		// <Form {...form}>
-		// 	<form action={addTransporte} className="space-y-8">
-		// 		<FormField
-		// 			control={form.control}
-		// 			name="empresaId"
-		// 			render={({ field }) => (
-		// 				<FormItem>
-		// 					<FormLabel>Empresa</FormLabel>
-		// 					<Select
-		// 						onValueChange={field.onChange}
-		// 						defaultValue={field.value.toString()}
-		// 					>
-		// 						<FormControl>
-		// 							<SelectTrigger>
-		// 								<SelectValue placeholder="Selecione uma empresa" />
-		// 							</SelectTrigger>
-		// 						</FormControl>
-		// 						<SelectContent>
-		// 							<SelectItem value="0">Selecione uma empresa</SelectItem>
-		// 							{empresas?.map((empresa: Empresa) => (
-		// 								<SelectItem
-		// 									key={empresa.id}
-		// 									value={empresa.id?.toString() || "0"}
-		// 								>
-		// 									{empresa.razaoNome}
-		// 								</SelectItem>
-		// 							))}
-		// 						</SelectContent>
-		// 					</Select>
-		// 					<FormMessage className="text-red-600 ml-1 text-xs" />
-		// 				</FormItem>
-		// 			)}
-		// 		/>
-		// 		<Button
-		// 			type="submit"
-		// 			className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white"
-		// 		>
-		// 			Salvar
-		// 		</Button>
+		<form action={formAction}>
+			<div className="flex flex-col gap-4">
+				<div className="flex flex-col">
+					<Label className="mb-2">Empresa</Label>
+					<Input {...register("empresaId")} className="border-white border" />
+					<FieldError field="empresaId" state={state} />
+				</div>
+				<div className="flex flex-col">
+					<SelectField
+						name="motoristaId"
+						control={control}
+						register={register}
+						items={motoristas}
+						displayItem="Selecione uma motorista..."
+						stateError={state}
+					/>
+				</div>
+				<div>
+					<ReactSelect
+						name="tomadorId"
+						label="Tomador"
+						control={control}
+						register={register}
+						items={motoristas}
+						placeholder="Selecione um tomador"
+						stateError={state}
+					/>
+				</div>
 
-		// 		<DialogClose asChild>
-		// 			<Button
-		// 				type="button"
-		// 				variant="destructive"
-		// 				className="bg-red-600 dark:bg-red-600 dark:hover:bg-red-500 text-white ml-2"
-		// 			>
-		// 				Cancelar
-		// 			</Button>
-		// 		</DialogClose>
-		// 	</form>
-		// </Form>
-
-		<Form {...form}>
-			<form action={addTransporte}>
-				<FormField
-					control={form.control}
-					name="empresaId"
-					render={({ field }) => (
-						<FormItem>
-							<FormLabel>Username</FormLabel>
-							<FormControl>
-								<Input placeholder="shadcn" {...field} />
-							</FormControl>
-							<FormMessage />
-						</FormItem>
-					)}
-				/>
-
-				<Button
-					type="submit"
-					className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white"
-				>
-					Salvar
-				</Button>
-
-				<DialogClose asChild>
+				<div className="flex justify-center">
 					<Button
-						type="button"
-						variant="destructive"
-						className="bg-red-600 dark:bg-red-600 dark:hover:bg-red-500 text-white ml-2"
+						type="submit"
+						className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white"
 					>
-						Cancelar
+						Enviar
 					</Button>
-				</DialogClose>
-			</form>
-		</Form>
+				</div>
+			</div>
+		</form>
 	);
 }
