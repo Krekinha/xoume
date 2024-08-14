@@ -9,13 +9,19 @@ import {
 } from "@/components/ui/dialog";
 import { GrAdd } from "react-icons/gr";
 import { useAtendimentoStore } from "@/store/useAtendimentoStore";
-import type { Empresa } from "@/utils/types";
+import type { Empresa, Motorista, Tomador } from "@/utils/types";
 import { FormAddTransporte } from "./FormAddTransporte";
 
 interface DialogAddTransporteProps {
 	empresas: Empresa[];
+	motoristas: Motorista[];
+	tomadores: Tomador[];
 }
-export function DialogAddTransporte({ empresas }: DialogAddTransporteProps) {
+export function DialogAddTransporte({
+	empresas,
+	motoristas,
+	tomadores,
+}: DialogAddTransporteProps) {
 	const { open, setOpen } = useAtendimentoStore();
 
 	return (
@@ -34,7 +40,11 @@ export function DialogAddTransporte({ empresas }: DialogAddTransporteProps) {
 					<DialogTitle>Adicionar transporte</DialogTitle>
 					<DialogDescription />
 				</DialogHeader>
-				<FormAddTransporte />
+				<FormAddTransporte
+					empresas={empresas}
+					motoristas={motoristas}
+					tomadores={tomadores}
+				/>
 			</DialogContent>
 		</Dialog>
 	);

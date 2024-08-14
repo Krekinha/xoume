@@ -4,16 +4,36 @@ import { FallbackFetch } from "./transportes/FallbackFetch";
 import { Suspense } from "react";
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import { TransportesList } from "./transportes/TransportesList";
-import { getTransportes, getEmpresas } from "@/server/TransporteActions";
+import {
+	getTransportes,
+	getEmpresas,
+	getMotoristas,
+	getTomadores,
+} from "@/server/TransporteActions";
+import { ToggleAddTransporte } from "@/components/ToggleAddTransporte";
 
 export default async function Page() {
 	const transportes = await getTransportes();
 	const empresas = await getEmpresas();
-	console.log(empresas);
+	const motoristas = await getMotoristas();
+	const tomadores = await getTomadores();
+
+	console.log(tomadores);
 	return (
 		<>
 			<nav className="navbar p-4 sm:ml-64 fixed top-0 w-full mt-11 py-2 shadow-sm bg-white dark:bg-zinc-900">
-				<DialogAddTransporte empresas={empresas} />
+				{/* <DialogAddTransporte
+					empresas={empresas}
+					motoristas={motoristas}
+					tomadores={tomadores}
+				/> */}
+
+				<ToggleAddTransporte
+					empresas={empresas}
+					motoristas={motoristas}
+					tomadores={tomadores}
+				/>
+
 				<span className="ml-2 text-sm dark:text-green-300">
 					Novo transporte
 				</span>

@@ -7,15 +7,17 @@ import type {
 	Motorista,
 	ResponseAction,
 	SelectItemProps,
+	Tomador,
 } from "@/utils/types";
 import { addTransporte } from "@/server/TransporteActions";
 import { useFormState } from "react-dom";
-import { FieldError } from "@/components/form/FieldError";
-import { Input } from "@/components/ui/input";
-import { SelectField } from "@/components/form/SelectField";
-import { useState } from "react";
 import { ReactSelect } from "@/components/form/ReactSelect";
-import { Label } from "@/components/ui/label";
+
+interface FormAddTransporteProps {
+	empresas: Empresa[];
+	motoristas: Motorista[];
+	tomadores: Tomador[];
+}
 
 interface IFormInput {
 	empresaId: string;
@@ -28,12 +30,16 @@ const initialState: ResponseAction = {
 	message: {},
 };
 
-export function FormAddTransporte() {
+export function FormAddTransporte({
+	empresas,
+	motoristas,
+	tomadores,
+}: FormAddTransporteProps) {
 	const [state, formAction] = useFormState(addTransporte, initialState);
 	const { register, control, getValues, setValue } = useForm<IFormInput>({
 		defaultValues: {
-			motoristaId: "0",
-			tomadorId: "0",
+			motoristaId: "",
+			tomadorId: "",
 		},
 	});
 
@@ -43,68 +49,69 @@ export function FormAddTransporte() {
 		console.log(getValues());
 	}
 
-	const motoristas: SelectItemProps[] = [
-		{ label: "JOAO LUIZ", value: "1" },
-		{ label: "RENIVALDO", value: "3" },
-		{ label: "GENILTON", value: "5" },
-	];
+	const empresaItems = (): SelectItemProps[] => {
+		if (empresas) {
+			return empresas.map((empresa) => ({
+				label: empresa.razaoNome || "",
+				value: empresa.id?.toString() || "",
+			}));
+		}
+		return [];
+	};
 
-	const empresas: SelectItemProps[] = [
-		{ label: "JOAO LUIZ", value: "1" },
-		{ label: "RENIVALDO", value: "3" },
-		{ label: "GENILTON", value: "5" },
-	];
+	const motoristaItems = (): SelectItemProps[] => {
+		if (motoristas) {
+			return motoristas.map((motorista) => ({
+				label: motorista.nome || "",
+				value: motorista.id?.toString() || "",
+			}));
+		}
+		return [];
+	};
 
-	const options = [
-		{ label: "JOAO LUIZ", value: "1" },
-		{ label: "RENIVALDO", value: "3" },
-		{ label: "GENILTON", value: "5" },
-	];
-
-	interface StateOption {
-		readonly options: any[];
-	}
-
-	const tomadores: readonly StateOption[] = [
-		{
-			options: [
-				{ label: "MAGBAN", value: "1" },
-				{ label: "GRANSENA", value: "3" },
-			],
-		},
-	];
+	const tomadorItems = (): SelectItemProps[] => {
+		if (tomadores) {
+			return tomadores.map((tomador) => ({
+				label: tomador.razaoNome || "",
+				value: tomador.id?.toString() || "",
+			}));
+		}
+		return [];
+	};
 
 	console.log(state);
 
 	return (
 		<form action={formAction}>
-			<div className="flex flex-col gap-4">
-				<div className="flex flex-col">
-					<Label className="mb-2">Empresa</Label>
-					<Input {...register("empresaId")} className="border-white border" />
-					<FieldError field="empresaId" state={state} />
-				</div>
-				<div className="flex flex-col">
-					<SelectField
-						name="motoristaId"
-						control={control}
-						register={register}
-						items={motoristas}
-						displayItem="Selecione uma motorista..."
-						stateError={state}
-					/>
-				</div>
-				<div>
-					<ReactSelect
-						name="tomadorId"
-						label="Tomador"
-						control={control}
-						register={register}
-						items={motoristas}
-						placeholder="Selecione um tomador"
-						stateError={state}
-					/>
-				</div>
+			<div className="flex flex-col gap-3">
+				<ReactSelect
+					name="empresaId"
+					label="Empresa"
+					control={control}
+					register={register}
+					items={empresaItems()}
+					placeholder="Selecione uma empresa"
+					stateError={state}
+				/>
+				<ReactSelect
+					name="motoristaId"
+					label="Motorista"
+					control={control}
+					register={register}
+					items={motoristaItems()}
+					placeholder="Selecione um motorista"
+					stateError={state}
+				/>
+
+				<ReactSelect
+					name="tomadorId"
+					label="Tomador"
+					control={control}
+					register={register}
+					items={tomadorItems()}
+					placeholder="Selecione um tomador"
+					stateError={state}
+				/>
 
 				<div className="flex justify-center">
 					<Button

@@ -10,6 +10,8 @@ const Sheet = SheetPrimitive.Root;
 
 const SheetTrigger = SheetPrimitive.Trigger;
 
+const SheetClose = SheetPrimitive.Close;
+
 const SheetPortal = SheetPrimitive.Portal;
 
 const SheetOverlay = React.forwardRef<
@@ -33,6 +35,8 @@ const sheetVariants = cva(
 		variants: {
 			side: {
 				left: "top-0 inset-y-0 left-0 h-full w-64 h-screen pt-20 data-[state=closed]:slide-out-to-left data-[state=open]:slide-in-from-left sm:max-w-sm",
+				right:
+					"top-0 inset-y-0 right-0 h-full w-full h-screen pt-20 data-[state=closed]:slide-out-to-right data-[state=open]:slide-in-from-right sm:max-w-sm",
 			},
 		},
 	},
@@ -78,6 +82,7 @@ export {
 	SheetPortal,
 	SheetOverlay,
 	SheetTrigger,
+	SheetClose,
 	SheetContent,
 	SheetTitle,
 };

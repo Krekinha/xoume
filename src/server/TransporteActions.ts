@@ -3,9 +3,14 @@
 import { baseUrl } from "@/utils/constants";
 import type { ResponseAction, Transporte } from "@/utils/types";
 import { revalidateTag } from "next/cache";
-import { z, type ZodIssue } from "zod";
+import { nullable, optional, string, z, type ZodIssue } from "zod";
 
 const local_add = "http://localhost:3333/transportes/add";
+
+function passEmptyToUndefined(val: FormDataEntryValue | null) {
+	if (val === "") return undefined;
+	return val;
+}
 
 export async function getTransportes() {
 	const res = await fetch(`${process.env.API_TRANSMANAGER_URL}/transportes`, {
@@ -24,6 +29,7 @@ export async function addTransporte(
 ): Promise<ResponseAction> {
 	const url = baseUrl("/transportes/add");
 
+	const proto = undefined;
 	const data = Object.fromEntries(formData);
 	console.log(data);
 
@@ -35,13 +41,17 @@ export async function addTransporte(
 		motoristaId: z.coerce
 			.number()
 			.positive({ message: "Selecione uma opção válida" }),
+		tomadorId: z.coerce
+			.number()
+			.positive({ message: "Selecione uma opção válida" })
+			.optional(),
 	});
 
 	// valida os dados usando o schema criado anteriormente
 	const validation = schema.safeParse({
 		empresaId: formData.get("empresaId"),
 		motoristaId: formData.get("motoristaId"),
-		tomadorId: formData.get("tomadorId"),
+		tomadorId: passEmptyToUndefined(formData.get("tomadorId")),
 	});
 
 	if (validation.success) {
@@ -68,6 +78,7 @@ export async function addTransporte(
 						text: `HTTP error! status: ${response.status} resposta: ${res}`,
 					},
 				};
+				console.log(res);
 				return responseServer;
 			}
 
@@ -142,4 +153,26 @@ export async function getEmpresas() {
 	const empresas = response.empresas;
 	//console.log(empresas);
 	return empresas;
+}
+
+export async function getMotoristas() {
+	const res = await fetch(`${process.env.API_TRANSMANAGER_URL}/motoristas`, {
+		next: { tags: ["motoristas"] },
+	});
+
+	const response = await res.json();
+	const motoristas = response.motoristas;
+	//console.log(motoristas);
+	return motoristas;
+}
+
+export async function getTomadores() {
+	const res = await fetch(`${process.env.API_TRANSMANAGER_URL}/tomadores`, {
+		next: { tags: ["tomadores"] },
+	});
+
+	const response = await res.json();
+	const tomadores = response.tomadores;
+
+	return tomadores;
 }

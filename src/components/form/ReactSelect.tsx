@@ -12,7 +12,6 @@ import { FieldError } from "./FieldError";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import type { ReactNode } from "react";
-import { Label } from "../ui/label";
 
 const DropdownIndicator = (props: any) => {
 	return (
@@ -74,8 +73,12 @@ export function ReactSelect({
 	...props
 }: ReactSelectProps) {
 	return (
-		<>
-			{label && <Label className="mb-2">{label}</Label>}
+		<div>
+			{label && (
+				<label className="text-sm font-medium ml-1 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
+					{label}
+				</label>
+			)}
 			<Controller
 				name={name}
 				control={control}
@@ -113,42 +116,51 @@ export function ReactSelect({
 									isFocused
 										? "border-primary-600 ring-1 ring-primary-500"
 										: "border-gray-300 hover:border-gray-400",
-									"border rounded-lg bg-white hover:cursor-pointer",
+									"border rounded-md bg-white hover:cursor-pointer pl-2",
+									"dark:bg-zinc-950 dark:border-zinc-800",
+									"dark:text-sm dark:text-zinc-100",
 									// "dark:flex dark:h-9 dark:items-center ",
-									// "dark:text-sm",
 									// "dark:whitespace-nowrap dark:rounded-md border dark:bg-transparent",
 									// "dark:shadow-sm dark:ring-offset-pink-600",
-									// "dark:placeholder:text-red-500 dark:placeholder:text-red-400",
-									// "dark:text-zinc-300",
-									// "dark:border-zinc-800 dark:ring-offset-zinc-950 ",
-									// isFocused ? "dark:ring-1 dark:outline-none" : "",
+									// "dark:ring-offset-zinc-950 ",
+									// "focus:dark:ring-1 focus:dark:outline-none",
 								),
-							placeholder: () => "text-blue-500 pl-3 py-0.5",
-							input: () => "pl-3 py-0.5",
-							valueContainer: () => "p-1 gap-1",
-							singleValue: () => singleValueStyles,
-							multiValue: () => multiValueStyles,
-							multiValueLabel: () => multiValueLabelStyles,
-							multiValueRemove: () => multiValueRemoveStyles,
-							indicatorsContainer: () => indicatorsContainerStyles,
-							clearIndicator: () => clearIndicatorStyles,
-							indicatorSeparator: () => indicatorSeparatorStyles,
-							dropdownIndicator: () => dropdownIndicatorStyles,
-							menu: () => menuStyles,
-							groupHeading: () => groupHeadingStyles,
+							placeholder: () => "text-blue-500 pl-1 py-0.5 text-sm",
+							input: () => "pl-1 py-0.5",
+							valueContainer: () => "gap-1",
+							singleValue: () => "leading-7 ml-1",
+							multiValue: () =>
+								"bg-gray-100 rounded items-center py-0.5 pl-2 pr-1 gap-1.5",
+							multiValueLabel: () => "leading-6 py-0.5",
+							multiValueRemove: () =>
+								"border border-gray-200 bg-white hover:bg-red-50 hover:text-red-800 text-gray-500 hover:border-red-300 rounded-md",
+							//indicatorsContainer: () => "p-1 gap-1",
+							clearIndicator: () =>
+								"text-gray-500 p-1 rounded-md hover:bg-red-50 hover:text-red-800",
+							//indicatorSeparator: () => "bg-gray-300",
+							dropdownIndicator: () =>
+								"p-1 hover:bg-gray-100 text-gray-500 rounded-md hover:text-black",
+							menu: () =>
+								cn(
+									"p-1 mt-1 border border-gray-200 bg-white rounded-md text-sm",
+									"dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-50",
+								),
+							groupHeading: () => "ml-3 mt-2 mb-1 text-gray-500 text-sm",
 							option: ({ isFocused, isSelected }) =>
 								cn(
-									isFocused && optionStyles.focus,
-									isSelected && optionStyles.selected,
-									optionStyles.base,
+									isFocused && "bg-gray-100 dark:bg-zinc-900",
+									isSelected &&
+										"after:content-['✔'] after:ml-3 after:text-sm after:text-center after:text-blue-500 text-amber-500",
+									"hover:cursor-pointer px-3 py-2 rounded",
 								),
-							noOptionsMessage: () => noOptionsMessageStyles,
+							noOptionsMessage: () =>
+								"text-gray-500 p-2 bg-gray-50 border border-dashed border-gray-200 rounded-sm",
 						}}
 					/>
 				)}
 			/>
 
 			{stateError && <FieldError field={name} state={stateError} />}
-		</>
+		</div>
 	);
 }
