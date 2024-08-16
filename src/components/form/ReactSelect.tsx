@@ -66,7 +66,6 @@ export function ReactSelect({
 	label,
 	name,
 	control,
-	register,
 	items,
 	placeholder,
 	stateError,
@@ -82,15 +81,16 @@ export function ReactSelect({
 			<Controller
 				name={name}
 				control={control}
-				render={({ field }) => (
+				render={({ field: { onChange, value, ref } }) => (
 					<Select
-						{...register(name)}
-						{...field}
+						//{...field}
 						{...props}
 						placeholder={placeholder}
 						unstyled
 						components={{ DropdownIndicator }}
 						options={items}
+						value={items?.find((c) => c.value === value)}
+						onChange={(val) => onChange(val?.value)}
 						styles={{
 							input: (base) => ({
 								...base,
@@ -160,7 +160,7 @@ export function ReactSelect({
 				)}
 			/>
 
-			{stateError && <FieldError field={name} state={stateError} />}
+			{stateError && <FieldError field={name} errors={stateError} />}
 		</div>
 	);
 }

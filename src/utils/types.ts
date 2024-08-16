@@ -209,7 +209,7 @@ export type MenuSideList = {
 };
 
 export type Message = {
-	type?: string;
+	type?: TipoMessage;
 	text?: string;
 	status?: number;
 	response?: object;
@@ -219,7 +219,12 @@ export type ResponseAction = {
 	message?: Message;
 };
 
+export enum TipoMessage {
+	SUCCESS = 0,
+	ERROR = 1,
+}
+
 export interface SelectItemProps {
-	label: string;
-	value: string;
+	label: string | undefined;
+	value: unknown;
 }

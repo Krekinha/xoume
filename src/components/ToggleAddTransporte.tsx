@@ -15,12 +15,17 @@ import type {
 } from "@/utils/types";
 import { GrAdd } from "react-icons/gr";
 
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 
 import { addTransporte } from "@/server/TransporteActions";
 import { useFormState } from "react-dom";
 import { ReactSelect } from "@/components/form/ReactSelect";
+import Select, { components, type DropdownIndicatorProps } from "react-select";
+import { useState, type HtmlHTMLAttributes, type ReactElement } from "react";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { cn } from "@/lib/utils";
 
 interface ToggleAddTransporteProps {
 	empresas: Empresa[];
@@ -39,16 +44,40 @@ const initialState: ResponseAction = {
 	message: {},
 };
 
+// define o schema de validação dos dados recebidos pelo form cliente
+const schema = z.object({
+	empresaId: z.coerce
+		.number()
+		.positive({ message: "Selecione uma opção válida" }),
+	motoristaId: z.coerce
+		.number()
+		.positive({ message: "Selecione uma opção válida" }),
+	tomadorId: z.coerce
+		.number()
+		.positive({ message: "Selecione uma opção válida" })
+		.optional(),
+});
+
 export function ToggleAddTransporte({
 	empresas,
 	motoristas,
 	tomadores,
 }: ToggleAddTransporteProps) {
-	const [state, formAction] = useFormState(addTransporte, initialState);
-	const { register, control, getValues, setValue } = useForm<IFormInput>({
+	//const [state, formAction] = useFormState(addTransporte, initialState);
+	const [open, setOpen] = useState(false);
+	const {
+		register,
+		control,
+		getValues,
+		setValue,
+		reset,
+		handleSubmit,
+		formState,
+	} = useForm<z.infer<typeof schema>>({
+		resolver: zodResolver(schema),
 		defaultValues: {
-			motoristaId: "",
-			tomadorId: "",
+			empresaId: 0,
+			motoristaId: 0,
 		},
 	});
 
@@ -58,45 +87,100 @@ export function ToggleAddTransporte({
 		console.log(getValues());
 	}
 
-	const empresaItems = (): SelectItemProps[] => {
+	const empresaItems = () => {
 		if (empresas) {
 			return empresas.map((empresa) => ({
-				label: empresa.razaoNome || "",
-				value: empresa.id?.toString() || "",
+				label: empresa.razaoNome,
+				value: empresa.id,
 			}));
 		}
 		return [];
 	};
 
-	const motoristaItems = (): SelectItemProps[] => {
+	const motoristaItems = () => {
 		if (motoristas) {
 			return motoristas.map((motorista) => ({
-				label: motorista.nome || "",
-				value: motorista.id?.toString() || "",
+				label: motorista.nome,
+				value: motorista.id,
 			}));
 		}
 		return [];
 	};
 
-	const tomadorItems = (): SelectItemProps[] => {
+	const tomadorItems = () => {
 		if (tomadores) {
 			return tomadores.map((tomador) => ({
-				label: tomador.razaoNome || "",
-				value: tomador.id?.toString() || "",
+				label: tomador.razaoNome,
+				value: tomador.id,
 			}));
 		}
 		return [];
 	};
 
-	console.log(state);
+	function onOpenChange(e: boolean) {
+		/**
+		 * (e) = retorna o estado atual do diálogo, quando
+		 * esse diálogo estiver fechado (false) os valores
+		 * do formulário serão resetados
+		 */
+		// if (open === false) {
+		// 	reset();
+		// 	state.errors = [];
+		// 	state.message = {};
+		// }
+	}
+
+	function after() {
+		// console.log(state.message?.text);
+		// if (state.message?.type) {
+		// 	console.log(state.message.type);
+		// 	const modal = document.querySelector("#modalDialog") as ModalDialogProps;
+		// 	modal.message = state.message;
+		// 	//modal?.showModal();
+		// }
+		// const modal = ModalDialog({message=state.message || {text:"", status:0}})
+	}
+
+	async function onSubmit(values: z.infer<typeof schema>) {
+		console.log(values);
+
+		const res = await addTransporte(values);
+
+		console.log(res);
+
+		// const validation = schema.parse({
+		// 	empresaId: values.empresaId.value,
+		// 	motoristaId: values.motoristaId.value,
+		// 	tomadorId: values.tomadorId?.value,
+		// });
+
+		//console.log(validation);
+		//if (validation.success) console.log(validation.data);
+	}
+
+	function teste(e: any) {
+		console.log(e);
+		getControl();
+	}
+
+	console.log(formState);
 
 	return (
-		<Sheet modal={false}>
+		<Sheet
+			modal={false}
+			open={open}
+			onOpenChange={(e) => {
+				onOpenChange(e);
+			}}
+		>
 			<SheetTrigger asChild>
 				<button
-					className="button-add rounded-full p-1 bg-blue-600 text-white hover:bg-green-700 active:bg-green-800
-        shadow-md hover:shadow-lg focus:shadow-lg ease-linear transition-all 
-        cursor-pointer duration-150 select-none "
+					onClick={() => setOpen(!open)}
+					className={cn(
+						"bg-green-600 text-white hover:bg-green-700 active:bg-green-800",
+						"shadow-md hover:shadow-lg focus:shadow-lg ease-linear transition-all",
+						"rounded-full p-1 cursor-pointer duration-150 select-none",
+					)}
 				>
 					<GrAdd className="h-4 w-4" />
 				</button>
@@ -108,7 +192,8 @@ export function ToggleAddTransporte({
 			>
 				<SheetTitle />
 				<div className="h-full px-3 pb-4 overflow-y-auto">
-					<form action={formAction}>
+					{/* <ModalDialog message={state.message} /> */}
+					<form onSubmit={handleSubmit(onSubmit)}>
 						<div className="flex flex-col gap-3">
 							<ReactSelect
 								name="empresaId"
@@ -117,7 +202,7 @@ export function ToggleAddTransporte({
 								register={register}
 								items={empresaItems()}
 								placeholder="Selecione uma empresa"
-								stateError={state}
+								stateError={formState.errors}
 							/>
 							<ReactSelect
 								name="motoristaId"
@@ -126,7 +211,7 @@ export function ToggleAddTransporte({
 								register={register}
 								items={motoristaItems()}
 								placeholder="Selecione um motorista"
-								stateError={state}
+								stateError={formState.errors}
 							/>
 
 							<ReactSelect
@@ -136,15 +221,17 @@ export function ToggleAddTransporte({
 								register={register}
 								items={tomadorItems()}
 								placeholder="Selecione um tomador"
-								stateError={state}
+								stateError={formState.errors}
 							/>
 
 							<div className="flex justify-center gap-2">
-								<SheetClose asChild>
-									<Button className="bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 dark:text-white">
-										Cancelar
-									</Button>
-								</SheetClose>
+								<Button
+									type="button"
+									onClick={() => setOpen(false)}
+									className="bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 dark:text-white"
+								>
+									Cancelar
+								</Button>
 								<Button
 									type="submit"
 									className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white"

@@ -1,16 +1,14 @@
 "use server";
 
 import { baseUrl } from "@/utils/constants";
-import type { ResponseAction, Transporte } from "@/utils/types";
+import {
+	TipoMessage,
+	type ResponseAction,
+	type Transporte,
+} from "@/utils/types";
 import { revalidateTag } from "next/cache";
-import { nullable, optional, string, z, type ZodIssue } from "zod";
 
 const local_add = "http://localhost:3333/transportes/add";
-
-function passEmptyToUndefined(val: FormDataEntryValue | null) {
-	if (val === "") return undefined;
-	return val;
-}
 
 export async function getTransportes() {
 	const res = await fetch(`${process.env.API_TRANSMANAGER_URL}/transportes`, {
@@ -24,96 +22,60 @@ export async function getTransportes() {
 }
 
 export async function addTransporte(
-	prevState: any,
-	formData: FormData,
+	transporte: Transporte,
 ): Promise<ResponseAction> {
 	const url = baseUrl("/transportes/add");
 
-	const proto = undefined;
-	const data = Object.fromEntries(formData);
-	console.log(data);
+	console.log(transporte);
 
-	// define o schema de validação dos dados recebidos pelo form cliente
-	const schema = z.object({
-		empresaId: z.coerce
-			.number()
-			.positive({ message: "Selecione uma opção válida" }),
-		motoristaId: z.coerce
-			.number()
-			.positive({ message: "Selecione uma opção válida" }),
-		tomadorId: z.coerce
-			.number()
-			.positive({ message: "Selecione uma opção válida" })
-			.optional(),
-	});
+	try {
+		// faz o fetch que envia os dados para a api
+		const response = await fetch(url, {
+			method: "POST",
+			cache: "no-store",
+			headers: { "Content-Type": "application/json" },
+			body: JSON.stringify(transporte),
+		});
 
-	// valida os dados usando o schema criado anteriormente
-	const validation = schema.safeParse({
-		empresaId: formData.get("empresaId"),
-		motoristaId: formData.get("motoristaId"),
-		tomadorId: passEmptyToUndefined(formData.get("tomadorId")),
-	});
+		// capatura a resposta do servidor
+		const res = await response.json();
 
-	if (validation.success) {
-		// se a validação foi bem sucedida, envia os dados para a api
-		console.log(validation.data);
-		try {
-			// faz o fetch que envia os dados para a api
-			const response = await fetch(url, {
-				method: "POST",
-				cache: "no-store",
-				headers: { "Content-Type": "application/json" },
-				body: JSON.stringify(validation.data),
-			});
-
-			// capatura a resposta do servidor
-			const res = await response.json();
-
-			// se houver erros no servidor envia a resposta e o status da requisição
-			if (!response.ok) {
-				const responseServer: ResponseAction = {
-					errors: [],
-					message: {
-						type: "error",
-						text: `HTTP error! status: ${response.status} resposta: ${res}`,
-					},
-				};
-				console.log(res);
-				return responseServer;
-			}
-
-			// atualiza a requisição no cache
-			revalidateTag("transportes");
-
+		// se houver erros no servidor envia a resposta e o status da requisição
+		if (!response.ok) {
 			const responseServer: ResponseAction = {
 				errors: [],
 				message: {
-					type: "success",
-					text: "Transporte adicionado com sucesso",
-					response: res,
+					type: TipoMessage.ERROR,
+					text: `HTTP error! status: ${response.status} resposta: ${res}`,
 				},
 			};
-
+			console.log(res);
 			return responseServer;
-		} catch (error) {
-			// lança um erro se houver erros na requisição
-			const response: ResponseAction = {
-				errors: [],
-				message: {
-					type: "error",
-					text: `Erro ao adicionar o transporte: : ${error}`,
-				},
-			};
-			console.log(validation.data);
-			return response;
 		}
-	} else {
-		// se a validação falhar retorna um array de erros
-		const response: ResponseAction = {
-			errors: validation.error.issues,
-			message: {},
+
+		// atualiza a requisição no cache
+		revalidateTag("transportes");
+
+		const responseServer: ResponseAction = {
+			errors: [],
+			message: {
+				type: TipoMessage.SUCCESS,
+				text: "Transporte adicionado com sucesso",
+				response: res,
+			},
 		};
-		console.log(validation);
+
+		return responseServer;
+	} catch (error) {
+		// lança um erro se houver erros na requisição
+		const response: ResponseAction = {
+			errors: [],
+			message: {
+				type: TipoMessage.ERROR,
+				text: `Erro ao adicionar o transporte: : ${error}`,
+			},
+		};
+		console.log(error);
 		return response;
 	}
 }

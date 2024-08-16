@@ -61,7 +61,7 @@ export function SelectField({
 					</Select>
 				)}
 			/>
-			{stateError && <FieldError field={name} state={stateError} />}
+			{stateError && <FieldError field={name} errors={stateError} />}
 		</>
 	);
 }

@@ -10,7 +10,7 @@ import {
 import { GrAdd } from "react-icons/gr";
 import { useAtendimentoStore } from "@/store/useAtendimentoStore";
 import type { Empresa, Motorista, Tomador } from "@/utils/types";
-import { FormAddTransporte } from "./FormAddTransporte";
+import { FormAddTransporte } from "./add/FormAddTransporte";
 
 interface DialogAddTransporteProps {
 	empresas: Empresa[];
