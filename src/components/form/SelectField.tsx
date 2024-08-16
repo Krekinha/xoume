@@ -53,7 +53,10 @@ export function SelectField({
 							{displayItem && <SelectItem value="0">{displayItem}</SelectItem>}
 
 							{items?.map((item) => (
-								<SelectItem key={item.value} value={item.value}>
+								<SelectItem
+									key={item.label}
+									value={item?.value?.toString() as string}
+								>
 									{item.label}
 								</SelectItem>
 							))}
