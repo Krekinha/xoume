@@ -15,11 +15,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import ModalDialog, { type ModalDialogProps } from "@/components/ModalDialog";
-import {
-	useState,
-	type DialogHTMLAttributes,
-	type HtmlHTMLAttributes,
-} from "react";
+import React, { useState } from "react";
 
 interface FormAddTransporteProps {
 	empresas: Empresa[];
@@ -46,6 +42,7 @@ export function FormAddTransporte({
 	motoristas,
 	tomadores,
 }: FormAddTransporteProps) {
+	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalMessage, setModalMessage] = useState<Message>({});
 	const router = useRouter();
 	const {
@@ -94,27 +91,35 @@ export function FormAddTransporte({
 		return [];
 	};
 
+	function onClose() {
+		if (modalMessage?.type === TipoMessage.SUCCESS) {
+			console.log("success");
+			router.push("/transmanager");
+			setIsModalOpen(false);
+		}
+	}
+
 	async function onSubmit(values: z.infer<typeof schema>) {
 		console.log(values);
 
 		const res = await addTransporte(values);
-
 		console.log(res);
 
 		if (res.message?.type === TipoMessage.SUCCESS) {
 			setModalMessage(res.message);
-			//const modal = <ModalDialog message={res.message}/> as HTMLDialogElement
-			const modal = document.querySelector("#modalDialog") as HTMLDialogElement;
-
-			//adicionar
-
-			modal.showModal();
+			setIsModalOpen(true);
 		}
 	}
 
 	return (
-		<div className="h-full px-3 pb-4 overflow-y-auto">
-			<ModalDialog message={modalMessage} />
+		<div id="frmRoot" className="h-full px-3 pb-4">
+			{isModalOpen && (
+				<ModalDialog
+					isOpen={isModalOpen}
+					message={modalMessage}
+					onClose={onClose}
+				/>
+			)}
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col gap-3">
 					<ReactSelect
@@ -156,7 +161,7 @@ export function FormAddTransporte({
 						</Button>
 						<Button
 							type="submit"
-							className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white"
+							className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white shadow-md dark:shadow-black"
 						>
 							Enviar
 						</Button>
