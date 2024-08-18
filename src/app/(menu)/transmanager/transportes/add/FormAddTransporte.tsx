@@ -97,6 +97,10 @@ export function FormAddTransporte({
 			router.push("/transmanager");
 			setIsModalOpen(false);
 		}
+
+		if (modalMessage?.type === TipoMessage.ERROR) {
+			setIsModalOpen(false);
+		}
 	}
 
 	async function onSubmit(values: z.infer<typeof schema>) {
@@ -105,7 +109,7 @@ export function FormAddTransporte({
 		const res = await addTransporte(values);
 		console.log(res);
 
-		if (res.message?.type === TipoMessage.SUCCESS) {
+		if (res.message) {
 			setModalMessage(res.message);
 			setIsModalOpen(true);
 		}

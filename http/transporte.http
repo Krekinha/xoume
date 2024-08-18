@@ -60,8 +60,8 @@ Content-Type: application/json
     //"val_cte": 4000,
     //"aliquota_icms": 12,
     //"val_icms": 864.13,
-    "empresaId": 2
-    //"motoristaId": 5
+    "empresaId": 2,
+    "motoristaId": 333
 }
 
 

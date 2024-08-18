@@ -36,7 +36,7 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 		if (onClose) {
 			onClose();
 		}
-		console.log(isModalOpen);
+		console.log(message?.text);
 		setModalOpen(false);
 	};
 
@@ -95,9 +95,9 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 			<div className="flex h-0 flex-grow gap-2">
 				<div className="flex items-center">{icon()}</div>
 				<div className="flex flex-col w-full items-center rounded-md px-2 py-1 ">
-					<p className="h-full content-center overflow-hidden overflow-y-auto">
+					<span className="h-full whitespace-pre-line content-center overflow-hidden overflow-y-auto">
 						{message?.text}
-					</p>
+					</span>
 					<div className="flex justify-center mr-8">
 						<Button
 							onClick={handleCloseModal}

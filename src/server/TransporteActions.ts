@@ -9,7 +9,13 @@ import {
 import { revalidateTag } from "next/cache";
 
 const local_add = "http://localhost:3333/transportes/add";
-
+interface ErrorDetails {
+	cause?: {
+		errors?: Array<{
+			message: string;
+		}>;
+	};
+}
 export async function getTransportes() {
 	const res = await fetch(`${process.env.API_TRANSMANAGER_URL}/transportes`, {
 		next: { tags: ["transportes"] },
@@ -37,8 +43,29 @@ export async function addTransporte(
 			body: JSON.stringify(transporte),
 		});
 
+		const status = response.status;
+
+		console.log(status);
+
+		if (status === 500) {
+			const message = await response.text();
+			console.log(message);
+			const responseServer: ResponseAction = {
+				errors: [],
+				message: {
+					type: TipoMessage.ERROR,
+					text: `Erro ao adicionar transporte!\nstatus: ${status}\nresposta: ${message}`,
+					status: status,
+				},
+			};
+
+			return responseServer;
+		}
+
 		// capatura a resposta do servidor
 		const res = await response.json();
+
+		console.log(res);
 
 		// se houver erros no servidor envia a resposta e o status da requisição
 		if (!response.ok) {
@@ -46,9 +73,11 @@ export async function addTransporte(
 				errors: [],
 				message: {
 					type: TipoMessage.ERROR,
-					text: `HTTP error! status: ${response.status} resposta: ${res}`,
+					text: `HTTP error! status: ${response.status} resposta: ${res.error} | ${res.message}`,
+					status: res.statusCode,
 				},
 			};
+
 			console.log(res);
 			return responseServer;
 		}
@@ -67,15 +96,16 @@ export async function addTransporte(
 
 		return responseServer;
 	} catch (error) {
+		const errorMessage =
+			(error as ErrorDetails).cause?.errors?.[1]?.message ?? error;
 		// lança um erro se houver erros na requisição
 		const response: ResponseAction = {
 			errors: [],
 			message: {
 				type: TipoMessage.ERROR,
-				text: `Erro ao adicionar o transporte: : ${error}`,
+				text: `Erro ao adicionar o transporte: : ${errorMessage}`,
 			},
 		};
-		console.log(error);
 		return response;
 	}
 }
