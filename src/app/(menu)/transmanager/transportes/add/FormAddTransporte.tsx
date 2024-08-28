@@ -14,8 +14,9 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import ModalDialog, { type ModalDialogProps } from "@/components/ModalDialog";
+import ModalDialog from "@/components/ModalDialog";
 import React, { useState } from "react";
+import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 
 interface FormAddTransporteProps {
 	empresas: Empresa[];
@@ -148,6 +149,17 @@ export function FormAddTransporte({
 					<ReactSelect
 						name="tomadorId"
 						label="Tomador"
+						control={control}
+						register={register}
+						items={tomadorItems()}
+						placeholder="Selecione um tomador"
+						stateError={formState.errors}
+					/>
+
+					<ReactSelectCity
+						nameUf="tomadorId"
+						nameCidade=""
+						label="Origem"
 						control={control}
 						register={register}
 						items={tomadorItems()}
