@@ -8,12 +8,14 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
+//* USER
+
 model User {
-  id    String @id @default(cuid())
-  nome  String
-  email String @unique
-  roles Role[] @default([COLAB])
-  senha String
+  id     String  @id @default(cuid())
+  nome   String
+  email  String  @unique
+  roles  Role[]  @default([COLAB])
+  senha  String
   avatar String?
 
   // Relacionamentos
@@ -30,6 +32,8 @@ enum Role {
   COLAB
   FINANCE
 }
+
+//* ATENDIMENTO
 
 model Atendimento {
   id     String @id @default(cuid())
@@ -153,26 +157,82 @@ enum SituacaoEventoEvolucaoAtendimento {
   ANDAMENTO
 }
 
+//* TRANSPORTE
+
 model Transporte {
-  id     String @id @default(cuid())
-  motorista String?
-  val_frete Decimal?
+  id             Int      @id @default(autoincrement())
+  notas          Int[]
+  cte            Int?
+  uf_origem      String?
+  cidade_origem  String?
+  uf_destino     String?
+  cidade_destino String?
+  peso           Decimal?
+  val_tonelada   Decimal?
+  val_frete      Decimal?
+  val_cte        Decimal?
+  aliquota_icms  Decimal?
+  val_icms       Decimal?
 
   criadoEm     DateTime? @default(now())
   atualizadoEm DateTime?
 
   // Relacionamentos
-  empresa Empresa?  @relation("transporteEmpresa", fields: [empresaId], references: [id])
+  cteComplementar CteComplementar? // 1 para 1
+  motorista       Motorista?       @relation(fields: [motoristaId], references: [id])
+  tomador         Tomador?         @relation("transporteTomador", fields: [tomadorId], references: [id])
+  empresa         Empresa          @relation("transporteEmpresa", fields: [empresaId], references: [id])
 
   // Chave
-  empresaId       String?
+  motoristaId Int?
+  empresaId   Int
+  tomadorId   Int?
+}
+
+model CteComplementar {
+  id            Int      @id @default(autoincrement())
+  cte           Int
+  peso          Decimal?
+  val_tonelada  Decimal?
+  val_frete     Decimal?
+  val_cte       Decimal
+  aliquota_icms Decimal?
+  val_icms      Decimal?
+
+  criadoEm     DateTime? @default(now())
+  atualizadoEm DateTime?
+
+  // Relacionamentos
+  transporte   Transporte @relation(fields: [transporteId], references: [id])
+  // Chave
+  transporteId Int        @unique
 }
 
 model Empresa {
-  id          String       @id @default(cuid())
-  razaoNome   String
-  cnpjCpf     String?      @unique
+  id        Int     @id @default(autoincrement())
+  razaoNome String
+  cnpjCpf   String? @unique
 
   // Relacionamentos
+  motoristas        Motorista[]
   transporteEmpresa Transporte[] @relation("transporteEmpresa")
+}
+
+model Motorista {
+  id   Int     @id @default(autoincrement())
+  nome String
+  cpf  String? @unique
+
+  // Relacionamentos
+  empresas    Empresa[]
+  transportes Transporte[]
+}
+
+model Tomador {
+  id        Int     @id @default(autoincrement())
+  razaoNome String
+  cnpjCpf   String? @unique
+
+  // Relacionamentos
+  transporteTomador Transporte[] @relation("transporteTomador")
 }

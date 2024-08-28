@@ -219,6 +219,13 @@ export type ResponseAction = {
 	message?: Message;
 };
 
+export type ErrorResponse = {
+	code?: string;
+	name?: string;
+	data?: string;
+	message?: string;
+};
+
 export enum TipoMessage {
 	SUCCESS = 0,
 	ERROR = 1,

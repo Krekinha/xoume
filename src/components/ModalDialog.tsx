@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import { TipoMessage, type Message } from "@/utils/types";
+import { TipoMessage, type ErrorResponse, type Message } from "@/utils/types";
 import type React from "react";
 import { useEffect, useRef, useState, type ElementType } from "react";
 import {
@@ -18,12 +18,14 @@ import { Button } from "./ui/button";
 
 export interface ModalDialogProps {
 	//extends React.DialogHTMLAttributes<HTMLDialogElement> {
-	message?: Message;
+	err?: ErrorResponse;
+	data?: unknown;
 	onClose?: () => void;
 	isOpen: boolean;
 }
 const ModalDialog: React.FC<ModalDialogProps> = ({
-	message,
+	err,
+	data,
 	onClose,
 	isOpen,
 	//className,
@@ -36,7 +38,7 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 		if (onClose) {
 			onClose();
 		}
-		console.log(message?.text);
+		console.log(message());
 		setModalOpen(false);
 	};
 
@@ -64,19 +66,31 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 	}, [isModalOpen]);
 
 	const icon = () => {
-		if (message?.type === TipoMessage.SUCCESS) {
+		if (data) {
 			return (
 				<MdCheckCircleOutline className="flex-none h-10 w-10 text-green-600" />
 			);
 		}
 
-		if (message?.type === TipoMessage.ERROR) {
+		if (err) {
 			return (
 				<MdOutlineErrorOutline className="flex-none h-10 w-10 text-red-600" />
 			);
 		}
 
 		return <MdOutlineInfo className="flex-none h-10 w-10 text-blue-600" />;
+	};
+
+	const message = () => {
+		if (err) {
+			return err.message;
+		}
+
+		if (data) {
+			return data as string;
+		}
+
+		return "?";
 	};
 
 	return (
@@ -96,7 +110,7 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 				<div className="flex items-center">{icon()}</div>
 				<div className="flex flex-col w-full items-center rounded-md px-2 py-1 ">
 					<span className="h-full whitespace-pre-line content-center overflow-hidden overflow-y-auto">
-						{message?.text}
+						{message()}
 					</span>
 					<div className="flex justify-center mr-8">
 						<Button

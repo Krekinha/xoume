@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ReactSelect } from "@/components/form/ReactSelect";
 import { Button } from "@/components/ui/button";
-import { addTransporte } from "@/server/TransporteActions";
+import { addTransporte, addTransporteZsa } from "@/server/TransporteActions";
 import {
 	TipoMessage,
 	type Empresa,
@@ -17,6 +17,7 @@ import { z } from "zod";
 import ModalDialog from "@/components/ModalDialog";
 import React, { useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
+import { useServerAction } from "zsa-react";
 
 interface FormAddTransporteProps {
 	empresas: Empresa[];
@@ -43,8 +44,9 @@ export function FormAddTransporte({
 	motoristas,
 	tomadores,
 }: FormAddTransporteProps) {
+	const { isPending, execute, data, error } = useServerAction(addTransporteZsa);
 	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [modalMessage, setModalMessage] = useState<Message>({});
+	const [modalResponse, setModalResponse] = useState<any>({});
 	const router = useRouter();
 	const {
 		register,
@@ -93,13 +95,12 @@ export function FormAddTransporte({
 	};
 
 	function onClose() {
-		if (modalMessage?.type === TipoMessage.SUCCESS) {
-			console.log("success");
+		if (data) {
 			router.push("/transmanager");
 			setIsModalOpen(false);
 		}
 
-		if (modalMessage?.type === TipoMessage.ERROR) {
+		if (error) {
 			setIsModalOpen(false);
 		}
 	}
@@ -107,21 +108,29 @@ export function FormAddTransporte({
 	async function onSubmit(values: z.infer<typeof schema>) {
 		console.log(values);
 
-		const res = await addTransporte(values);
-		console.log(res);
+		const [data, err] = await execute(values);
 
-		if (res.message) {
-			setModalMessage(res.message);
-			setIsModalOpen(true);
-		}
+		console.log(data);
+		console.log(err);
+
+		// const res = await addTransporte(values);
+		// console.log(res);
+
+		setModalResponse({ data: data, err: err });
+		setIsModalOpen(true);
+		// if (res.message) {
+		// 	setModalMessage(res.message);
+		// 	setIsModalOpen(true);
+		// }
 	}
 
 	return (
-		<div id="frmRoot" className="h-full px-3 pb-4">
+		<div className="h-full px-3 pb-4">
 			{isModalOpen && (
 				<ModalDialog
 					isOpen={isModalOpen}
-					message={modalMessage}
+					data={modalResponse.data}
+					err={modalResponse.err}
 					onClose={onClose}
 				/>
 			)}
@@ -170,7 +179,7 @@ export function FormAddTransporte({
 					<div className="flex justify-center gap-2">
 						<Button
 							type="button"
-							onClick={() => router.push("/transmanager")}
+							onClick={() => console.log("/transmanager")} //{() => router.push("/transmanager")}
 							className="bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 dark:text-white"
 						>
 							Cancelar
