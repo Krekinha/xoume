@@ -4,13 +4,7 @@ import { useRouter } from "next/navigation";
 import { ReactSelect } from "@/components/form/ReactSelect";
 import { Button } from "@/components/ui/button";
 import { addTransporte, addTransporteZsa } from "@/server/TransporteActions";
-import {
-	TipoMessage,
-	type Empresa,
-	type Message,
-	type Motorista,
-	type Tomador,
-} from "@/utils/types";
+import type { Empresa, Motorista, Tomador } from "@/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -48,15 +42,9 @@ export function FormAddTransporte({
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalResponse, setModalResponse] = useState<any>({});
 	const router = useRouter();
-	const {
-		register,
-		control,
-		getValues,
-		setValue,
-		reset,
-		handleSubmit,
-		formState,
-	} = useForm<z.infer<typeof schema>>({
+	const { register, control, handleSubmit, formState } = useForm<
+		z.infer<typeof schema>
+	>({
 		resolver: zodResolver(schema),
 		defaultValues: {
 			empresaId: 0,
@@ -179,7 +167,7 @@ export function FormAddTransporte({
 					<div className="flex justify-center gap-2">
 						<Button
 							type="button"
-							onClick={() => console.log("/transmanager")} //{() => router.push("/transmanager")}
+							onClick={() => router.push("/transmanager")}
 							className="bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 dark:text-white"
 						>
 							Cancelar

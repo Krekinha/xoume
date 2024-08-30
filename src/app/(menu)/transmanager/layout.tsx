@@ -1,10 +1,10 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
-import Sidebar from "@/components/Sidebar";
 import type { Sidemenu } from "@/utils/types";
 import { SvgConfiguracoes } from "@/components/svg/SvgConfiguracoes";
 import Providers from "@/context/Providers";
+import { cn } from "@/lib/utils";
 
 export const metadata = {
 	title: "XOUME - TRANSMANAGER",
@@ -43,14 +43,19 @@ export default async function Layout({
 	 * a sessão como parâmetro, que será compartilhadas nas demais rotas
 	 */
 	return (
-		<section>
+		<main
+			className={cn(
+				"grid w-full grid-cols-1 bg-green-500",
+				//"transition duration-700 hover:animate-out",
+			)}
+		>
 			<Providers>
 				<NextAuthSessionProvider session={session}>
-					<Sidebar sidemenu={menu} session={session} />
+					{/* <Sidebar sidemenu={menu} session={session} /> */}
 					{children}
 					{/* {children} */}
 				</NextAuthSessionProvider>
 			</Providers>
-		</section>
+		</main>
 	);
 }

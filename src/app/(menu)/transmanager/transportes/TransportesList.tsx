@@ -29,7 +29,7 @@ export function TransportesList({ transportes }: TransportesProps) {
 	//if (error) <h2>{error.message}</h2>;
 	//if (data)
 	return (
-		<div className="space-y-3">
+		<div className="space-y-3 overflow-auto">
 			{transportes.map((transporte: Transporte) => (
 				<ul key={transporte.id}>
 					<TransporteListItem.Root>

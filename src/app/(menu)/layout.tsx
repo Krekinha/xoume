@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
 import MainNavbar from "@/components/MainNavbar";
+import Sidebar from "@/components/Sidebar";
 /**
  * Neste arquivo irei determinar o padrão de layout para todas as rotas do grupo (menu)
  * e configurar parâmetros que serão compartilhados com essa rotas (metadados,
@@ -32,21 +33,29 @@ export default async function RootLayout({ children }: any) {
 	 * a sessão como parâmetro, que será compartilhadas nas demais rotas
 	 */
 	return (
-		<html lang="en" suppressHydrationWarning>
-			<body>
-				{/* <ReactQueryClientProvider> */}
+		// <html lang="en" suppressHydrationWarning>
+		<html
+			suppressHydrationWarning
+			lang="en"
+			className="fixed overflow-hidden h-full dark"
+		>
+			<body className="fixed overflow-hidden w-full min-h-full flex text-gray-900 dark:text-white bg-white dark:bg-transparent">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"
-					enableSystem
-					disableTransitionOnChange
+					//enableSystem
+					//disableTransitionOnChange
 				>
 					<NextAuthSessionProvider session={session}>
-						<MainNavbar />
-						{children}
+						<div className="flex flex-col flex-none w-full">
+							<MainNavbar />
+							<div className="flex flex-row">
+								<Sidebar session={session} />
+								{children}
+							</div>
+						</div>
 					</NextAuthSessionProvider>
 				</ThemeProvider>
-				{/* </ReactQueryClientProvider> */}
 			</body>
 		</html>
 	);

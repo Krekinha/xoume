@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { ToggleTheme } from "@/components/ToggleTheme";
 import { ToggleMainSidebar } from "./ToggleMainSidebar";
+import Media from "./Media";
 /**
  * Esse Navbar é o menu principal do site. Estará visível em
  * todas as rotas que necessite de login
@@ -16,7 +17,8 @@ interface MainNavbarProps {
 
 export default function MainNavbar({ modulo }: MainNavbarProps) {
 	return (
-		<nav className="fixed top-0 z-50 w-full bg-gray-900 border-b border-gray-700">
+		// <header className="fixed top-0 z-50 w-full bg-gray-900 border-b border-gray-700">
+		<header className="z-50 w-full bg-gray-900 border-b border-gray-700">
 			<div className="px-3 pt-2 lg:px-5 lg:pl-3">
 				<div className="flex w-full gap-2 justify-between">
 					<div className="flex gap-2 ">
@@ -52,6 +54,7 @@ export default function MainNavbar({ modulo }: MainNavbarProps) {
 								</span>
 							</div>
 							<div>
+								<Media />
 								<span
 									className="text-[0.8rem] sm:text-sm text-violet-300 flex 
                   font-semibold drop-shadow-[0_1.2px_1.2px_rgba(0,0,0,0.2)] shadow-slate-500 uppercase"
@@ -96,6 +99,6 @@ export default function MainNavbar({ modulo }: MainNavbarProps) {
 					</div>
 				</div>
 			</div>
-		</nav>
+		</header>
 	);
 }

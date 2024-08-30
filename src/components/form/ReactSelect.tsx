@@ -1,10 +1,9 @@
 "use client";
-import Select, { components, type DropdownIndicatorProps } from "react-select";
+import Select, { components } from "react-select";
 import type { SelectItemProps } from "@/utils/types";
 import {
 	Controller,
 	type Control,
-	type FieldValues,
 	type UseFormRegister,
 } from "react-hook-form";
 

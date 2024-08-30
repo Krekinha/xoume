@@ -24,7 +24,7 @@ export default function Home() {
 	}
 
 	return (
-		<div className=" h-screen dark:bg-gray-800 pt-16 pl-6 bg-slate-200 flex justify-start max-sm:flex-col max-sm:items-center gap-4">
+		<div className=" h-screen w-full dark:bg-gray-800 pt-16 pl-6 bg-slate-200 flex justify-start max-sm:flex-col max-sm:items-center gap-4">
 			<MainCard.Root link="/transmanager">
 				<MainCard.Header>
 					<MainCard.Icon icon={FcInTransit} />

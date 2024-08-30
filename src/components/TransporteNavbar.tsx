@@ -7,7 +7,7 @@ import { useRouter } from "next/navigation";
 export default function TransporteNavbar() {
 	const router = useRouter();
 	return (
-		<nav className="navbar p-4 sm:ml-64 fixed top-0 w-full mt-11 py-2 shadow-sm bg-white dark:bg-zinc-900">
+		<nav className="p-4 w-full py-2 shadow-sm bg-white dark:bg-zinc-900">
 			<button
 				onClick={() => router.push("/transmanager/transportes/add")}
 				className={cn(

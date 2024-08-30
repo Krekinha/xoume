@@ -1,8 +1,10 @@
 "use client";
 
+import { cn } from "@/lib/utils";
 import type { Session, Sidemenu } from "@/utils/types";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useEffect, useState } from "react";
 
 //import { useSidemenuStore } from "@/store/useSidemenuStore";
 interface ISidemenu {
@@ -16,14 +18,49 @@ export default function Sidebar({ sidemenu, session }: ISidemenu) {
 	 * @author Krekinha
 	 * @version 1.0
 	 */
+
 	const pathname = usePathname();
+	const [width, setWidth] = useState(0);
+
+	useEffect(() => {
+		const handleResize = () => {
+			if (typeof window !== "undefined") {
+				setWidth(window.innerWidth);
+			}
+		};
+
+		window.addEventListener("resize", handleResize);
+		handleResize(); // Executa uma vez para iniciar com a largura inicial
+
+		return () => window.removeEventListener("resize", handleResize);
+	}, []);
+
+	function isOpen() {
+		// sm: até 640px
+		// md: até 768px
+		// lg: até 1024px
+
+		if (width >= 640) {
+			console.log(width, "px: open");
+			return "open";
+		}
+		console.log(width, "px: closed");
+		return "closed";
+	}
 
 	return (
 		<aside
-			id="logo-sidebar"
-			className="fixed top-0 left-0 z-40 w-64 h-screen border-r pt-20 transition-transform -translate-x-full bg-gray-900 border-gray-700 sm:translate-x-0"
-			aria-label="Sidebar"
-			aria-hidden="true"
+			// className={`${pathname === "/" ? "hidden" : "z-40 sm:inline-flex sm:min-w-64 h-full border-r bg-gray-900 border-gray-700 hidden"}`}
+			className={cn(
+				"inline-flex z-40 h-full border-r bg-gray-900 border-gray-700",
+				"inset-y-0 left-0 sm:w-64 sm:min-w-64 w-0",
+				"transition ease-in-out",
+				"data-[state=open]:animate-in",
+				"data-[state=closed]:animate-out",
+				"data-[state=open]:slide-in-from-left data-[state=open]:duration-500",
+				"data-[state=closed]:slide-out-to-left data-[state=closed]:duration-300",
+			)}
+			data-state={isOpen()}
 		>
 			<div className="h-full px-3 pb-4 overflow-y-auto">
 				{sidemenu?.menu?.map((menu) => (
