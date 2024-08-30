@@ -8,10 +8,10 @@ import type { Empresa, Motorista, Tomador } from "@/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import ModalDialog from "@/components/ModalDialog";
 import React, { useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
+import ModalDialog from "@/components/transmanager/ModalDialog";
 
 interface FormAddTransporteProps {
 	empresas: Empresa[];

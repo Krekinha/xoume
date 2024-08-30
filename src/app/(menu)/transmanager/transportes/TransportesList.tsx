@@ -1,10 +1,10 @@
 "use client";
 import type { Transporte } from "@/utils/types";
-import { TransporteListItem } from "@/components/TransporteListItem";
 import { MdFactory } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";
 import { RiWeightFill } from "react-icons/ri";
 import { PiInvoiceBold } from "react-icons/pi";
+import { TransporteListItem } from "@/components/transmanager/TransporteListItem";
 //import { getTransportes } from "@/server/TransporteActions";
 //import { useQuery } from "@tanstack/react-query";
 

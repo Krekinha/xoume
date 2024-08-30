@@ -27,19 +27,32 @@ const config = {
 					from: { height: "var(--radix-accordion-content-height)" },
 					to: { height: "0" },
 				},
-				slide: {
+				slideIn: {
 					from: {
-						width: "100%",
+						width: "0px",
+						"min-width": "0px",
 					},
 					to: {
-						width: "calc(100% - 256px)",
+						width: "256px",
+						"min-width": "256px",
+					},
+				},
+				slideOut: {
+					from: {
+						width: "256px",
+						"min-width": "256px",
+					},
+					to: {
+						width: "0px",
+						"min-width": "0px",
 					},
 				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
-				slide: "slide 1s ease-in-out",
+				slideIn: "slideIn 0.5s ease-in",
+				slideOut: "slideOut 0.5s ease-out",
 			},
 		},
 	},

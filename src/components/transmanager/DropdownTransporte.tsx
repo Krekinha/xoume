@@ -1,6 +1,4 @@
 "use client";
-
-import { transporteService } from "@/services/transporteService";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { AiFillEdit } from "react-icons/ai";
 import { MoreHorizontal } from "lucide-react";

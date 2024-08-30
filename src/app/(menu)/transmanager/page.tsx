@@ -4,7 +4,7 @@ import { Suspense } from "react";
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import { TransportesList } from "./transportes/TransportesList";
 import { getTransportes } from "@/server/TransporteActions";
-import TransporteNavbar from "@/components/TransporteNavbar";
+import TransporteNavbar from "@/components/transmanager/TransporteNavbar";
 
 export default async function Page() {
 	const transportes = await getTransportes();

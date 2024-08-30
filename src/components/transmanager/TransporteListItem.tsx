@@ -1,12 +1,11 @@
-import { DropdownTransporte } from "@/components/DropdownTransporte";
-import { cn } from "@/lib/utils";
+import { DropdownTransporte } from "@/components/transmanager/DropdownTransporte";
 import type { Transporte } from "@/utils/types";
 import type React from "react";
-import { useState, type ElementType, type ReactNode } from "react";
+import type { ElementType, ReactNode } from "react";
 import { FaTruck, FaUser } from "react-icons/fa6";
 import { FaHashtag } from "react-icons/fa";
 import { Separator } from "./ui/separator";
-import { ComplementoItem } from "./ComplementoItem";
+import { ComplementoItem } from "./transmanager/ComplementoItem";
 
 /**
  * Item da lista de transportes/viagens cadastradas.

@@ -76,7 +76,7 @@ export default function AvatarMenuSide({ session }: any) {
 							{/* Outros Menus */}
 
 							{generalMenuItems.map(({ label, icon, shortcut, link }, i) => (
-								<Link key={`${label}-${i}`} href={link} className="font-medium">
+								<Link key={link} href={link} className="font-medium">
 									<DropdownMenuPrimitive.Item
 										className={clsx(
 											"flex cursor-default select-none items-center rounded-md px-2 py-2 text-xs outline-none",
