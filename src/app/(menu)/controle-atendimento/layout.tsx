@@ -1,7 +1,7 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
-import Sidebar from "@/components/Sidebar";
+import MainSidebar from "@/components/Sidebar";
 import type { Sidemenu } from "@/utils/types";
 import SvgAtendimentos from "./SvgAtendimentos";
 import { SvgAtividades } from "@/components/svg/SvgAtividades";
@@ -52,7 +52,7 @@ export default async function RootLayout({
 	return (
 		<Providers>
 			<NextAuthSessionProvider session={session}>
-				<Sidebar sidemenu={menu} session={session} />
+				<MainSidebar sidemenu={menu} session={session} />
 				{children}
 			</NextAuthSessionProvider>
 		</Providers>

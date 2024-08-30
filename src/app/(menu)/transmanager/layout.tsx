@@ -42,7 +42,7 @@ export default async function Layout({
 	 * a sessão como parâmetro, que será compartilhadas nas demais rotas
 	 */
 	return (
-		<main className="grid w-full grid-cols-1 bg-green-500">
+		<main className="grid h-full w-full grid-cols-1 bg-green-500">
 			<Providers>
 				<NextAuthSessionProvider session={session}>
 					{/* <Sidebar sidemenu={menu} session={session} /> */}

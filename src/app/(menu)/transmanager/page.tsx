@@ -12,14 +12,11 @@ export default async function Page() {
 	return (
 		<>
 			<TransporteNavbar />
-			{/* em telas sm a margem recua 256px apartir da esquerda para entrada do sidebar */}
-			<div className="p-4">
-				<ErrorBoundary FallbackComponent={FallbackFetch}>
-					<Suspense fallback={<LoadingSkeleton model={1} />}>
-						<TransportesList transportes={transportes} />
-					</Suspense>
-				</ErrorBoundary>
-			</div>
+			<ErrorBoundary FallbackComponent={FallbackFetch}>
+				<Suspense fallback={<LoadingSkeleton model={1} />}>
+					<TransportesList transportes={transportes} />
+				</Suspense>
+			</ErrorBoundary>
 		</>
 	);
 }

@@ -7,12 +7,12 @@ import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 
 //import { useSidemenuStore } from "@/store/useSidemenuStore";
-interface ISidemenu {
+interface MainSidebarProps {
 	sidemenu?: Sidemenu;
 	session?: Session;
 }
 
-export default function Sidebar({ sidemenu, session }: ISidemenu) {
+export default function MainSidebar({ sidemenu, session }: MainSidebarProps) {
 	/**
 	 * etc
 	 * @author Krekinha

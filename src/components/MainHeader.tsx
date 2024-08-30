@@ -11,14 +11,14 @@ import Media from "./Media";
  * @version 1.0
  */
 
-interface MainNavbarProps {
+interface MainHeaderProps {
 	modulo?: string;
 }
 
-export default function MainNavbar({ modulo }: MainNavbarProps) {
+export default function MainHeader({ modulo }: MainHeaderProps) {
 	return (
 		// <header className="fixed top-0 z-50 w-full bg-gray-900 border-b border-gray-700">
-		<header className="z-50 w-full bg-gray-900 border-b border-gray-700">
+		<header className="h-full w-full row-span-1 bg-gray-900 border-b border-gray-700">
 			<div className="px-3 pt-2 lg:px-5 lg:pl-3">
 				<div className="flex w-full gap-2 justify-between">
 					<div className="flex gap-2 ">

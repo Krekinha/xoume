@@ -4,8 +4,8 @@ import type React from "react";
 import type { ElementType, ReactNode } from "react";
 import { FaTruck, FaUser } from "react-icons/fa6";
 import { FaHashtag } from "react-icons/fa";
-import { Separator } from "./ui/separator";
-import { ComplementoItem } from "./transmanager/ComplementoItem";
+import { Separator } from "../ui/separator";
+import { ComplementoItem } from "./ComplementoItem";
 
 /**
  * Item da lista de transportes/viagens cadastradas.

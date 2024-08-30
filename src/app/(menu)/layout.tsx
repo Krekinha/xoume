@@ -5,8 +5,8 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
-import MainNavbar from "@/components/MainNavbar";
-import Sidebar from "@/components/Sidebar";
+import MainHeader from "@/components/MainHeader";
+import MainSidebar from "@/components/MainSidebar";
 /**
  * Neste arquivo irei determinar o padrão de layout para todas as rotas do grupo (menu)
  * e configurar parâmetros que serão compartilhados com essa rotas (metadados,
@@ -34,12 +34,8 @@ export default async function RootLayout({ children }: any) {
 	 */
 	return (
 		// <html lang="en" suppressHydrationWarning>
-		<html
-			suppressHydrationWarning
-			lang="en"
-			className="fixed overflow-hidden h-full dark"
-		>
-			<body className="fixed overflow-hidden w-full min-h-full flex text-gray-900 dark:text-white bg-white dark:bg-transparent">
+		<html suppressHydrationWarning lang="en" className="h-screen dark">
+			<body className="h-full w-full overflow-y-hidden text-gray-900 dark:text-white bg-white dark:bg-transparent">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"
@@ -47,11 +43,13 @@ export default async function RootLayout({ children }: any) {
 					//disableTransitionOnChange
 				>
 					<NextAuthSessionProvider session={session}>
-						<div className="flex flex-col flex-none w-full">
-							<MainNavbar />
-							<div className="flex flex-row">
-								<Sidebar session={session} />
-								{children}
+						<div className="grid grid-flow-row grid-rows-10 h-full w-full">
+							<MainHeader />
+							<div className="h-full row-span-9">
+								<div className="flex flex-row h-full">
+									<MainSidebar session={session} />
+									{children}
+								</div>
 							</div>
 						</div>
 					</NextAuthSessionProvider>

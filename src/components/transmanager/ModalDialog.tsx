@@ -1,14 +1,13 @@
 import { cn } from "@/lib/utils";
-import { TipoMessage, type ErrorResponse, type Message } from "@/utils/types";
+import type { ErrorResponse } from "@/utils/types";
 import type React from "react";
 import { useEffect, useRef, useState, type ElementType } from "react";
 import {
 	MdCheckCircleOutline,
-	MdError,
 	MdOutlineErrorOutline,
 	MdOutlineInfo,
 } from "react-icons/md";
-import { Button } from "./ui/button";
+import { Button } from "../ui/button";
 
 /**
  * Componente card personalizado para exibir os módulos da aplicação.
