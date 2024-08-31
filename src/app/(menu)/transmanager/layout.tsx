@@ -1,28 +1,10 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
-import type { Sidemenu } from "@/utils/types";
-import { SvgConfiguracoes } from "@/components/svg/SvgConfiguracoes";
 import Providers from "@/context/Providers";
 
 export const metadata = {
 	title: "XOUME - TRANSMANAGER",
-};
-
-const menu: Sidemenu = {
-	modulo: "Transmanager",
-	menu: [
-		{
-			label: "Transportes",
-			icon: <SvgConfiguracoes />,
-			link: "/transmanager",
-		},
-		{
-			label: "Configurações",
-			icon: <SvgConfiguracoes />,
-			link: "/transmanager/configuracoes",
-		},
-	],
 };
 
 export default async function Layout({
@@ -42,7 +24,7 @@ export default async function Layout({
 	 * a sessão como parâmetro, que será compartilhadas nas demais rotas
 	 */
 	return (
-		<main className="grid h-full w-full grid-cols-1 bg-green-500">
+		<main className="grid h-full w-full grid-cols-1 bg-black/30">
 			<Providers>
 				<NextAuthSessionProvider session={session}>
 					{/* <Sidebar sidemenu={menu} session={session} /> */}

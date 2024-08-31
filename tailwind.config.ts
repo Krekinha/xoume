@@ -31,20 +31,28 @@ const config = {
 					from: {
 						width: "0px",
 						"min-width": "0px",
+						display: "none",
+						opacity: "0",
 					},
 					to: {
 						width: "256px",
 						"min-width": "256px",
+						display: "inline-flex",
+						opacity: "1",
 					},
 				},
 				slideOut: {
 					from: {
 						width: "256px",
 						"min-width": "256px",
+						opacity: "1",
+						display: "inline-flex",
 					},
 					to: {
 						width: "0px",
 						"min-width": "0px",
+						opacity: "0.5",
+						display: "none",
 					},
 				},
 			},

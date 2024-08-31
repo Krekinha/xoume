@@ -7,6 +7,7 @@ import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
 import MainHeader from "@/components/MainHeader";
 import MainSidebar from "@/components/MainSidebar";
+import React from "react";
 /**
  * Neste arquivo irei determinar o padrão de layout para todas as rotas do grupo (menu)
  * e configurar parâmetros que serão compartilhados com essa rotas (metadados,
@@ -33,7 +34,6 @@ export default async function RootLayout({ children }: any) {
 	 * a sessão como parâmetro, que será compartilhadas nas demais rotas
 	 */
 	return (
-		// <html lang="en" suppressHydrationWarning>
 		<html suppressHydrationWarning lang="en" className="h-screen dark">
 			<body className="h-full w-full overflow-y-hidden text-gray-900 dark:text-white bg-white dark:bg-transparent">
 				<ThemeProvider

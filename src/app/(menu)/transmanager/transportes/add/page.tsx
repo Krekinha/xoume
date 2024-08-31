@@ -14,7 +14,7 @@ export default async function Page() {
 	const motoristas = await getMotoristas();
 	const tomadores = await getTomadores();
 	return (
-		<div className="p-4 sm:ml-64 mt-10">
+		<>
 			<ErrorBoundary FallbackComponent={FallbackFetch}>
 				<Suspense fallback={<LoadingSkeleton model={1} />}>
 					<FormAddTransporte
@@ -24,6 +24,6 @@ export default async function Page() {
 					/>
 				</Suspense>
 			</ErrorBoundary>
-		</div>
+		</>
 	);
 }

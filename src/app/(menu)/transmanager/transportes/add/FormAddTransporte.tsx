@@ -113,7 +113,7 @@ export function FormAddTransporte({
 	}
 
 	return (
-		<div className="h-full px-3 pb-4">
+		<div className="h-full w-full bg-zinc-800">
 			{isModalOpen && (
 				<ModalDialog
 					isOpen={isModalOpen}
@@ -123,7 +123,7 @@ export function FormAddTransporte({
 				/>
 			)}
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div className="flex flex-col gap-3">
+				<div className="flex flex-col w-full p-4 gap-3">
 					<ReactSelect
 						name="empresaId"
 						label="Empresa"
