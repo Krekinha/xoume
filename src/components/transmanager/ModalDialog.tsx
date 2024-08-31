@@ -7,7 +7,7 @@ import {
 	MdOutlineErrorOutline,
 	MdOutlineInfo,
 } from "react-icons/md";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 /**
  * Componente card personalizado para exibir os módulos da aplicação.

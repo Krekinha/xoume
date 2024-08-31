@@ -3,7 +3,6 @@ import type { SelectItemProps } from "@/utils/types";
 import {
 	Controller,
 	type Control,
-	type FieldValues,
 	type UseFormRegister,
 } from "react-hook-form";
 import {
@@ -12,10 +11,9 @@ import {
 	SelectItem,
 	SelectTrigger,
 	SelectValue,
-} from "../ui/select";
+} from "@/components/ui/select";
 import { FieldError } from "./FieldError";
-import { CommandInput } from "../ui/command";
-import { Label } from "../ui/label";
+import { Label } from "@/components/ui/label";
 
 interface SelectFieldProps {
 	name: string;
