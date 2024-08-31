@@ -39,6 +39,7 @@ export default async function RootLayout({ children }: any) {
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"
+
 					//enableSystem
 					//disableTransitionOnChange
 				>
@@ -47,7 +48,7 @@ export default async function RootLayout({ children }: any) {
 							<MainHeader />
 							<div className="h-full row-span-9">
 								<div className="flex flex-row h-full">
-									<MainSidebar session={session} />
+									<MainSidebar />
 									{children}
 								</div>
 							</div>

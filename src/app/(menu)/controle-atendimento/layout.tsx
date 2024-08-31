@@ -1,12 +1,12 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
-import MainSidebar from "@/components/Sidebar";
 import type { Sidemenu } from "@/utils/types";
 import SvgAtendimentos from "./SvgAtendimentos";
 import { SvgAtividades } from "@/components/svg/SvgAtividades";
 import { SvgConfiguracoes } from "@/components/svg/SvgConfiguracoes";
 import Providers from "@/context/Providers";
+import MainSidebar from "@/components/MainSidebar";
 
 export const metadata = {
 	title: "XOUME - CONTROLE DE ATENDIMENTO",
@@ -52,7 +52,7 @@ export default async function RootLayout({
 	return (
 		<Providers>
 			<NextAuthSessionProvider session={session}>
-				<MainSidebar sidemenu={menu} session={session} />
+				<MainSidebar />
 				{children}
 			</NextAuthSessionProvider>
 		</Providers>
