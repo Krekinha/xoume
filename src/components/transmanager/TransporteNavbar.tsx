@@ -3,11 +3,12 @@
 import { GrAdd } from "react-icons/gr";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import Media from "@/components/main/Media";
 
 export default function TransporteNavbar() {
 	const router = useRouter();
 	return (
-		<nav className="p-4 w-full py-2 shadow-sm bg-white dark:bg-zinc-900">
+		<nav className="p-4 w-full py-2 shadow-sm bg-white dark:bg-zinc-900 flex flex-row items-center gap-3">
 			<button
 				onClick={() => router.push("/transmanager/transportes/add")}
 				className={cn(
@@ -19,7 +20,9 @@ export default function TransporteNavbar() {
 				<GrAdd className="h-4 w-4" />
 			</button>
 
-			<span className="ml-2 text-sm dark:text-green-300">Novo transporte</span>
+			<span className="ml-2 text-sm dark:text-green-300">
+				<Media />
+			</span>
 		</nav>
 	);
 }

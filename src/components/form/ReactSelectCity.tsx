@@ -11,7 +11,7 @@ import {
 import { FieldError } from "./FieldError";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 import { estadosBrasil } from "@/utils/constants";
 
 const DropdownIndicator = (props: any) => {
@@ -87,8 +87,8 @@ export function ReactSelectCity({
 					control={control}
 					render={({ field: { onChange, value, ref } }) => (
 						<Select
-							//{...field}
 							{...props}
+							instanceId={useId()}
 							placeholder="UF"
 							unstyled
 							components={{ DropdownIndicator }}
@@ -173,8 +173,8 @@ export function ReactSelectCity({
 					control={control}
 					render={({ field: { onChange, value, ref } }) => (
 						<Select
-							//{...field}
 							{...props}
+							instanceId={useId()}
 							placeholder={placeholder}
 							unstyled
 							components={{ DropdownIndicator }}

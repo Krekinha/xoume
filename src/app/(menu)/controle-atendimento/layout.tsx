@@ -6,7 +6,7 @@ import SvgAtendimentos from "./SvgAtendimentos";
 import { SvgAtividades } from "@/components/svg/SvgAtividades";
 import { SvgConfiguracoes } from "@/components/svg/SvgConfiguracoes";
 import Providers from "@/context/Providers";
-import MainSidebar from "@/components/MainSidebar";
+import MainSidebar from "@/components/main/MainSidebar";
 
 export const metadata = {
 	title: "XOUME - CONTROLE DE ATENDIMENTO",

@@ -1,4 +1,4 @@
-import { MainCard } from "@/components/MainCard";
+import { MainCard } from "@/components/main/MainCard";
 import { FcInTransit } from "react-icons/fc";
 import Image from "next/image";
 

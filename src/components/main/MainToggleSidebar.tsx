@@ -1,4 +1,4 @@
-"use cliente";
+"use client";
 import { Button } from "@/components/ui/button";
 import {
 	Sheet,
@@ -6,34 +6,11 @@ import {
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sidebar";
-import { SvgToggleSidebar } from "./svg/SvgToggleSidebar";
-import type { Sidemenu } from "@/utils/types";
-import Link from "next/link";
+import { SvgToggleSidebar } from "../svg/SvgToggleSidebar";
 import { usePathname } from "next/navigation";
-import { SvgConfiguracoes } from "./svg/SvgConfiguracoes";
 import { MenuSidebar } from "./MainSidebar";
 
-// const sidemenu: Sidemenu = {
-// 	modulo: "Transmanager",
-// 	menu: [
-// 		{
-// 			label: "Transportes",
-// 			icon: <SvgConfiguracoes />,
-// 			link: "/transmanager",
-// 		},
-// 		{
-// 			label: "Configurações",
-// 			icon: <SvgConfiguracoes />,
-// 			link: "/transmanager/configuracoes",
-// 		},
-// 	],
-// };
-
-function isVisible() {
-	return true;
-}
-
-export function ToggleMainSidebar() {
+export function MainToggleSidebar() {
 	const pathname = usePathname();
 	return (
 		<Sheet modal={false}>

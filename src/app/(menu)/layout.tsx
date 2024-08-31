@@ -5,8 +5,8 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import { ThemeProvider } from "@/context/ThemeContext";
-import MainHeader from "@/components/MainHeader";
-import MainSidebar from "@/components/MainSidebar";
+import MainHeader from "@/components/main/MainHeader";
+import MainSidebar from "@/components/main/MainSidebar";
 import React from "react";
 /**
  * Neste arquivo irei determinar o padrão de layout para todas as rotas do grupo (menu)

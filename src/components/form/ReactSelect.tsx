@@ -10,7 +10,7 @@ import {
 import { FieldError } from "./FieldError";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
-import type { ReactNode } from "react";
+import { type ReactNode, useId } from "react";
 
 const DropdownIndicator = (props: any) => {
 	return (
@@ -84,6 +84,7 @@ export function ReactSelect({
 					<Select
 						//{...field}
 						{...props}
+						instanceId={useId()}
 						placeholder={placeholder}
 						unstyled
 						components={{ DropdownIndicator }}
