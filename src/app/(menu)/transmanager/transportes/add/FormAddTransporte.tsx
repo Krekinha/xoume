@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ReactSelect } from "@/components/form/ReactSelect";
 import { Button } from "@/components/ui/button";
-import { addTransporte, addTransporteZsa } from "@/server/TransporteActions";
+import { addTransporte, addTransporte } from "@/server/TransporteActions";
 import type { Empresa, Motorista, Tomador } from "@/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -38,7 +38,7 @@ export function FormAddTransporte({
 	motoristas,
 	tomadores,
 }: FormAddTransporteProps) {
-	const { isPending, execute, data, error } = useServerAction(addTransporteZsa);
+	const { isPending, execute, data, error } = useServerAction(addTransporte);
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [modalResponse, setModalResponse] = useState<any>({});
 	const router = useRouter();
