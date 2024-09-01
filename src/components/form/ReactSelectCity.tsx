@@ -175,7 +175,7 @@ export function ReactSelectCity({
 					render={({ field: { onChange, value, ref } }) => (
 						<Select
 							{...props}
-							instanceId={useId()}
+							instanceId={id}
 							placeholder={placeholder}
 							unstyled
 							components={{ DropdownIndicator }}
