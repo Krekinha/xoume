@@ -27,6 +27,7 @@ interface RadixMenuItem {
 
 export default function MainAvatarDownMenu() {
 	const { status } = useSession();
+	const id = useId();
 	const generalMenuItems: RadixMenuItem[] = [
 		{
 			label: "Perfil",
@@ -68,7 +69,7 @@ export default function MainAvatarDownMenu() {
 						{/* Outros Menus */}
 
 						{generalMenuItems.map(({ label, icon, shortcut, link }) => (
-							<Link key={useId()} href={link} className="font-medium">
+							<Link key={id} href={link} className="font-medium">
 								<DropdownMenuPrimitive.Item
 									className={cn(
 										"flex cursor-default select-none items-center rounded-md",
