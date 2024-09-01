@@ -14,7 +14,7 @@ export default async function Page() {
 			<TransporteNavbar />
 			<ErrorBoundary FallbackComponent={FallbackFetch}>
 				<Suspense fallback={<LoadingSkeleton model={1} />}>
-					<TransportesList transportes={transportes} />
+					<TransportesList />
 				</Suspense>
 			</ErrorBoundary>
 		</>
