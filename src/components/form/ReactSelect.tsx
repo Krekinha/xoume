@@ -70,6 +70,7 @@ export function ReactSelect({
 	stateError,
 	...props
 }: ReactSelectProps) {
+	const id = useId();
 	return (
 		<div>
 			{label && (
@@ -84,7 +85,7 @@ export function ReactSelect({
 					<Select
 						//{...field}
 						{...props}
-						instanceId={useId()}
+						instanceId={id}
 						placeholder={placeholder}
 						unstyled
 						components={{ DropdownIndicator }}

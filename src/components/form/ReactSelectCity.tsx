@@ -74,6 +74,7 @@ export function ReactSelectCity({
 	stateError,
 	...props
 }: ReactSelectCityProps) {
+	const id = useId();
 	return (
 		<div>
 			{label && (
@@ -88,7 +89,7 @@ export function ReactSelectCity({
 					render={({ field: { onChange, value, ref } }) => (
 						<Select
 							{...props}
-							instanceId={useId()}
+							instanceId={id}
 							placeholder="UF"
 							unstyled
 							components={{ DropdownIndicator }}
