@@ -1,7 +1,7 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
-import Providers from "@/context/Providers";
+import Providers from "@/providers/Providers";
 
 export const metadata = {
 	title: "XOUME - TRANSMANAGER",
@@ -27,9 +27,7 @@ export default async function Layout({
 		<main className="grid h-full w-full grid-cols-1 bg-black/30">
 			<Providers>
 				<NextAuthSessionProvider session={session}>
-					{/* <Sidebar sidemenu={menu} session={session} /> */}
 					{children}
-					{/* {children} */}
 				</NextAuthSessionProvider>
 			</Providers>
 		</main>

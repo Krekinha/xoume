@@ -9,7 +9,7 @@ import { createServerAction } from "zsa";
 const prisma = new PrismaClient();
 const local_add = "http://localhost:3333/transportes/add";
 
-export async function getTransportes() {
+export async function getTransportesBackup() {
 	const res = await fetch(`${process.env.API_TRANSMANAGER_URL}/transportes`, {
 		next: { tags: ["transportes"] },
 	});
@@ -19,6 +19,34 @@ export async function getTransportes() {
 	//console.log(transportes);
 	return transportes;
 }
+
+export const getTransportes = createServerAction().handler(async () => {
+	try {
+		/**
+		 * É necessário que o include seja feita em todos os relacionamentos
+		 * entre os objetos, do contrário, os elementos sem o include não
+		 * irão aparecer em componentes visuais como lista e tabelas
+		 */
+		const transportes = await prisma.transporte.findMany({
+			include: {
+				empresa: true,
+				motorista: true,
+				tomador: true,
+				cteComplementar: true,
+			},
+		});
+		return JSON.parse(JSON.stringify(transportes));
+	} catch (error: unknown) {
+		if (
+			error instanceof Prisma.PrismaClientKnownRequestError ||
+			error instanceof Prisma.PrismaClientUnknownRequestError
+		) {
+			console.log("Erro conhecido do Prisma:", error.message);
+			return new Response(error.message, { status: 500 });
+		}
+		throw error;
+	}
+});
 
 export async function delTransporte(id: number) {
 	console.log(id);
@@ -87,9 +115,6 @@ export const addTransporte = createServerAction()
 					// tomadorId: body.tomadorId,
 				},
 			});
-
-			// atualiza a requisição no cache
-			revalidateTag("transportes");
 
 			return "Transporte adicionado com sucesso";
 		} catch (error: unknown) {

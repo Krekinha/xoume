@@ -5,7 +5,7 @@ import type { Sidemenu } from "@/utils/types";
 import SvgAtendimentos from "./SvgAtendimentos";
 import { SvgAtividades } from "@/components/svg/SvgAtividades";
 import { SvgConfiguracoes } from "@/components/svg/SvgConfiguracoes";
-import Providers from "@/context/Providers";
+import Providers from "@/providers/Providers";
 import MainSidebar from "@/components/main/MainSidebar";
 
 export const metadata = {

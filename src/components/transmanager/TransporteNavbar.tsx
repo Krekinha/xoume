@@ -8,7 +8,7 @@ import Media from "@/components/main/Media";
 export default function TransporteNavbar() {
 	const router = useRouter();
 	return (
-		<nav className="p-4 w-full py-2 shadow-sm bg-white dark:bg-zinc-900 flex flex-row items-center gap-3">
+		<nav className="p-4 w-full py-2 h-min shadow-sm bg-white dark:bg-zinc-900 flex flex-row items-center gap-3">
 			<button
 				onClick={() => router.push("/transmanager/transportes/add")}
 				className={cn(

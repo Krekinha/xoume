@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ReactSelect } from "@/components/form/ReactSelect";
 import { Button } from "@/components/ui/button";
-import { addTransporte, addTransporte } from "@/server/TransporteActions";
+import { addTransporte } from "@/server/TransporteActions";
 import type { Empresa, Motorista, Tomador } from "@/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -12,6 +12,16 @@ import React, { useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
 import ModalDialog from "@/components/transmanager/ModalDialog";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
 
 interface FormAddTransporteProps {
 	empresas: Empresa[];
@@ -85,12 +95,14 @@ export function FormAddTransporte({
 	function onClose() {
 		if (data) {
 			router.push("/transmanager");
-			setIsModalOpen(false);
+			//setIsModalOpen(false);
+			console.log(data);
 		}
-
-		if (error) {
-			setIsModalOpen(false);
-		}
+		console.log("nada");
+		router.push("/transmanager");
+		// if (error) {
+		// 	setIsModalOpen(false);
+		// }
 	}
 
 	async function onSubmit(values: z.infer<typeof schema>) {
@@ -100,9 +112,6 @@ export function FormAddTransporte({
 
 		console.log(data);
 		console.log(err);
-
-		// const res = await addTransporte(values);
-		// console.log(res);
 
 		setModalResponse({ data: data, err: err });
 		setIsModalOpen(true);
@@ -114,14 +123,12 @@ export function FormAddTransporte({
 
 	return (
 		<div className="h-full w-full bg-zinc-800">
-			{isModalOpen && (
-				<ModalDialog
-					isOpen={isModalOpen}
-					data={modalResponse.data}
-					err={modalResponse.err}
-					onClose={onClose}
-				/>
-			)}
+			<ModalDialog
+				isOpen={isModalOpen}
+				data={modalResponse.data}
+				err={modalResponse.err}
+				onClose={onClose}
+			/>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col w-full p-4 gap-3">
 					<ReactSelect

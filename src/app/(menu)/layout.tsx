@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
-import { ThemeProvider } from "@/context/ThemeContext";
+import { ThemeProvider } from "@/providers/ThemeContext";
 import MainHeader from "@/components/main/MainHeader";
 import MainSidebar from "@/components/main/MainSidebar";
 import React from "react";
