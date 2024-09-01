@@ -83,7 +83,7 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 
 	return (
 		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogTrigger>Open</DialogTrigger>
+			<DialogTrigger/>
 			<DialogContent className="bg-zinc-950 border border-zinc-900">
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-4">
