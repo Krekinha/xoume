@@ -7,7 +7,7 @@ import { useState, type CSSProperties, type StyleHTMLAttributes } from "react";
 
 export default function Page() {
 	return (
-		<div className="flex flex-col gap-1 h-screen bg-red-500 p-2 max-h-screen">
+		<div className="flex flex-col gap-1 h-dvh bg-red-500 p-2">
 			<Header />
 			<Body />
 		</div>
@@ -21,8 +21,8 @@ function Body() {
 			<Aside />
 			{/* <MainSidebar /> */}
 			{/* <Article /> */}
-			<main className="flex w-full overflow-auto h-full max-h-screen flex-col bg-pink-700 p-2">
-				<div className="flex h-full max-h-screen flex-col items-center gap-1 overflow-y-auto bg-yellow-400 p-2">
+			<main className="flex w-full overflow-auto h-full flex-col bg-pink-700 p-2">
+				<div className="flex h-full flex-col items-center gap-1 overflow-y-auto bg-yellow-400 p-2">
 					<TransporteNavbar />
 					<TransportesList />
 					{/* <div className="h-full max-h-screen w-full space-y-2 overflow-y-auto rounded-lg bg-violet-700 p-2">

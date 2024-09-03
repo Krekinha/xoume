@@ -7,7 +7,7 @@ import { PiInvoiceBold } from "react-icons/pi";
 import { TransporteListItem } from "@/components/transmanager/TransporteListItem";
 import { useServerActionQuery } from "@/lib/server-action-hooks";
 import { getTransportes } from "@/server/TransporteActions";
-import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
+import QueryStatus from "@/components/main/QueryStatus";
 
 export function TransportesList() {
 	const { isLoading, isRefetching, isSuccess, isError, error, data } =
@@ -17,10 +17,13 @@ export function TransportesList() {
 		});
 	console.log(data);
 	return (
-		<div className="h-full max-h-screen w-full space-y-3 overflow-y-auto p-4">
-			{isLoading ? <LoadingSkeleton model={1} /> : ""}
-			{isRefetching ? " refetching..." : ""}
-			{isError ? `erro: ${error.message}` : ""}
+		<div className="h-full max-h-screen w-full space-y-3 overflow-y-auto p-4 overflow-x-hidden">
+			<QueryStatus
+				isLoading={isLoading}
+				isRefetching={isRefetching}
+				isError={isError}
+				error={error}
+			/>
 			{isSuccess
 				? data?.map((transporte: Transporte) => (
 						<ul key={transporte.id}>

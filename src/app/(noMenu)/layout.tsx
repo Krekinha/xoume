@@ -11,7 +11,7 @@ export default function RootLayout({
 		<html suppressHydrationWarning lang="en">
 			{/* <body className="h-screen flex flex-col"> */}
 			<body className="overflow-hidden">
-				<Providers>
+				<Providers session={null}>
 					<ThemeProvider
 						attribute="class"
 						defaultTheme="dark"

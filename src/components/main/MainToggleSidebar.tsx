@@ -1,34 +1,30 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import {
 	Sheet,
 	SheetContent,
 	SheetTitle,
 	SheetTrigger,
 } from "@/components/ui/sidebar";
-import { SvgToggleSidebar } from "../svg/SvgToggleSidebar";
 import { usePathname } from "next/navigation";
 import { MenuSidebar } from "./MainSidebar";
+import { Menu } from "lucide-react";
 
 export function MainToggleSidebar() {
 	const pathname = usePathname();
 	return (
 		<Sheet modal={false}>
 			<SheetTrigger asChild>
-				<Button
-					size={null}
-					variant={"ghost"}
+				<button
 					className={`${pathname === "/" ? "hidden" : "inline-flex"} 
-					items-center p-1 text-sm text-gray-500 rounded-lg sm:hidden hover:bg-gray-100 focus:outline-none`}
+					items-center p-1 text-sm hover:bg-none rounded-lg md:hidden focus:outline-none`}
 				>
-					{/* <span className="sr-only">Open sidebar</span> */}
-					<SvgToggleSidebar />
-				</Button>
+					<Menu className="text-gray-400 hover:text-gray-300 " />
+				</button>
 			</SheetTrigger>
 			<SheetContent
 				side={"left"}
 				aria-describedby={undefined}
-				className="bg-gray-900 sm:hidden"
+				className="bg-[#17191C] md:hidden"
 			>
 				<SheetTitle />
 				<MenuSidebar />

@@ -5,9 +5,10 @@ import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
 import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import { ThemeProvider } from "@/providers/ThemeContext";
-import MainHeader from "@/components/main/MainHeader";
 import MainSidebar from "@/components/main/MainSidebar";
 import React from "react";
+import MainHeader from "@/components/main/MainHeader";
+import Providers from "@/providers/Providers";
 /**
  * Neste arquivo irei determinar o padrão de layout para todas as rotas do grupo (menu)
  * e configurar parâmetros que serão compartilhados com essa rotas (metadados,
@@ -36,25 +37,17 @@ export default async function RootLayout({ children }: any) {
 	return (
 		<html suppressHydrationWarning lang="en" className="dark">
 			<body className="overflow-hidden">
-				<ThemeProvider
-					attribute="class"
-					defaultTheme="dark"
-
-					//enableSystem
-					//disableTransitionOnChange
-				>
-					<NextAuthSessionProvider session={session}>
-						<div className="flex flex-col h-screen max-h-screen">
-							<MainHeader />
-							<div className="flex h-full w-full max-h-screen overflow-hidden">
-								<MainSidebar />
-								<main className="flex w-full overflow-auto h-full max-h-screen flex-col">
-									{children}
-								</main>
-							</div>
+				<Providers session={session}>
+					<div className="flex flex-col h-dvh">
+						<MainHeader />
+						<div className="flex h-full w-full overflow-hidden">
+							<MainSidebar />
+							<main className="flex w-full overflow-auto h-full flex-col">
+								{children}
+							</main>
 						</div>
-					</NextAuthSessionProvider>
-				</ThemeProvider>
+					</div>
+				</Providers>
 			</body>
 		</html>
 	);

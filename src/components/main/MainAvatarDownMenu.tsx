@@ -9,6 +9,7 @@ import { FaUserCog } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
 import { signOut, useSession } from "next-auth/react";
 import { cn } from "@/lib/utils";
+import { DropdownMenuLabel } from "../ui/dropdown-menu";
 /**
  * Menu Avatar que ficará sempre visível na Navbar.
  * Os principais menus do site deverão estar aqui
@@ -26,7 +27,7 @@ interface RadixMenuItem {
 }
 
 export default function MainAvatarDownMenu() {
-	const { status } = useSession();
+	const { data: session, status } = useSession();
 	const id = useId();
 	const generalMenuItems: RadixMenuItem[] = [
 		{
@@ -66,6 +67,20 @@ export default function MainAvatarDownMenu() {
 							"bg-zinc-900 ml-4 border border-zinc-600 z-50",
 						)}
 					>
+						<DropdownMenuLabel
+							className={cn(
+								"flex cursor-default select-none items-center rounded-md",
+								"px-2 py-2 text-xs outline-none",
+								"text-gray-500",
+							)}
+						>
+							<span className="flex-grow text-sky-500">
+								{session?.user.email}
+							</span>
+						</DropdownMenuLabel>
+
+						<DropdownMenuPrimitive.Separator className="my-1 h-px bg-gray-700" />
+
 						{/* Outros Menus */}
 
 						{generalMenuItems.map(({ label, icon, shortcut, link }) => (
