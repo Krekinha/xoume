@@ -10,18 +10,17 @@ import { getTransportes } from "@/server/TransporteActions";
 import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 
 export function TransportesList() {
-	const { isLoading, isRefetching, isSuccess, data } = useServerActionQuery(
-		getTransportes,
-		{
+	const { isLoading, isRefetching, isSuccess, isError, error, data } =
+		useServerActionQuery(getTransportes, {
 			input: undefined,
 			queryKey: ["getTransportes"],
-		},
-	);
+		});
 	console.log(data);
 	return (
 		<div className="h-full max-h-screen w-full space-y-3 overflow-y-auto p-4">
 			{isLoading ? <LoadingSkeleton model={1} /> : ""}
 			{isRefetching ? " refetching..." : ""}
+			{isError ? `erro: ${error.message}` : ""}
 			{isSuccess
 				? data?.map((transporte: Transporte) => (
 						<ul key={transporte.id}>

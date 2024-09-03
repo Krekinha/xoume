@@ -55,12 +55,36 @@ const config = {
 						display: "none",
 					},
 				},
+				slideOpen: {
+					from: {
+						width: "0px",
+						display: "none",
+					},
+					to: {
+						width: "240px",
+						display: "flex",
+					},
+				},
+				slideClose: {
+					from: {
+						// width: "240px",
+						display: "flex",
+						// position: "sticky",
+					},
+					to: {
+						// width: "0px",
+						display: "none",
+						// position: "fixed",
+					},
+				},
 			},
 			animation: {
 				"accordion-down": "accordion-down 0.2s ease-out",
 				"accordion-up": "accordion-up 0.2s ease-out",
 				slideIn: "slideIn 0.5s ease-in",
 				slideOut: "slideOut 0.5s ease-out",
+				slideOpen: "slideOpen 0.4s linear",
+				slideClose: "slideClose 0.4s linear",
 			},
 		},
 	},

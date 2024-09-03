@@ -35,15 +35,11 @@ export function MenuSidebar() {
 		if (pathname.startsWith("/teste")) {
 			return transmanagerSideMenu;
 		}
-
-		if (pathname.startsWith("/layout")) {
-			return transmanagerSideMenu;
-		}
 		return null;
 	}
 
 	return (
-		<div className="h-full px-3 w-full pb-4 overflow-y-auto">
+		<div className="h-full px-3 w-full pb-4 overflow-y-auto overflow-x-hidden">
 			{sidemenu()?.menu?.map((menu) => (
 				<ul key={menu.link} className="space-y-2 font-medium">
 					<li>
@@ -51,7 +47,7 @@ export function MenuSidebar() {
 							<div
 								className={`${
 									pathname === menu.link
-										? "flex items-center p-2 text-gray-900 rounded-lg hover:bg-violet-500/15 group bg-violet-500/15"
+										? "flex items-center p-2 text-gray-900 rounded-lg border border-gray-800 cursor-default group"
 										: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-800 group"
 								} flex items-center py-2 px-4 rounded-lg mb-2`}
 							>
@@ -59,7 +55,14 @@ export function MenuSidebar() {
 									{menu.icon}
 								</div>
 
-								<span className="flex-1 ms-3 whitespace-nowrap text-gray-400">
+								{/* <span className="flex-1 ms-3 whitespace-nowrap text-gray-400"> */}
+								<span
+									className={`${
+										pathname === menu.link
+											? "flex-1 ms-3 whitespace-nowrap text-amber-600"
+											: "flex-1 ms-3 whitespace-nowrap text-gray-400"
+									}`}
+								>
 									{menu.label}
 								</span>
 								{menu.notificacao && (
@@ -79,18 +82,21 @@ export function MenuSidebar() {
 function Aside() {
 	return (
 		<div
-			id="dynamic-sidebar"
 			data-open="true"
 			data-hover="false"
 			aria-hidden="false"
-			className="z-40 transition-transform max-md:absolute border-r border-gray-700 bg-gray-900"
+			className={cn(
+				"z-40 transition-transform max-md:absolute border-r border-gray-700",
+				// "max-md:animate-slideClose",
+			)}
 		>
 			<aside
 				data-open="false"
 				className={cn(
-					"md:h-body flex w-full flex-col text-[15px] max-md:fixed",
+					"flex w-full flex-col text-[15px] max-md:fixed",
 					"max-md:inset-0 max-md:z-40 max-md:pt-16 max-md:data-[open=false]:hidden",
-					"md:sticky md:top-16 md:w-[240px] md:text-sm xl:w-[260px] pt-4",
+					"md:sticky md:top-0 md:w-[240px] md:text-sm xl:w-[260px] pt-4",
+					"md:animate-slideOpen",
 				)}
 			>
 				<MenuSidebar />
