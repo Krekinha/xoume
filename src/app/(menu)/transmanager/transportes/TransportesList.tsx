@@ -19,7 +19,7 @@ export function TransportesList() {
 	);
 	console.log(data);
 	return (
-		<div className="space-y-3 overflow-y-auto h-full p-4">
+		<div className="h-full max-h-screen w-full space-y-3 overflow-y-auto p-4">
 			{isLoading ? <LoadingSkeleton model={1} /> : ""}
 			{isRefetching ? " refetching..." : ""}
 			{isSuccess

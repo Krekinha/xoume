@@ -11,7 +11,7 @@ import MainLogo from "./MainLogo";
 
 export default function MainHeader() {
 	return (
-		<header className="z-50 h-full w-full py-2 pl-2 pr-4 row-span-1 bg-gray-900 border-b border-gray-700">
+		<header className="z-50 h-16 w-full py-2 pl-2 pr-4 row-span-1 bg-gray-900 border-b border-gray-700">
 			<div className="flex w-full h-full gap-2 justify-between">
 				<div className="flex gap-2 items-center">
 					<MainToggleSidebar />

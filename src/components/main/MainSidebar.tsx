@@ -11,15 +11,16 @@ export default function MainSidebar() {
 	if (pathname === "/") return;
 
 	return (
-		<aside
-			className={cn(
-				"sm:inline-flex z-40 h-full border-r bg-gray-900 border-gray-700",
-				"inset-y-0 sm:w-64 w-0 min-w-0 sm:min-w-64 hidden",
-				"sm:animate-slideIn animate-slideOut pt-4",
-			)}
-		>
-			<MenuSidebar />
-		</aside>
+		<Aside />
+		// <aside
+		// 	className={cn(
+		// 		"sm:inline-flex z-40 h-full border-r border-gray-700 bg-gray-900",
+		// 		"inset-y-0 sm:w-64 w-0 min-w-0 sm:min-w-64 hidden",
+		// 		"sm:animate-slideIn animate-slideOut pt-4",
+		// 	)}
+		// >
+		// 	<MenuSidebar />
+		// </aside>
 	);
 }
 
@@ -28,6 +29,14 @@ export function MenuSidebar() {
 
 	function sidemenu() {
 		if (pathname.startsWith("/transmanager")) {
+			return transmanagerSideMenu;
+		}
+
+		if (pathname.startsWith("/teste")) {
+			return transmanagerSideMenu;
+		}
+
+		if (pathname.startsWith("/layout")) {
 			return transmanagerSideMenu;
 		}
 		return null;
@@ -63,6 +72,29 @@ export function MenuSidebar() {
 					</li>
 				</ul>
 			))}
+		</div>
+	);
+}
+
+function Aside() {
+	return (
+		<div
+			id="dynamic-sidebar"
+			data-open="true"
+			data-hover="false"
+			aria-hidden="false"
+			className="z-40 transition-transform max-md:absolute border-r border-gray-700 bg-gray-900"
+		>
+			<aside
+				data-open="false"
+				className={cn(
+					"md:h-body flex w-full flex-col text-[15px] max-md:fixed",
+					"max-md:inset-0 max-md:z-40 max-md:pt-16 max-md:data-[open=false]:hidden",
+					"md:sticky md:top-16 md:w-[240px] md:text-sm xl:w-[260px] pt-4",
+				)}
+			>
+				<MenuSidebar />
+			</aside>
 		</div>
 	);
 }

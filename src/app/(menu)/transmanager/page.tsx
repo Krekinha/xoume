@@ -1,22 +1,15 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { FallbackFetch } from "./transportes/FallbackFetch";
-import { Suspense } from "react";
-import LoadingSkeleton from "@/components/ui/LoadingSkeleton";
 import { TransportesList } from "./transportes/TransportesList";
-import { getTransportes } from "@/server/TransporteActions";
 import TransporteNavbar from "@/components/transmanager/TransporteNavbar";
 
 export default async function Page() {
-	const transportes = await getTransportes();
-
 	return (
-		<>
+		<div className="flex h-full max-h-screen flex-col items-center overflow-y-auto">
 			<TransporteNavbar />
 			<ErrorBoundary FallbackComponent={FallbackFetch}>
-				<Suspense fallback={<LoadingSkeleton model={1} />}>
-					<TransportesList />
-				</Suspense>
+				<TransportesList />
 			</ErrorBoundary>
-		</>
+		</div>
 	);
 }

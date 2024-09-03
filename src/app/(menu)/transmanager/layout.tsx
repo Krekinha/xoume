@@ -24,12 +24,10 @@ export default async function Layout({
 	 * a sessão como parâmetro, que será compartilhadas nas demais rotas
 	 */
 	return (
-		<main className="grid h-full w-full grid-cols-1 bg-black/30">
-			<Providers>
-				<NextAuthSessionProvider session={session}>
-					{children}
-				</NextAuthSessionProvider>
-			</Providers>
-		</main>
+		<Providers>
+			<NextAuthSessionProvider session={session}>
+				{children}
+			</NextAuthSessionProvider>
+		</Providers>
 	);
 }

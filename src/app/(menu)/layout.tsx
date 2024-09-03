@@ -34,8 +34,8 @@ export default async function RootLayout({ children }: any) {
 	 * a sessão como parâmetro, que será compartilhadas nas demais rotas
 	 */
 	return (
-		<html suppressHydrationWarning lang="en" className="h-screen dark">
-			<body className="h-full w-full overflow-y-hidden text-gray-900 dark:text-white bg-white dark:bg-transparent">
+		<html suppressHydrationWarning lang="en" className="dark">
+			<body className="overflow-hidden">
 				<ThemeProvider
 					attribute="class"
 					defaultTheme="dark"
@@ -44,13 +44,13 @@ export default async function RootLayout({ children }: any) {
 					//disableTransitionOnChange
 				>
 					<NextAuthSessionProvider session={session}>
-						<div className="grid grid-flow-row grid-rows-10 h-full w-full">
+						<div className="flex flex-col h-screen max-h-screen">
 							<MainHeader />
-							<div className="h-full row-span-9">
-								<div className="flex flex-row h-full">
-									<MainSidebar />
+							<div className="flex h-full w-full max-h-screen overflow-hidden">
+								<MainSidebar />
+								<main className="flex w-full overflow-auto h-full max-h-screen flex-col">
 									{children}
-								</div>
+								</main>
 							</div>
 						</div>
 					</NextAuthSessionProvider>
