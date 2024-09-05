@@ -15,7 +15,6 @@ export function TransportesList() {
 			input: undefined,
 			queryKey: ["getTransportes"],
 		});
-	console.log(data);
 	return (
 		<div className="h-full max-h-screen w-full space-y-3 overflow-y-auto p-4 overflow-x-hidden">
 			<QueryStatus

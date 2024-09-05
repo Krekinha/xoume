@@ -1,5 +1,3 @@
-import { FormAddTransporte } from "../transportes/add/FormAddTransporte";
-
 export default async function Page() {
 	/**
 	 * etc

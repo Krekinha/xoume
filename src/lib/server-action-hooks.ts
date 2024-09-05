@@ -1,4 +1,3 @@
-import { getMunicipiosByUf } from "@/server/OthersActions";
 import { useInfiniteQuery, useMutation, useQuery } from "@tanstack/react-query";
 import {
 	createServerActionsKeyFactory,
@@ -8,6 +7,9 @@ import {
 export const QueryKeyFactory = createServerActionsKeyFactory({
 	getTransportes: () => ["getTransportes"],
 	getMunicipiosByUf: () => ["getMunicipiosByUf"],
+	getEmpresas: () => ["getEmpresas"],
+	getMotoristas: () => ["getMotoristas"],
+	getTomadores: () => ["getTomadores"],
 });
 
 const {

@@ -12,12 +12,10 @@ import React from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
 import { useModalDialogContext } from "@/providers/ModaDialogProvider";
-
-interface FormAddTransporteProps {
-	empresas: Empresa[];
-	motoristas: Motorista[];
-	tomadores: Tomador[];
-}
+import { useServerActionQuery } from "@/lib/server-action-hooks";
+import { getEmpresas } from "@/server/EmpresaActions";
+import { getMotoristas } from "@/server/MotoristaActions";
+import { getTomadores } from "@/server/TomadorActions";
 
 // define o schema de validação dos dados recebidos pelo form cliente
 const schema = z.object({
@@ -47,11 +45,22 @@ const schema = z.object({
 		.optional(),
 });
 
-export function FormAddTransporte({
-	empresas,
-	motoristas,
-	tomadores,
-}: FormAddTransporteProps) {
+export function FormAddTransporte() {
+	const { data: empresas } = useServerActionQuery(getEmpresas, {
+		input: undefined,
+		queryKey: ["getEmpresas"],
+	});
+
+	const { data: motoristas } = useServerActionQuery(getMotoristas, {
+		input: undefined,
+		queryKey: ["getMotoristas"],
+	});
+
+	const { data: tomadores } = useServerActionQuery(getTomadores, {
+		input: undefined,
+		queryKey: ["getTomadores"],
+	});
+
 	const { isPending, execute, data, error } = useServerAction(addTransporte);
 	const { setModalDialog } = useModalDialogContext();
 	const router = useRouter();
@@ -67,7 +76,7 @@ export function FormAddTransporte({
 
 	const empresaItems = () => {
 		if (empresas) {
-			return empresas.map((empresa) => ({
+			return empresas.map((empresa: Empresa) => ({
 				label: empresa.razaoNome,
 				value: empresa.id,
 			}));
@@ -77,7 +86,7 @@ export function FormAddTransporte({
 
 	const motoristaItems = () => {
 		if (motoristas) {
-			return motoristas.map((motorista) => ({
+			return motoristas.map((motorista: Motorista) => ({
 				label: motorista.nome,
 				value: motorista.id,
 			}));
@@ -87,7 +96,7 @@ export function FormAddTransporte({
 
 	const tomadorItems = () => {
 		if (tomadores) {
-			return tomadores.map((tomador) => ({
+			return tomadores.map((tomador: Tomador) => ({
 				label: tomador.razaoNome,
 				value: tomador.id,
 			}));

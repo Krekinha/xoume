@@ -1,6 +1,6 @@
 import { ErrorBoundary } from "react-error-boundary";
 import { FallbackFetch } from "./transportes/FallbackFetch";
-import { TransportesList } from "./transportes/TransportesList";
+import { TransportesList } from "@/components/transmanager/TransportesList";
 import TransporteNavbar from "@/components/transmanager/TransporteNavbar";
 
 export default async function Page() {

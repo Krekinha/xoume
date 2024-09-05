@@ -30,48 +30,11 @@ export const getTransportes = createServerAction().handler(async () => {
 			error instanceof Prisma.PrismaClientUnknownRequestError
 		) {
 			console.log("Erro conhecido do Prisma:", error.message);
-			return new Response(error.message, { status: 500 });
+			return new Error(error.message);
 		}
 		throw error;
 	}
 });
-
-export const delTransporte = createServerAction()
-	.input(
-		z.object({
-			id: z.coerce
-				.number()
-				.positive({ message: "O Id informado não é um número válido" }),
-		}),
-	)
-	.handler(async ({ input }) => {
-		console.log(input.id);
-
-		try {
-			const transporte = await prisma.transporte.delete({
-				where: {
-					id: input.id,
-				},
-				select: {
-					cte: true,
-					notas: true,
-				},
-			});
-			console.log(transporte);
-			return {
-				message: `Transporte referente ao CT-e "${transporte.cte ?? "(não informado)"}", nota(s) "${transporte.notas.length > 0 ? transporte.notas : "(não informado)"}" excluído com sucesso!`,
-			};
-		} catch (error: unknown) {
-			if (
-				error instanceof Prisma.PrismaClientKnownRequestError ||
-				error instanceof Prisma.PrismaClientUnknownRequestError
-			) {
-				console.log("Erro conhecido do Prisma:", error.message);
-				throw error;
-			}
-			throw error;
-		}
-	});
 
 export const addTransporte = createServerAction()
 	.input(
@@ -137,6 +100,43 @@ export const addTransporte = createServerAction()
 				throw error;
 			}
 			console.log(error);
+			throw error;
+		}
+	});
+
+export const delTransporte = createServerAction()
+	.input(
+		z.object({
+			id: z.coerce
+				.number()
+				.positive({ message: "O Id informado não é um número válido" }),
+		}),
+	)
+	.handler(async ({ input }) => {
+		console.log(input.id);
+
+		try {
+			const transporte = await prisma.transporte.delete({
+				where: {
+					id: input.id,
+				},
+				select: {
+					cte: true,
+					notas: true,
+				},
+			});
+			console.log(transporte);
+			return {
+				message: `Transporte referente ao CT-e "${transporte.cte ?? "(não informado)"}", nota(s) "${transporte.notas.length > 0 ? transporte.notas : "(não informado)"}" excluído com sucesso!`,
+			};
+		} catch (error: unknown) {
+			if (
+				error instanceof Prisma.PrismaClientKnownRequestError ||
+				error instanceof Prisma.PrismaClientUnknownRequestError
+			) {
+				console.log("Erro conhecido do Prisma:", error.message);
+				throw error;
+			}
 			throw error;
 		}
 	});

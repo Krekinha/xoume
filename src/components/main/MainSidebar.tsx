@@ -11,16 +11,28 @@ export default function MainSidebar() {
 	if (pathname === "/") return;
 
 	return (
-		<Aside />
-		// <aside
-		// 	className={cn(
-		// 		"sm:inline-flex z-40 h-full border-r border-gray-700 bg-gray-900",
-		// 		"inset-y-0 sm:w-64 w-0 min-w-0 sm:min-w-64 hidden",
-		// 		"sm:animate-slideIn animate-slideOut pt-4",
-		// 	)}
-		// >
-		// 	<MenuSidebar />
-		// </aside>
+		<div
+			data-open="true"
+			data-hover="false"
+			aria-hidden="false"
+			className={cn(
+				"z-40 transition-transform max-md:absolute border-r border-violet-400 dark:border-gray-700",
+				"bg-violet-300 dark:bg-transparent",
+				// "max-md:animate-slideClose",
+			)}
+		>
+			<aside
+				data-open="false"
+				className={cn(
+					"flex w-full flex-col text-[15px] max-md:fixed",
+					"max-md:inset-0 max-md:z-40 max-md:pt-16 max-md:data-[open=false]:hidden",
+					"md:sticky md:top-0 md:w-[240px] md:text-sm xl:w-[260px] pt-4",
+					"md:animate-slideOpen",
+				)}
+			>
+				<MenuSidebar />
+			</aside>
+		</div>
 	);
 }
 
@@ -47,11 +59,11 @@ export function MenuSidebar() {
 							<div
 								className={`${
 									pathname === menu.link
-										? "flex items-center p-2 text-gray-900 rounded-lg border border-gray-800 cursor-default group"
-										: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-gray-800 group"
+										? "flex items-center p-2 text-gray-900 rounded-lg border border-violet-400 dark:border-gray-800 cursor-default group"
+										: "flex items-center p-2 text-gray-900 rounded-lg hover:bg-violet-400 dark:hover:bg-gray-800 group"
 								} flex items-center py-2 px-4 rounded-lg mb-2`}
 							>
-								<div className="border rounded-lg border-gray-700 p-1 shadow-sm">
+								<div className="border rounded-lg border-violet-400 dark:border-gray-700 p-1 shadow-sm">
 									{menu.icon}
 								</div>
 
@@ -59,8 +71,8 @@ export function MenuSidebar() {
 								<span
 									className={`${
 										pathname === menu.link
-											? "flex-1 ms-3 whitespace-nowrap text-amber-600"
-											: "flex-1 ms-3 whitespace-nowrap text-gray-400"
+											? "flex-1 ms-3 whitespace-nowrap text-blue-700 dark:text-amber-600"
+											: "flex-1 ms-3 whitespace-nowrap text-gray-600 dark:text-gray-400"
 									}`}
 								>
 									{menu.label}
@@ -75,32 +87,6 @@ export function MenuSidebar() {
 					</li>
 				</ul>
 			))}
-		</div>
-	);
-}
-
-function Aside() {
-	return (
-		<div
-			data-open="true"
-			data-hover="false"
-			aria-hidden="false"
-			className={cn(
-				"z-40 transition-transform max-md:absolute border-r border-gray-700",
-				// "max-md:animate-slideClose",
-			)}
-		>
-			<aside
-				data-open="false"
-				className={cn(
-					"flex w-full flex-col text-[15px] max-md:fixed",
-					"max-md:inset-0 max-md:z-40 max-md:pt-16 max-md:data-[open=false]:hidden",
-					"md:sticky md:top-0 md:w-[240px] md:text-sm xl:w-[260px] pt-4",
-					"md:animate-slideOpen",
-				)}
-			>
-				<MenuSidebar />
-			</aside>
 		</div>
 	);
 }
