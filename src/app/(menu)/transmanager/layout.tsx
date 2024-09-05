@@ -23,11 +23,5 @@ export default async function Layout({
 	 * cliente, que neste caso é o NextAuthSessionProvider, que está recebendo
 	 * a sessão como parâmetro, que será compartilhadas nas demais rotas
 	 */
-	return (
-		<Providers>
-			<NextAuthSessionProvider session={session}>
-				{children}
-			</NextAuthSessionProvider>
-		</Providers>
-	);
+	return <>{children}</>;
 }
