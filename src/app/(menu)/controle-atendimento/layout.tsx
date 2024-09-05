@@ -50,11 +50,9 @@ export default async function RootLayout({
 	 * a sessão como parâmetro, que será compartilhadas nas demais rotas
 	 */
 	return (
-		<Providers>
-			<NextAuthSessionProvider session={session}>
-				<MainSidebar />
-				{children}
-			</NextAuthSessionProvider>
+		<Providers session={session}>
+			<MainSidebar />
+			{children}
 		</Providers>
 	);
 }
