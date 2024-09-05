@@ -6,6 +6,7 @@ import {
 	CollapsibleTrigger,
 } from "@/components/ui/collapsible";
 import type { CteComplementar } from "@/utils/types";
+import { cn } from "@/lib/utils";
 
 interface TransporteListItemComplementoProps {
 	children: ReactNode;
@@ -23,19 +24,23 @@ export function ComplementoItem({
 				<Collapsible
 					open={isOpen}
 					onOpenChange={setIsOpen}
-					className="space-y-2 pt-3"
+					className="space-y-2"
 				>
 					<CollapsibleTrigger asChild>
 						<button
-							className="py-1 px-2 rounded-md bg-fuchsia-800 hover:bg-fuchsia-700 text-[9px] 
-	shadow-md shadow-slate-900 focus:shadow-lg ease-linear 
-	transition-all duration-150 select-none"
+							className={cn(
+								"py-1 px-2 rounded-md bg-fuchsia-800 hover:bg-fuchsia-700 text-[9px]",
+								"shadow-md shadow-slate-900 focus:shadow-lg ease-linear",
+								"transition-all duration-150 select-none",
+							)}
 						>
 							<span className="sr-only">Toggle</span>COMPLEMENTO
 						</button>
 					</CollapsibleTrigger>
 					<CollapsibleContent>
-						<div className="flex gap-2 text-sm text-cyan-500">{children}</div>
+						<div className="flex flex-wrap gap-2 text-sm text-cyan-500">
+							{children}
+						</div>
 					</CollapsibleContent>
 				</Collapsible>
 			)}

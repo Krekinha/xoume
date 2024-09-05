@@ -5,6 +5,7 @@ import ReactQueryProvider from "./ReactQueryProvider";
 import { ThemeProvider } from "./ThemeContext";
 import type { ReactNode } from "react";
 import NextAuthSessionProvider from "./NextAuthSessionProvider";
+import { ModalDialogContextProvider } from "./ModaDialogProvider";
 
 interface ProvidersProps {
 	children: ReactNode;
@@ -22,7 +23,7 @@ export default function Providers({ children, session }: ProvidersProps) {
 		>
 			<NextAuthSessionProvider session={session}>
 				<ReactQueryProvider>
-					<SidemenuContextProvider>{children}</SidemenuContextProvider>
+					<ModalDialogContextProvider>{children}</ModalDialogContextProvider>
 				</ReactQueryProvider>
 			</NextAuthSessionProvider>
 		</ThemeProvider>

@@ -4,7 +4,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { BsArrowDownCircleFill } from "react-icons/bs";
 import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu";
-import { clsx } from "clsx";
 import { FaUserCog } from "react-icons/fa";
 import { IoSettingsSharp } from "react-icons/io5";
 import { signOut, useSession } from "next-auth/react";
@@ -51,7 +50,7 @@ export default function MainAvatarDownMenu() {
 						className={cn(
 							"bg-gray-100 text-white active:bg-gray-100 hover:bg-gray-100 py-1 px-1",
 							"border font-bold uppercase shadow-md hover:shadow-lg outline-none focus:shadow-lg",
-							"focus:bg-gray-100 ease-linear transition-all duration-150 rounded-full",
+							"focus:bg-gray-100 ease-linear transition-all duration-150 rounded-full flex-shrink-0",
 						)}
 					>
 						<Image src="/images/user.png" alt={""} width={25} height={25} />
@@ -83,8 +82,8 @@ export default function MainAvatarDownMenu() {
 
 						{/* Outros Menus */}
 
-						{generalMenuItems.map(({ label, icon, shortcut, link }) => (
-							<Link key={id} href={link} className="font-medium">
+						{generalMenuItems.map(({ label, icon, shortcut, link }, i) => (
+							<Link key={id && i} href={link} className="font-medium">
 								<DropdownMenuPrimitive.Item
 									className={cn(
 										"flex cursor-default select-none items-center rounded-md",

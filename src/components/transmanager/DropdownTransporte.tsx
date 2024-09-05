@@ -10,31 +10,61 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { Transporte } from "@/utils/types";
+import type { ErrorResponse, Transporte } from "@/utils/types";
 import { delTransporte } from "@/server/TransporteActions";
+import { cn } from "@/lib/utils";
+import {
+	QueryKeyFactory,
+	useServerActionQuery,
+} from "@/lib/server-action-hooks";
+import { useState } from "react";
+import ModalDialog from "./ModalDialog";
+import { useServerAction } from "zsa-react";
+import { useModalDialogContext } from "@/providers/ModaDialogProvider";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface Props {
 	transporte: Transporte;
 }
 
 export function DropdownTransporte({ transporte }: Props) {
-	async function excluirTransporte() {
-		try {
-			const response = await delTransporte(transporte.id || 0);
-			console.log(response);
-			//getTransportes();
-		} catch (error) {
-			console.error("Erro ao exluir transporte:", error);
-			// Aqui eu posso adicionar um tratamento de erro, como mostrar uma mensagem de erro na interface do usuário.
-		}
+	const [id, setId] = useState(false);
+	const { data, error, execute } = useServerAction(delTransporte);
+	const { setModalDialog } = useModalDialogContext();
+	const queryClient = useQueryClient();
+
+	function onClose() {
+		queryClient.refetchQueries({
+			queryKey: QueryKeyFactory.getTransportes(), //retornar a mesma chave de consulta definida em factory
+		});
+		console.log("onclose");
+	}
+
+	async function excluirTransporte(id: number) {
+		const [data, err] = await execute({ id: id });
+
+		setModalDialog({
+			open: true,
+			data: data ? data.message : null,
+			error: err
+				? { code: err.code, name: err.name, message: err.message }
+				: undefined,
+			onClose: onClose,
+		});
+		// console.log(error);
+		// console.log(data);
+		// setModalResponse({ data: data, err: error });
+		// setIsModalOpen(true);
 	}
 
 	return (
 		<DropdownMenu>
 			<DropdownMenuTrigger asChild>
 				<button
-					className="inline-flex h-6 w-6 p-0 hover:bg-gray-200 active:bg-gray-300 ease-linear transition-all 
-                     cursor-pointer duration-150 select-none items-center justify-center rounded-md"
+					className={cn(
+						"inline-flex h-5 w-5 p-0 hover:bg-gray-200 active:bg-gray-300 ease-linear transition-all",
+						"cursor-pointer duration-150 select-none items-center justify-center rounded-md",
+					)}
 				>
 					<span className="sr-only">Open menu</span>
 					<MoreHorizontal className="h-4 w-4" />
@@ -51,7 +81,7 @@ export function DropdownTransporte({ transporte }: Props) {
 					Editar
 				</DropdownMenuItem>
 				<DropdownMenuItem
-					onClick={() => excluirTransporte()}
+					onClick={() => excluirTransporte(transporte.id || 0)}
 					className="hover:bg-gray-300 cursor-pointer rounded gap-2"
 				>
 					<RiDeleteBin6Line className="text-red-600" />

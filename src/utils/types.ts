@@ -232,6 +232,6 @@ export enum TipoMessage {
 }
 
 export interface SelectItemProps {
-	label: string | undefined;
-	value: unknown;
+	label?: string;
+	value?: unknown;
 }

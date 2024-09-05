@@ -1,7 +1,5 @@
-import { cn } from "@/lib/utils";
-import type { ErrorResponse } from "@/utils/types";
 import type React from "react";
-import { useEffect, useRef, useState, type ElementType } from "react";
+import type { ElementType } from "react";
 import {
 	MdCheckCircleOutline,
 	MdOutlineErrorOutline,
@@ -11,7 +9,6 @@ import { Button } from "@/components/ui/button";
 
 import {
 	Dialog,
-	DialogClose,
 	DialogContent,
 	DialogDescription,
 	DialogFooter,
@@ -19,6 +16,7 @@ import {
 	DialogTitle,
 	DialogTrigger,
 } from "@/components/ui/dialog";
+import { useModalDialogContext } from "@/providers/ModaDialogProvider";
 
 /**
  * Componente card personalizado para exibir os módulos da aplicação.
@@ -26,21 +24,17 @@ import {
  * @author Krekinha
  */
 
-export interface ModalDialogProps {
-	err?: ErrorResponse;
-	data?: unknown;
-	onClose?: () => void;
-	isOpen: boolean;
-}
-const ModalDialog: React.FC<ModalDialogProps> = ({
-	err,
-	data,
-	onClose,
-	isOpen,
-	//className,
-	//...props
-}) => {
+const ModalDialog: React.FC = () => {
+	const { setModalDialog, modalDialog } = useModalDialogContext();
+
+	const open = modalDialog.open;
+	const data = modalDialog.data;
+	const error = modalDialog.error;
+	const onClose = modalDialog.onClose;
+
+	console.log(error);
 	console.log(data);
+
 	const icon = () => {
 		if (data) {
 			return (
@@ -48,7 +42,7 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 			);
 		}
 
-		if (err) {
+		if (error) {
 			return (
 				<MdOutlineErrorOutline className="flex-none h-10 w-10 text-red-600" />
 			);
@@ -58,8 +52,8 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 	};
 
 	const message = () => {
-		if (err) {
-			return err.message;
+		if (error) {
+			return error?.message;
 		}
 
 		if (data) {
@@ -70,8 +64,8 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 	};
 
 	const title = () => {
-		if (err) {
-			return err.message;
+		if (error) {
+			return `${error.code}: (${error.name})`;
 		}
 
 		if (data) {
@@ -82,8 +76,8 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 	};
 
 	return (
-		<Dialog open={isOpen} onOpenChange={onClose}>
-			<DialogTrigger/>
+		<Dialog open={open}>
+			<DialogTrigger />
 			<DialogContent className="bg-zinc-950 border border-zinc-900">
 				<DialogHeader>
 					<DialogTitle className="flex items-center gap-4">
@@ -99,47 +93,19 @@ const ModalDialog: React.FC<ModalDialogProps> = ({
 				</div>
 
 				<DialogFooter className="sm:justify-center">
-					<DialogClose asChild>
-						<Button
-							type="button"
-							className=" dark:bg-green-600 dark:text-white"
-						>
-							Close
-						</Button>
-					</DialogClose>
+					<Button
+						type="button"
+						onClick={() => {
+							setModalDialog({ open: false });
+							onClose ? onClose() : "";
+						}}
+						className=" dark:bg-green-600 dark:text-white"
+					>
+						Close
+					</Button>
 				</DialogFooter>
 			</DialogContent>
 		</Dialog>
-
-		// <dialog
-		// 	//{...props}
-		// 	id="modalDialog"
-		// 	ref={modalRef}
-		// 	onKeyDown={handleKeyDown}
-		// 	className={cn(
-		// 		"flex max-h-14 min-h-[10rem] min-w-[20rem] max-w-[20rem] flex-col",
-		// 		" gap-1 rounded-md bg-slate-900 p-2 shadow-md shadow-black",
-		// 		"z-20",
-		// 		//className,
-		// 	)}
-		// >
-		// 	<div className="flex h-0 flex-grow gap-2">
-		// 		<div className="flex items-center">{icon()}</div>
-		// 		<div className="flex flex-col w-full items-center rounded-md px-2 py-1 ">
-		// 			<span className="h-full whitespace-pre-line content-center overflow-hidden overflow-y-auto">
-		// 				{message()}
-		// 			</span>
-		// 			<div className="flex justify-center mr-8">
-		// 				<Button
-		// 					onClick={handleCloseModal}
-		// 					className="px-4 py-0 h-6 bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white shadow-sm dark:shadow-black"
-		// 				>
-		// 					ok
-		// 				</Button>
-		// 			</div>
-		// 		</div>
-		// 	</div>
-		// </dialog>
 	);
 };
 

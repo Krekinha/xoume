@@ -35,7 +35,7 @@ export function TransporteListItemRoot({
 	className,
 }: TransporteListItemRootProps) {
 	return (
-		<div className="container w-full rounded-lg border border-gray-200 bg-violet-50/30 dark:bg-zinc-800 dark:border-gray-700 p-1.5 shadow-sm-light shadow-gray-100">
+		<div className="flex flex-col gap-3 w-full rounded-lg border border-gray-200 bg-violet-50/30 dark:bg-zinc-800 dark:border-gray-700 p-1.5 shadow-sm-light shadow-gray-100">
 			{children}
 		</div>
 	);
@@ -50,7 +50,10 @@ interface TransporteListItemHeaderProps {
 export function TransporteListItemHeader({
 	children,
 }: TransporteListItemHeaderProps) {
-	return <div className="grid grid-flow-col items-center">{children}</div>;
+	// return <div className="grid grid-flow-col items-center">{children}</div>;
+	return (
+		<div className="flex flex-row items-center justify-between">{children}</div>
+	);
 }
 
 /**
@@ -81,11 +84,7 @@ interface TransporteListItemMenuProps {
 export function TransporteListItemMenu({
 	transporte,
 }: TransporteListItemMenuProps) {
-	return (
-		<div className="justify-self-end">
-			<DropdownTransporte transporte={transporte} />
-		</div>
-	);
+	return <DropdownTransporte transporte={transporte} />;
 }
 
 /**
@@ -187,7 +186,7 @@ export function TransporteListItemFooter({
 	children,
 }: TransporteListItemFooterProps) {
 	return (
-		<div className="flex flex-row gap-2.5 items-center mt-3 text-[0.65rem] text-slate-400">
+		<div className="flex flex-wrap gap-2.5 items-center text-[0.65rem] text-slate-400">
 			{children}
 		</div>
 	);

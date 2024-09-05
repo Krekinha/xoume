@@ -25,7 +25,7 @@ export default function Login() {
 	const { errors } = formState;
 
 	async function login(dados: ILogin) {
-		const resp = await signIn("credentials", {
+		const response = await signIn("credentials", {
 			redirect: false,
 			email: dados.email,
 			senha: dados.senha,
@@ -33,12 +33,12 @@ export default function Login() {
 
 		console.log(dados);
 
-		if (resp!.ok == true) {
-			console.log(resp);
+		if (response?.ok === true) {
+			console.log(response);
 			router.push("/");
 		} else {
-			setMessage({ text: resp?.error || "erro?" });
-			console.log(resp);
+			setMessage({ text: response?.error || "erro?" });
+			console.log(response);
 		}
 	}
 
@@ -81,7 +81,8 @@ export default function Login() {
 																	viewBox="0 0 1792 1792"
 																	xmlns="http://www.w3.org/2000/svg"
 																>
-																	<path d="M1792 710v794q0 66-47 113t-113 47h-1472q-66 0-113-47t-47-113v-794q44 49 101 87 362 246 497 345 57 42 92.5 65.5t94.5 48 110 24.5h2q51 0 110-24.5t94.5-48 92.5-65.5q170-123 498-345 57-39 100-87zm0-294q0 79-49 151t-122 123q-376 261-468 325-10 7-42.5 30.5t-54 38-52 32.5-57.5 27-50 9h-2q-23 0-50-9t-57.5-27-52-32.5-54-38-42.5-30.5q-91-64-262-182.5t-205-142.5q-62-42-117-115.5t-55-136.5q0-78 41.5-130t118.5-52h1472q65 0 112.5 47t47.5 113z"></path>
+																	<title>svg</title>
+																	<path d="M1792 710v794q0 66-47 113t-113 47h-1472q-66 0-113-47t-47-113v-794q44 49 101 87 362 246 497 345 57 42 92.5 65.5t94.5 48 110 24.5h2q51 0 110-24.5t94.5-48 92.5-65.5q170-123 498-345 57-39 100-87zm0-294q0 79-49 151t-122 123q-376 261-468 325-10 7-42.5 30.5t-54 38-52 32.5-57.5 27-50 9h-2q-23 0-50-9t-57.5-27-52-32.5-54-38-42.5-30.5q-91-64-262-182.5t-205-142.5q-62-42-117-115.5t-55-136.5q0-78 41.5-130t118.5-52h1472q65 0 112.5 47t47.5 113z" />
 																</svg>
 															</span>
 															<input
@@ -94,11 +95,11 @@ export default function Login() {
 														<span className="text-[0.75rem] text-red-500">
 															{errors.email?.message}
 														</span>
-														{/*props.touched.email && props.errors.email && (
-                              <span className="text-[0.75rem] text-red-500">
-                                {props.errors.email}
-                              </span>
-                            )*/}
+														{/* props.touched.email && props.errors.email && (
+														<span className="text-[0.75rem] text-red-500">
+															{props.errors.email}
+														</span>
+														) */}
 													</div>
 												</div>
 											</div>
@@ -112,7 +113,8 @@ export default function Login() {
 															viewBox="0 0 1792 1792"
 															xmlns="http://www.w3.org/2000/svg"
 														>
-															<path d="M1376 768q40 0 68 28t28 68v576q0 40-28 68t-68 28h-960q-40 0-68-28t-28-68v-576q0-40 28-68t68-28h32v-320q0-185 131.5-316.5t316.5-131.5 316.5 131.5 131.5 316.5q0 26-19 45t-45 19h-64q-26 0-45-19t-19-45q0-106-75-181t-181-75-181 75-75 181v320h736z"></path>
+															<title>svg</title>
+															<path d="M1376 768q40 0 68 28t28 68v576q0 40-28 68t-68 28h-960q-40 0-68-28t-28-68v-576q0-40 28-68t68-28h32v-320q0-185 131.5-316.5t316.5-131.5 316.5 131.5 131.5 316.5q0 26-19 45t-45 19h-64q-26 0-45-19t-19-45q0-106-75-181t-181-75-181 75-75 181v320h736z" />
 														</svg>
 													</span>
 													<input
@@ -136,7 +138,7 @@ export default function Login() {
 											<div className="flex items-center mb-6 -mt-4">
 												<div className="flex ml-auto">
 													<a
-														href="#"
+														href="##"
 														className="inline-flex text-xs underline text-gray-800 sm:text-sm hover:text-gray-700"
 													>
 														Esqueceu sua senha?

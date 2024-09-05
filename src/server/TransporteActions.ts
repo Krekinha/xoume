@@ -7,18 +7,6 @@ import { z } from "zod";
 import { createServerAction } from "zsa";
 
 const prisma = new PrismaClient();
-const local_add = "http://localhost:3333/transportes/add";
-
-export async function getTransportesBackup() {
-	const res = await fetch(`${process.env.API_TRANSMANAGER_URL}/transportes`, {
-		next: { tags: ["transportes"] },
-	});
-
-	const response = await res.json();
-	const transportes = response.transportes;
-	//console.log(transportes);
-	return transportes;
-}
 
 export const getTransportes = createServerAction().handler(async () => {
 	try {
@@ -48,31 +36,42 @@ export const getTransportes = createServerAction().handler(async () => {
 	}
 });
 
-export async function delTransporte(id: number) {
-	console.log(id);
-	const url = baseUrl(`/transportes/del/${id}`);
-	const local_del = `http://localhost:3333/transportes/del/${id}`;
+export const delTransporte = createServerAction()
+	.input(
+		z.object({
+			id: z.coerce
+				.number()
+				.positive({ message: "O Id informado não é um número válido" }),
+		}),
+	)
+	.handler(async ({ input }) => {
+		console.log(input.id);
 
-	try {
-		const res = await fetch(url, {
-			method: "DELETE",
-		});
-
-		if (!res.ok) {
-			throw new Error(`HTTP error! status: ${res.status}`);
+		try {
+			const transporte = await prisma.transporte.delete({
+				where: {
+					id: input.id,
+				},
+				select: {
+					cte: true,
+					notas: true,
+				},
+			});
+			console.log(transporte);
+			return {
+				message: `Transporte referente ao CT-e "${transporte.cte ?? "(não informado)"}", nota(s) "${transporte.notas.length > 0 ? transporte.notas : "(não informado)"}" excluído com sucesso!`,
+			};
+		} catch (error: unknown) {
+			if (
+				error instanceof Prisma.PrismaClientKnownRequestError ||
+				error instanceof Prisma.PrismaClientUnknownRequestError
+			) {
+				console.log("Erro conhecido do Prisma:", error.message);
+				throw error;
+			}
+			throw error;
 		}
-
-		const data = await res.json();
-		console.log(data);
-
-		revalidateTag("transportes");
-
-		return data;
-	} catch (error) {
-		console.log("Erro ao deletar o transporte:", error);
-		throw error;
-	}
-}
+	});
 
 export const addTransporte = createServerAction()
 	.input(
@@ -87,6 +86,18 @@ export const addTransporte = createServerAction()
 				.number()
 				.positive({ message: "Selecione uma opção válida" })
 				.optional(),
+			uf_origem: z
+				.string({ message: "UF: O valo esperado é uma string" })
+				.optional(),
+			cidade_origem: z
+				.string({ message: "Cidade: O valo esperado é uma string" })
+				.optional(),
+			uf_destino: z
+				.string({ message: "UF: O valo esperado é uma string" })
+				.optional(),
+			cidade_destino: z
+				.string({ message: "Cidade: O valo esperado é uma string" })
+				.optional(),
 		}),
 	)
 	.handler(async ({ input }) => {
@@ -100,10 +111,10 @@ export const addTransporte = createServerAction()
 					tomadorId: input.tomadorId,
 					// notas: body.notas,
 					// cte: body.cte,
-					// uf_origem: body.uf_origem,
-					// cidade_origem: body.cidade_origem,
-					// uf_destino: body.uf_destino,
-					// cidade_destino: body.cidade_destino,
+					uf_origem: input.uf_origem,
+					cidade_origem: input.cidade_origem,
+					uf_destino: input.uf_destino,
+					cidade_destino: input.cidade_destino,
 					// peso: body.peso,
 					// val_tonelada: body.val_tonelada,
 					// val_frete: body.val_frete,

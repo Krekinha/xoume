@@ -1,30 +1,39 @@
 "use server";
 
-import { baseUrl } from "@/utils/constants";
-import { Prisma, PrismaClient } from "@prisma/client";
-import { revalidateTag } from "next/cache";
+import type { SelectItemProps } from "@/utils/types";
+import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { createServerAction } from "zsa";
 
 const prisma = new PrismaClient();
 
-export async function getMunicipiosByUf(uf: string) {
-	const res = await fetch(
-		`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios?orderBy=nome&&view=nivelado`,
-		{
-			next: { tags: ["municipios"] },
-		},
-	);
+export const getMunicipiosByUf = createServerAction()
+	.input(
+		z.object({
+			uf: z.string(),
+		}),
+	)
+	.handler(async ({ input }) => {
+		console.log(input.uf);
 
-	const municipios = await res.json();
-	console.log(municipios);
-	//const municipios = response.tomadores;
+		try {
+			const response = await fetch(
+				`https://servicodados.ibge.gov.br/api/v1/localidades/estados/${input.uf}/municipios?orderBy=nome&&view=nivelado`,
+				{
+					next: { tags: ["municipios"] },
+				},
+			);
 
-	const municipiosMap = municipioItems(municipios);
-	console.log(municipiosMap);
+			const municipios = await response.json();
 
-	return municipiosMap;
-}
+			const municipiosMap = municipioItems(municipios);
+			//console.log(municipiosMap);
+
+			return municipiosMap;
+		} catch (error: unknown) {
+			throw new Error(`Falha ao buscar municípios: ${String(error)}`);
+		}
+	});
 
 export async function getEstados() {
 	const res = await fetch(
@@ -46,10 +55,13 @@ export async function getEstados() {
 
 const municipioItems = (municipios: any) => {
 	if (municipios) {
-		return municipios.map((municipio: any) => ({
-			label: municipio["municipio-nome"],
-			value: Number.parseInt(municipio["municipio-id"], 10),
-		}));
+		const municipiosMap: SelectItemProps[] = municipios.map(
+			(municipio: any) => ({
+				label: municipio["municipio-nome"],
+				value: Number.parseInt(municipio["municipio-id"], 10),
+			}),
+		);
+		return municipiosMap;
 	}
 	return [];
 };

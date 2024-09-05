@@ -8,10 +8,10 @@ import type { Empresa, Motorista, Tomador } from "@/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import React, { useState } from "react";
+import React from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
-import ModalDialog from "@/components/transmanager/ModalDialog";
+import { useModalDialogContext } from "@/providers/ModaDialogProvider";
 
 interface FormAddTransporteProps {
 	empresas: Empresa[];
@@ -31,6 +31,20 @@ const schema = z.object({
 		.number()
 		.positive({ message: "Selecione uma opção válida" })
 		.optional(),
+	uf_origem: z
+		.string({ message: "UF: O valo esperado é uma string" })
+		.optional(),
+	cidade_origem: z
+		.string({ message: "Cidade: O valo esperado é uma string" })
+		.toUpperCase()
+		.optional(),
+	uf_destino: z
+		.string({ message: "UF: O valo esperado é uma string" })
+		.optional(),
+	cidade_destino: z
+		.string({ message: "Cidade: O valo esperado é uma string" })
+		.toUpperCase()
+		.optional(),
 });
 
 export function FormAddTransporte({
@@ -39,8 +53,7 @@ export function FormAddTransporte({
 	tomadores,
 }: FormAddTransporteProps) {
 	const { isPending, execute, data, error } = useServerAction(addTransporte);
-	const [isModalOpen, setIsModalOpen] = useState(false);
-	const [modalResponse, setModalResponse] = useState<any>({});
+	const { setModalDialog } = useModalDialogContext();
 	const router = useRouter();
 	const { register, control, handleSubmit, formState } = useForm<
 		z.infer<typeof schema>
@@ -82,17 +95,11 @@ export function FormAddTransporte({
 		return [];
 	};
 
-	function onClose() {
+	function onClose(data: any) {
 		if (data) {
 			router.push("/transmanager");
-			//setIsModalOpen(false);
-			console.log(data);
+			console.log("indo para /transmanager");
 		}
-		console.log("nada");
-		router.push("/transmanager");
-		// if (error) {
-		// 	setIsModalOpen(false);
-		// }
 	}
 
 	async function onSubmit(values: z.infer<typeof schema>) {
@@ -103,8 +110,14 @@ export function FormAddTransporte({
 		console.log(data);
 		console.log(err);
 
-		setModalResponse({ data: data, err: err });
-		setIsModalOpen(true);
+		setModalDialog({
+			open: true,
+			data: data ? data : null,
+			error: err
+				? { code: err.code, name: err.name, message: err.message }
+				: undefined,
+			onClose: () => onClose(data),
+		});
 		// if (res.message) {
 		// 	setModalMessage(res.message);
 		// 	setIsModalOpen(true);
@@ -113,12 +126,6 @@ export function FormAddTransporte({
 
 	return (
 		<div className="h-full w-full bg-zinc-800">
-			<ModalDialog
-				isOpen={isModalOpen}
-				data={modalResponse.data}
-				err={modalResponse.err}
-				onClose={onClose}
-			/>
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col w-full p-4 gap-3">
 					<ReactSelect
@@ -151,27 +158,38 @@ export function FormAddTransporte({
 					/>
 
 					<ReactSelectCity
-						nameUf="tomadorId"
-						nameCidade=""
+						nameUf="uf_origem"
+						nameMunicipio="cidade_origem"
 						label="Origem"
 						control={control}
 						register={register}
 						items={tomadorItems()}
-						placeholder="Selecione um tomador"
+						placeholder="Selecione um município"
 						stateError={formState.errors}
 					/>
 
-					<div className="flex justify-center gap-2">
+					<ReactSelectCity
+						nameUf="uf_destino"
+						nameMunicipio="cidade_destino"
+						label="Destino"
+						control={control}
+						register={register}
+						items={tomadorItems()}
+						placeholder="Selecione um município"
+						stateError={formState.errors}
+					/>
+
+					<div className="flex justify-center mt-10 gap-2">
 						<Button
 							type="button"
 							onClick={() => router.push("/transmanager")}
-							className="bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 dark:text-white"
+							className="bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 dark:text-white shadow-sm dark:shadow-black/90"
 						>
 							Cancelar
 						</Button>
 						<Button
 							type="submit"
-							className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white shadow-md dark:shadow-black"
+							className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white shadow-sm dark:shadow-black/90"
 						>
 							Enviar
 						</Button>
