@@ -16,6 +16,7 @@ import { type ReactNode, useId, useRef, useState } from "react";
 import { estadosBrasil } from "@/utils/constants";
 import { useServerAction } from "zsa-react";
 import { getMunicipiosByUf } from "@/server/OthersActions";
+import QueryStatus from "../main/QueryStatus";
 
 const DropdownIndicator = (props: any) => {
 	return (
@@ -84,7 +85,7 @@ export function ReactSelectCity({
 	const selectEl = refMunicipio.current;
 	const [municipios, setMunicipios] = useState<SelectItemProps[]>([]);
 	const [item, setItem] = useState<SelectItemProps | null>(null);
-	const { isPending, execute, data, error } =
+	const { isPending, execute, data, error, isError } =
 		useServerAction(getMunicipiosByUf);
 	const idUf = useId();
 	const idCidade = useId();
@@ -92,6 +93,7 @@ export function ReactSelectCity({
 	async function buscarMunicipios(uf: string) {
 		setMunicipios([]);
 		const [data, err] = await execute({ uf: uf });
+		if (err) console.log(err);
 		if (data) setMunicipios(data);
 
 		selectEl?.focus();
@@ -108,6 +110,17 @@ export function ReactSelectCity({
 
 	return (
 		<div>
+			<QueryStatus
+				isLoading={isPending}
+				loadingNode={<span>Buscando...</span>}
+				isError={isError}
+				error={{
+					message: error?.message ?? "",
+					name: error?.name ?? "",
+					code: error?.code ?? "ERROR",
+					data: error?.data ?? "",
+				}}
+			/>
 			{label && (
 				<label className="text-sm font-medium ml-1 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
 					{label}

@@ -1,8 +1,6 @@
 "use server";
 
-import { baseUrl } from "@/utils/constants";
 import { Prisma, PrismaClient } from "@prisma/client";
-import { revalidateTag } from "next/cache";
 import { z } from "zod";
 import { createServerAction } from "zsa";
 
@@ -61,6 +59,7 @@ export const addTransporte = createServerAction()
 			cidade_destino: z
 				.string({ message: "Cidade: O valo esperado é uma string" })
 				.optional(),
+			notas: z.array(z.number()).optional(),
 		}),
 	)
 	.handler(async ({ input }) => {

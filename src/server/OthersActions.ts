@@ -27,10 +27,11 @@ export const getMunicipiosByUf = createServerAction()
 			const municipios = await response.json();
 
 			const municipiosMap = municipioItems(municipios);
-			//console.log(municipiosMap);
+			console.log(municipiosMap);
 
 			return municipiosMap;
 		} catch (error: unknown) {
+			console.log(error);
 			throw new Error(`Falha ao buscar municípios: ${String(error)}`);
 		}
 	});

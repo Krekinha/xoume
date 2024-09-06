@@ -16,6 +16,7 @@ import { useServerActionQuery } from "@/lib/server-action-hooks";
 import { getEmpresas } from "@/server/EmpresaActions";
 import { getMotoristas } from "@/server/MotoristaActions";
 import { getTomadores } from "@/server/TomadorActions";
+import { ReactSelectInputMulti } from "../form/ReactSelectInputMulti";
 
 // define o schema de validação dos dados recebidos pelo form cliente
 const schema = z.object({
@@ -43,6 +44,7 @@ const schema = z.object({
 		.string({ message: "Cidade: O valo esperado é uma string" })
 		.toUpperCase()
 		.optional(),
+	notas: z.array(z.number({ message: "Esperado número" })).optional(),
 });
 
 export function FormAddTransporte() {
@@ -71,6 +73,7 @@ export function FormAddTransporte() {
 		defaultValues: {
 			empresaId: 0,
 			motoristaId: 0,
+			notas: undefined,
 		},
 	});
 
@@ -185,6 +188,15 @@ export function FormAddTransporte() {
 						register={register}
 						items={tomadorItems()}
 						placeholder="Selecione um município"
+						stateError={formState.errors}
+					/>
+
+					<ReactSelectInputMulti
+						name="notas"
+						label="Notas"
+						control={control}
+						register={register}
+						placeholder="Digite uma número de nota e precione enter"
 						stateError={formState.errors}
 					/>
 
