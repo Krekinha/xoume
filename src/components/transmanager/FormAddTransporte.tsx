@@ -8,7 +8,7 @@ import type { Empresa, Motorista, Tomador } from "@/utils/types";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import React from "react";
+import React, { useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
 import { useModalDialogContext } from "@/providers/ModaDialogProvider";
@@ -17,35 +17,6 @@ import { getEmpresas } from "@/server/EmpresaActions";
 import { getMotoristas } from "@/server/MotoristaActions";
 import { getTomadores } from "@/server/TomadorActions";
 import { ReactSelectInputMulti } from "../form/ReactSelectInputMulti";
-
-// define o schema de validação dos dados recebidos pelo form cliente
-const schema = z.object({
-	empresaId: z.coerce
-		.number()
-		.positive({ message: "Selecione uma opção válida" }),
-	motoristaId: z.coerce
-		.number()
-		.positive({ message: "Selecione uma opção válida" }),
-	tomadorId: z.coerce
-		.number()
-		.positive({ message: "Selecione uma opção válida" })
-		.optional(),
-	uf_origem: z
-		.string({ message: "UF: O valo esperado é uma string" })
-		.optional(),
-	cidade_origem: z
-		.string({ message: "Cidade: O valo esperado é uma string" })
-		.toUpperCase()
-		.optional(),
-	uf_destino: z
-		.string({ message: "UF: O valo esperado é uma string" })
-		.optional(),
-	cidade_destino: z
-		.string({ message: "Cidade: O valo esperado é uma string" })
-		.toUpperCase()
-		.optional(),
-	notas: z.array(z.number({ message: "Esperado número" })).optional(),
-});
 
 export function FormAddTransporte() {
 	const { data: empresas } = useServerActionQuery(getEmpresas, {
@@ -63,13 +34,68 @@ export function FormAddTransporte() {
 		queryKey: ["getTomadores"],
 	});
 
-	const { isPending, execute, data, error } = useServerAction(addTransporte);
+	const {
+		isPending,
+		execute,
+		data,
+		error: err,
+	} = useServerAction(addTransporte);
 	const { setModalDialog } = useModalDialogContext();
+	const [fieldErrors, setFieldErrors] = useState({});
 	const router = useRouter();
-	const { register, control, handleSubmit, formState } = useForm<
-		z.infer<typeof schema>
-	>({
-		resolver: zodResolver(schema),
+
+	// define o schema de validação dos dados recebidos pelo form cliente
+	const schema = z.object({
+		empresaId: z.coerce
+			.number()
+			.positive({ message: "Selecione uma opção válida" }),
+		motoristaId: z.coerce
+			.number()
+			.positive({ message: "Selecione uma opção válida" }),
+		tomadorId: z.coerce
+			.number()
+			.positive({ message: "Selecione uma opção válida" })
+			.optional(),
+		uf_origem: z
+			.string({ message: "UF: O valo esperado é uma string" })
+			.optional(),
+		cidade_origem: z
+			.string({ message: "Cidade: O valo esperado é uma string" })
+			.toUpperCase()
+			.optional(),
+		uf_destino: z
+			.string({ message: "UF: O valo esperado é uma string" })
+			.optional(),
+		cidade_destino: z
+			.string({ message: "Cidade: O valo esperado é uma string" })
+			.toUpperCase()
+			.optional(),
+		notas: z.string().array().optional(),
+		//.positive({ message: "o número deve ser positivo" }),
+		//{ message: "Campo obrigatório" },
+
+		// notas: z.coerce
+		// 	.number({ message: "Somente números" })
+		// 	.positive({ message: "o número deve ser positivo" })
+		// 	.array()
+		// 	.optional(),
+		// notas: z.coerce
+		// 	.number({ message: "Somente números" })
+		// 	.positive({ message: "o número deve ser positivo" })
+		// 	.optional()
+		// 	.array(),
+	});
+
+	const {
+		register,
+		control,
+		handleSubmit,
+		formState,
+		setValue,
+		getValues,
+		getFieldState,
+	} = useForm({
+		//resolver: zodResolver(schema),
 		defaultValues: {
 			empresaId: 0,
 			motoristaId: 0,
@@ -114,26 +140,36 @@ export function FormAddTransporte() {
 		}
 	}
 
-	async function onSubmit(values: z.infer<typeof schema>) {
+	async function onSubmit(values) {
 		console.log(values);
 
 		const [data, err] = await execute(values);
 
+		if (err) {
+			if (err.code === "NOT_AUTHORIZED") {
+				// Handle not authorized error
+			} else if (err.code === "INPUT_PARSE_ERROR") {
+				// Handle input validation errors
+				console.log(err.fieldErrors);
+				console.log(err.formErrors);
+				console.log(err.formattedErrors);
+				setFieldErrors(err.fieldErrors);
+			} else {
+				// Handle other errors
+			}
+		}
+
 		console.log(data);
 		console.log(err);
 
-		setModalDialog({
-			open: true,
-			data: data ? data : null,
-			error: err
-				? { code: err.code, name: err.name, message: err.message }
-				: undefined,
-			onClose: () => onClose(data),
-		});
-		// if (res.message) {
-		// 	setModalMessage(res.message);
-		// 	setIsModalOpen(true);
-		// }
+		// setModalDialog({
+		// 	open: true,
+		// 	data: data ? data : null,
+		// 	error: err
+		// 		? { code: err.code, name: err.name, message: err.message }
+		// 		: undefined,
+		// 	onClose: () => onClose(data),
+		// });
 	}
 
 	return (
@@ -196,11 +232,16 @@ export function FormAddTransporte() {
 						label="Notas"
 						control={control}
 						register={register}
+						setValue={setValue}
+						getValues={getValues}
+						getFieldState={getFieldState}
+						formState={formState}
 						placeholder="Digite uma número de nota e precione enter"
 						stateError={formState.errors}
+						fieldErrors={fieldErrors}
 					/>
 
-					<div className="flex justify-center mt-10 gap-2">
+					<div className="flex justify-center self-end mt-5 gap-2">
 						<Button
 							type="button"
 							onClick={() => router.push("/transmanager")}

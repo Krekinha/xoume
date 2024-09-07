@@ -7,7 +7,11 @@ import {
 	type Control,
 	type FieldErrors,
 	type FieldValues,
+	type FormState,
+	type UseFormGetFieldState,
+	type UseFormGetValues,
 	type UseFormRegister,
+	type UseFormSetValue,
 } from "react-hook-form";
 
 import { FieldError } from "./FieldError";
@@ -19,6 +23,7 @@ import {
 	useId,
 	useState,
 } from "react";
+import { tr } from "@faker-js/faker";
 
 {
 	// Styles
@@ -62,15 +67,15 @@ interface ReactSelectProps {
 	items?: SelectItemProps[];
 	placeholder?: ReactNode;
 	stateError?: FieldErrors<FieldValues>;
-}
-
-interface Option {
-	readonly label: string;
-	readonly value: string;
+	getFieldState: UseFormGetFieldState<FieldValues>;
+	formState: FormState<FieldValues>;
+	getValues: (fiels?: string) => UseFormGetValues<any>;
+	setValue: UseFormSetValue<any>;
+	fieldErrors: any;
 }
 
 const createOption = (label: string) => ({
-	label,
+	label: label,
 	value: label,
 });
 
@@ -81,34 +86,59 @@ export function ReactSelectInputMulti({
 	items,
 	placeholder,
 	stateError,
+	getValues,
+	setValue,
+	getFieldState,
+	formState,
+	fieldErrors,
 	...props
 }: ReactSelectProps) {
 	const id = useId();
 	const [inputValue, setInputValue] = useState("");
-	const [valor, setValor] = useState<MultiValue<SelectItemProps>>([]);
+	const [multiValue, setMultiValue] = useState<MultiValue<SelectItemProps>>([]);
 
-	const handleKeyDown = (event: any, onChange: any) => {
+	const handleKeyDown: KeyboardEventHandler = (event) => {
 		if (!inputValue) return;
 		switch (event.key) {
 			case "Enter":
 			case "Tab":
-				// setValor((prev) => [...prev, createOption(inputValue)]);
-				setValor((prev) => [...prev, createOption(inputValue)]);
+				// função para prever o valor atual de multiValue
+				setRealMultiValues();
+				setMultiValue((prev) => [...prev, createOption(inputValue)]);
 				setInputValue("");
-				onChange(valor);
 				event.preventDefault();
 		}
-		console.log(valor);
-		console.log(inputValue);
+		const values = multiValue.map((item) => item.value);
+		console.log(values);
 	};
 
-	function onChanged(
-		val: MultiValue<SelectItemProps>,
-		onChange: (val?: any) => void,
-	) {
-		setValor(val);
-		console.log(valor);
-		onChange(valor);
+	function setRealMultiValues() {
+		/**
+		 * Chamar a função setMultiValue não altera o estado do código em execução
+		 * somente os componentes no DOM, por isso essa função foi criada para prever o
+		 * estado atual de multiValue e usa-lo para setar o campo "notas" no formState
+		 */
+
+		// pega valor "atual" do estado
+		const prevNotas = multiValue.map((item) => item.value);
+
+		// faz merge com o valor atual de inputValue
+		const atualNotas = [...prevNotas, inputValue];
+
+		// atualiza o campo "notas" no formState
+		setValue("notas", atualNotas);
+
+		console.log(formState);
+		console.log(getFieldState("notas", formState));
+		console.log(getFieldState("notas"));
+	}
+
+	function onChangeValues(newValue: MultiValue<SelectItemProps>) {
+		const atualNotas = newValue.map((item) => item.value);
+		setValue("notas", atualNotas);
+		setMultiValue(newValue);
+
+		console.log(getValues("notas"));
 	}
 
 	return (
@@ -121,10 +151,11 @@ export function ReactSelectInputMulti({
 			<Controller
 				name={name}
 				control={control}
-				render={({ field: { onChange, value, ref } }) => (
+				render={({ field: { onChange, value, ref }, formState }) => (
 					<CreatableSelect
 						//{...field}
 						{...props}
+						ref={ref}
 						instanceId={id}
 						placeholder={placeholder}
 						unstyled
@@ -133,10 +164,12 @@ export function ReactSelectInputMulti({
 						isClearable
 						isMulti
 						menuIsOpen={false}
-						onChange={(newValue) => onChanged(newValue, onChange)}
+						onChange={(newValue) => {
+							onChangeValues(newValue);
+						}}
 						onInputChange={(newValue) => setInputValue(newValue)}
-						onKeyDown={(e) => handleKeyDown(e, onChange)}
-						value={valor}
+						onKeyDown={handleKeyDown}
+						value={multiValue}
 						styles={{
 							input: (base) => ({
 								...base,
@@ -206,7 +239,9 @@ export function ReactSelectInputMulti({
 				)}
 			/>
 
-			{stateError && <FieldError field={name} errors={stateError} />}
+			{/* {stateError && <FieldError field={name} errors={stateError} />} */}
+			{fieldErrors && <FieldError field={name} errors={fieldErrors} />}
+			{<pre>erros:{JSON.stringify(stateError)}</pre>}
 		</div>
 	);
 }

@@ -59,7 +59,7 @@ export const addTransporte = createServerAction()
 			cidade_destino: z
 				.string({ message: "Cidade: O valo esperado é uma string" })
 				.optional(),
-			notas: z.array(z.number()).optional(),
+			notas: z.coerce.number().array().optional(),
 		}),
 	)
 	.handler(async ({ input }) => {
@@ -71,7 +71,7 @@ export const addTransporte = createServerAction()
 					empresaId: input.empresaId,
 					motoristaId: input.motoristaId,
 					tomadorId: input.tomadorId,
-					// notas: body.notas,
+					notas: input.notas,
 					// cte: body.cte,
 					uf_origem: input.uf_origem,
 					cidade_origem: input.cidade_origem,

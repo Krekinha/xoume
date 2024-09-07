@@ -110,7 +110,7 @@ export function ReactSelectCity({
 
 	return (
 		<div>
-			<QueryStatus
+			{/* <QueryStatus
 				isLoading={isPending}
 				loadingNode={<span>Buscando...</span>}
 				isError={isError}
@@ -120,7 +120,7 @@ export function ReactSelectCity({
 					code: error?.code ?? "ERROR",
 					data: error?.data ?? "",
 				}}
-			/>
+			/> */}
 			{label && (
 				<label className="text-sm font-medium ml-1 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
 					{label}
