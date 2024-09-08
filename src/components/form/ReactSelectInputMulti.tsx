@@ -5,6 +5,7 @@ import type { SelectItemProps } from "@/utils/types";
 import {
 	Controller,
 	type Control,
+	type UseFormGetValues,
 	type UseFormRegister,
 	type UseFormSetValue,
 } from "react-hook-form";

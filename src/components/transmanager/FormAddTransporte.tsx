@@ -40,7 +40,7 @@ export function FormAddTransporte() {
 	const [fieldErrors, setFieldErrors] = useState({});
 	const router = useRouter();
 
-	const { register, control, handleSubmit, setValue } = useForm<
+	const { register, control, handleSubmit, setValue, getValues } = useForm<
 		z.infer<typeof transporteSchema>
 	>({
 		defaultValues: {
@@ -215,6 +215,7 @@ export function FormAddTransporte() {
 					<InputField
 						name="peso"
 						label="Peso"
+						type="number"
 						register={register}
 						fieldErrors={fieldErrors}
 						placeholder="Digite um número"

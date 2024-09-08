@@ -1,9 +1,9 @@
 "use client";
-import type { UseFormRegister } from "react-hook-form";
+import type { UseFormGetValues, UseFormRegister } from "react-hook-form";
 
 import { ErrorField } from "./ErrorField";
 import { cn } from "@/lib/utils";
-import { useId } from "react";
+import { useId, useRef, useState, type KeyboardEventHandler } from "react";
 import { LabelField } from "./LabelField";
 import { Input } from "../ui/input";
 import React from "react";
@@ -24,13 +24,43 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
 			placeholder,
 			fieldErrors,
 			className,
-			type,
 			register,
+			type,
+			pattern,
 			...props
 		},
 		ref,
 	) => {
 		const id = useId();
+		const refInput = useRef<HTMLInputElement>(null);
+		// const elem = refInput.current;
+		// const [value, setValue] = useState("");
+		const handleKeyDown: KeyboardEventHandler<HTMLInputElement> = (e) => {
+			const charCode = e.key;
+
+			// Permite apenas números, vírgulas e pontos e Backspace
+			if (
+				(charCode >= "0" && charCode <= "9") ||
+				charCode === "," ||
+				charCode === "." ||
+				charCode === "Backspace"
+			) {
+				console.log();
+
+				// Verifica se o caractere pressionado violaria alguma das regras
+				if (violatesRules(charCode, props.value?.toString())) {
+					console.log(e.key);
+					e.preventDefault();
+				}
+				return;
+			}
+
+			// Previne que caracteres inválidos sejam inseridos
+			e.preventDefault();
+
+			console.log(e.key);
+		};
+
 		return (
 			<div>
 				{label && <LabelField label={label} />}
@@ -38,8 +68,14 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
 					{...props}
 					{...register(name)}
 					id={id}
+					// ref={refInput}
 					type={type}
 					placeholder={placeholder}
+					// pattern={"[0-9]{2}"}
+					step={"0.01"}
+					// pattern="/[0-9\.\,]+/"
+					// pattern={pattern}
+					onKeyDownCapture={handleKeyDown}
 					onKeyDown={(e) => {
 						if (e.key === "Enter") {
 							e.preventDefault();
@@ -67,3 +103,14 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
 InputField.displayName = "InputField";
 
 export { InputField };
+
+function violatesRules(charCode: string, currentValue = ""): boolean {
+	console.log(currentValue);
+	// Função auxiliar para verificar se o caractere pressionado violaria alguma das regras
+	const lastChar = currentValue[currentValue.length - 1];
+
+	if (charCode === "," && (lastChar === "," || lastChar === ".")) return true;
+	if (charCode === "." && (lastChar === "," || lastChar === ".")) return true;
+
+	return false;
+}
