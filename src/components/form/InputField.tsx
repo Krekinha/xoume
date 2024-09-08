@@ -1,9 +1,5 @@
 "use client";
-import {
-	Controller,
-	type Control,
-	type UseFormRegister,
-} from "react-hook-form";
+import type { UseFormRegister } from "react-hook-form";
 
 import { ErrorField } from "./ErrorField";
 import { cn } from "@/lib/utils";
@@ -15,18 +11,16 @@ import React from "react";
 interface InputFieldProps extends React.InputHTMLAttributes<HTMLInputElement> {
 	label?: string;
 	name: string;
-	control: Control<any, any>;
 	register: UseFormRegister<any>;
 	placeholder?: string;
 	fieldErrors?: any;
 }
 
-export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
+const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
 	(
 		{
 			label,
 			name,
-			control,
 			placeholder,
 			fieldErrors,
 			className,
@@ -40,10 +34,6 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
 		return (
 			<div>
 				{label && <LabelField label={label} />}
-				{/* <Controller
-					name={name}
-					control={control}
-					render={({ field }) => ( */}
 				<Input
 					{...props}
 					{...register(name)}
@@ -73,3 +63,5 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
 		);
 	},
 );
+
+export default InputField;
