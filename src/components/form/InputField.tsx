@@ -38,6 +38,7 @@ const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
 					{...props}
 					{...register(name)}
 					id={id}
+					name={name}
 					type={type}
 					placeholder={placeholder}
 					onKeyDown={(e) => {
