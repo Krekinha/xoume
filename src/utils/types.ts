@@ -1,6 +1,7 @@
 import type { ReactNode } from "react";
 import type { Decimal } from "@prisma/client/runtime/library";
 import { number, type ZodIssue } from "zod";
+import type { Control, UseFormRegister } from "react-hook-form";
 
 // USER TYPES
 export type User = {

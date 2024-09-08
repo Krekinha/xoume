@@ -58,7 +58,7 @@ const municipioItems = (municipios: any) => {
 	if (municipios) {
 		const municipiosMap: SelectItemProps[] = municipios.map(
 			(municipio: any) => ({
-				label: municipio["municipio-nome"],
+				label: String(municipio["municipio-nome"]).toUpperCase(),
 				value: Number.parseInt(municipio["municipio-id"], 10),
 			}),
 		);

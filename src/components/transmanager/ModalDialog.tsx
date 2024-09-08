@@ -99,7 +99,7 @@ const ModalDialog: React.FC = () => {
 							setModalDialog({ open: false });
 							onClose ? onClose() : "";
 						}}
-						className=" dark:bg-green-600 dark:text-white"
+						className=" dark:bg-green-600 dark:hover:bg-green-700 dark:text-white"
 					>
 						Close
 					</Button>

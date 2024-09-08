@@ -5,9 +5,8 @@ import { ReactSelect } from "@/components/form/ReactSelect";
 import { Button } from "@/components/ui/button";
 import { addTransporte } from "@/server/TransporteActions";
 import type { Empresa, Motorista, Tomador } from "@/utils/types";
-import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
+import type { z, ZodError } from "zod";
 import React, { useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
@@ -17,6 +16,8 @@ import { getEmpresas } from "@/server/EmpresaActions";
 import { getMotoristas } from "@/server/MotoristaActions";
 import { getTomadores } from "@/server/TomadorActions";
 import { ReactSelectInputMulti } from "../form/ReactSelectInputMulti";
+import type { transporteSchema } from "@/utils/schemas";
+import { InputField } from "../form/InputField";
 
 export function FormAddTransporte() {
 	const { data: empresas } = useServerActionQuery(getEmpresas, {
@@ -34,72 +35,19 @@ export function FormAddTransporte() {
 		queryKey: ["getTomadores"],
 	});
 
-	const {
-		isPending,
-		execute,
-		data,
-		error: err,
-	} = useServerAction(addTransporte);
+	const { execute } = useServerAction(addTransporte);
 	const { setModalDialog } = useModalDialogContext();
 	const [fieldErrors, setFieldErrors] = useState({});
 	const router = useRouter();
 
-	// define o schema de validação dos dados recebidos pelo form cliente
-	const schema = z.object({
-		empresaId: z.coerce
-			.number()
-			.positive({ message: "Selecione uma opção válida" }),
-		motoristaId: z.coerce
-			.number()
-			.positive({ message: "Selecione uma opção válida" }),
-		tomadorId: z.coerce
-			.number()
-			.positive({ message: "Selecione uma opção válida" })
-			.optional(),
-		uf_origem: z
-			.string({ message: "UF: O valo esperado é uma string" })
-			.optional(),
-		cidade_origem: z
-			.string({ message: "Cidade: O valo esperado é uma string" })
-			.toUpperCase()
-			.optional(),
-		uf_destino: z
-			.string({ message: "UF: O valo esperado é uma string" })
-			.optional(),
-		cidade_destino: z
-			.string({ message: "Cidade: O valo esperado é uma string" })
-			.toUpperCase()
-			.optional(),
-		notas: z.string().array().optional(),
-		//.positive({ message: "o número deve ser positivo" }),
-		//{ message: "Campo obrigatório" },
-
-		// notas: z.coerce
-		// 	.number({ message: "Somente números" })
-		// 	.positive({ message: "o número deve ser positivo" })
-		// 	.array()
-		// 	.optional(),
-		// notas: z.coerce
-		// 	.number({ message: "Somente números" })
-		// 	.positive({ message: "o número deve ser positivo" })
-		// 	.optional()
-		// 	.array(),
-	});
-
-	const {
-		register,
-		control,
-		handleSubmit,
-		formState,
-		setValue,
-		getValues,
-		getFieldState,
-	} = useForm({
-		//resolver: zodResolver(schema),
+	const { register, control, handleSubmit, setValue } = useForm<
+		z.infer<typeof transporteSchema>
+	>({
 		defaultValues: {
-			empresaId: 0,
-			motoristaId: 0,
+			empresaId: undefined,
+			motoristaId: undefined,
 			notas: undefined,
+			cte: undefined,
 		},
 	});
 
@@ -133,49 +81,53 @@ export function FormAddTransporte() {
 		return [];
 	};
 
-	function onClose(data: any) {
+	function onClose(data: unknown) {
 		if (data) {
 			router.push("/transmanager");
 			console.log("indo para /transmanager");
 		}
 	}
 
-	async function onSubmit(values) {
+	async function onSubmit(values: z.infer<typeof transporteSchema>) {
 		console.log(values);
 
 		const [data, err] = await execute(values);
+
+		console.log(data);
+		console.log(err);
 
 		if (err) {
 			if (err.code === "NOT_AUTHORIZED") {
 				// Handle not authorized error
 			} else if (err.code === "INPUT_PARSE_ERROR") {
-				// Handle input validation errors
-				console.log(err.fieldErrors);
-				console.log(err.formErrors);
-				console.log(err.formattedErrors);
-				setFieldErrors(err.fieldErrors);
+				const zodError = JSON.parse(err?.data) as ZodError;
+				console.log(zodError.issues);
+				setFieldErrors(zodError.issues);
 			} else {
-				// Handle other errors
+				setModalDialog({
+					open: true,
+					data: data ? data : null,
+					error: err
+						? { code: err.code, name: err.name, message: err.message }
+						: undefined,
+					onClose: () => onClose(data),
+				});
 			}
+		} else {
+			setFieldErrors({});
+			setModalDialog({
+				open: true,
+				data: data ? data : null,
+				error: undefined,
+				onClose: () => onClose(data),
+			});
 		}
-
-		console.log(data);
-		console.log(err);
-
-		// setModalDialog({
-		// 	open: true,
-		// 	data: data ? data : null,
-		// 	error: err
-		// 		? { code: err.code, name: err.name, message: err.message }
-		// 		: undefined,
-		// 	onClose: () => onClose(data),
-		// });
 	}
 
 	return (
-		<div className="h-full w-full bg-zinc-800">
+		<div className="h-full w-fullflex flex-col">
 			<form onSubmit={handleSubmit(onSubmit)}>
-				<div className="flex flex-col w-full p-4 gap-3">
+				<div className="flex flex-col w-full p-4 gap-3 dark:bg-[#191c1f] ">
 					<ReactSelect
 						name="empresaId"
 						label="Empresa"
@@ -183,7 +135,7 @@ export function FormAddTransporte() {
 						register={register}
 						items={empresaItems()}
 						placeholder="Selecione uma empresa"
-						stateError={formState.errors}
+						fieldErrors={fieldErrors}
 					/>
 					<ReactSelect
 						name="motoristaId"
@@ -192,7 +144,7 @@ export function FormAddTransporte() {
 						register={register}
 						items={motoristaItems()}
 						placeholder="Selecione um motorista"
-						stateError={formState.errors}
+						fieldErrors={fieldErrors}
 					/>
 
 					<ReactSelect
@@ -202,7 +154,7 @@ export function FormAddTransporte() {
 						register={register}
 						items={tomadorItems()}
 						placeholder="Selecione um tomador"
-						stateError={formState.errors}
+						fieldErrors={fieldErrors}
 					/>
 
 					<ReactSelectCity
@@ -210,10 +162,9 @@ export function FormAddTransporte() {
 						nameMunicipio="cidade_origem"
 						label="Origem"
 						control={control}
-						register={register}
-						items={tomadorItems()}
+						setValue={setValue}
+						fieldErrors={fieldErrors}
 						placeholder="Selecione um município"
-						stateError={formState.errors}
 					/>
 
 					<ReactSelectCity
@@ -221,25 +172,30 @@ export function FormAddTransporte() {
 						nameMunicipio="cidade_destino"
 						label="Destino"
 						control={control}
-						register={register}
-						items={tomadorItems()}
+						setValue={setValue}
+						fieldErrors={fieldErrors}
 						placeholder="Selecione um município"
-						stateError={formState.errors}
 					/>
 
-					<ReactSelectInputMulti
-						name="notas"
-						label="Notas"
-						control={control}
-						register={register}
-						setValue={setValue}
-						getValues={getValues}
-						getFieldState={getFieldState}
-						formState={formState}
-						placeholder="Digite uma número de nota e precione enter"
-						stateError={formState.errors}
-						fieldErrors={fieldErrors}
-					/>
+					<div className="grid grid-flow-col grid-cols-2 gap-3">
+						<ReactSelectInputMulti
+							name="notas"
+							label="Notas"
+							control={control}
+							setValue={setValue}
+							fieldErrors={fieldErrors}
+							placeholder="Digite um número e pressione enter"
+						/>
+						<InputField
+							name="cte"
+							label="CTe"
+							type="number"
+							control={control}
+							register={register}
+							fieldErrors={fieldErrors}
+							placeholder="Digite um número"
+						/>
+					</div>
 
 					<div className="flex justify-center self-end mt-5 gap-2">
 						<Button

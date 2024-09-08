@@ -7,10 +7,11 @@ import {
 	type UseFormRegister,
 } from "react-hook-form";
 
-import { FieldError } from "./FieldError";
+import { ErrorField } from "./ErrorField";
 import { ChevronDownIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import { type ReactNode, useId } from "react";
+import { LabelField } from "./LabelField";
 
 const DropdownIndicator = (props: any) => {
 	return (
@@ -59,6 +60,7 @@ interface ReactSelectProps {
 	items?: SelectItemProps[];
 	placeholder?: ReactNode;
 	stateError?: any;
+	fieldErrors?: any;
 }
 
 export function ReactSelect({
@@ -68,16 +70,13 @@ export function ReactSelect({
 	items,
 	placeholder,
 	stateError,
+	fieldErrors,
 	...props
 }: ReactSelectProps) {
 	const id = useId();
 	return (
 		<div>
-			{label && (
-				<label className="text-sm font-medium ml-1 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-					{label}
-				</label>
-			)}
+			{label && <LabelField label={label} />}
 			<Controller
 				name={name}
 				control={control}
@@ -119,22 +118,12 @@ export function ReactSelect({
 										: "border-gray-300 hover:border-gray-400",
 									"border rounded-md bg-white hover:cursor-pointer pl-2",
 									"dark:bg-zinc-950 dark:border-zinc-800",
-									"dark:text-sm dark:text-zinc-100",
-									// "dark:flex dark:h-9 dark:items-center ",
-									// "dark:whitespace-nowrap dark:rounded-md border dark:bg-transparent",
-									// "dark:shadow-sm dark:ring-offset-pink-600",
-									// "dark:ring-offset-zinc-950 ",
-									// "focus:dark:ring-1 focus:dark:outline-none",
+									"dark:text-sm dark:text-gray-400",
 								),
 							placeholder: () => "text-blue-500 pl-1 py-0.5 text-sm",
 							input: () => "pl-1 py-0.5",
 							valueContainer: () => "gap-1",
 							singleValue: () => "leading-7 ml-1",
-							multiValue: () =>
-								"bg-gray-100 rounded items-center py-0.5 pl-2 pr-1 gap-1.5",
-							multiValueLabel: () => "leading-6 py-0.5",
-							multiValueRemove: () =>
-								"border border-gray-200 bg-white hover:bg-red-50 hover:text-red-800 text-gray-500 hover:border-red-300 rounded-md",
 							//indicatorsContainer: () => "p-1 gap-1",
 							clearIndicator: () =>
 								"text-gray-500 p-1 rounded-md hover:bg-red-50 hover:text-red-800",
@@ -144,7 +133,7 @@ export function ReactSelect({
 							menu: () =>
 								cn(
 									"p-1 mt-1 border border-gray-200 bg-white rounded-md text-sm",
-									"dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-50",
+									"dark:bg-zinc-950 dark:border-zinc-800 dark:text-gray-400",
 								),
 							groupHeading: () => "ml-3 mt-2 mb-1 text-gray-500 text-sm",
 							option: ({ isFocused, isSelected }) =>
@@ -161,7 +150,8 @@ export function ReactSelect({
 				)}
 			/>
 
-			{stateError && <FieldError field={name} errors={stateError} />}
+			{fieldErrors && <ErrorField field={name} errors={fieldErrors} />}
+			{/* {stateError && <FieldError field={name} errors={stateError} />} */}
 		</div>
 	);
 }

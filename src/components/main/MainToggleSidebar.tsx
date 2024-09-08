@@ -24,7 +24,7 @@ export function MainToggleSidebar() {
 			<SheetContent
 				side={"left"}
 				aria-describedby={undefined}
-				className="bg-[#17191C] md:hidden"
+				className="bg-[#17191C] md:hidden border border-violet-400 dark:border-gray-700"
 			>
 				<SheetTitle />
 				<MenuSidebar />

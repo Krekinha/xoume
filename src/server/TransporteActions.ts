@@ -1,10 +1,41 @@
 "use server";
 
+import { transporteSchema } from "@/utils/schemas";
 import { Prisma, PrismaClient } from "@prisma/client";
-import { z } from "zod";
-import { createServerAction } from "zsa";
+import { z, ZodError, type ZodIssue } from "zod";
+import { createServerAction, createServerActionProcedure, ZSAError } from "zsa";
 
 const prisma = new PrismaClient();
+
+const publicAction = createServerActionProcedure()
+	.experimental_shapeError(({ err, typedData }) => {
+		if (err instanceof ZSAError) {
+			const { code: type, inputParseErrors, message } = err;
+			return {
+				message: err.message,
+				code: err.code,
+				rhfErrors: {
+					root: {
+						type,
+						message: message ?? inputParseErrors?.fieldErrors?.[0],
+					},
+					...Object.fromEntries(
+						Object.entries(inputParseErrors?.fieldErrors ?? {}).map(
+							([name, errors]) => [name, { message: errors?.[0] }],
+						),
+					),
+				},
+				values: typedData.inputRaw,
+			};
+		}
+		return {
+			message: "Something went wrong",
+			code: "ERROR",
+			values: typedData.inputRaw,
+		};
+	})
+	.handler(() => {})
+	.createServerAction();
 
 export const getTransportes = createServerAction().handler(async () => {
 	try {
@@ -35,33 +66,7 @@ export const getTransportes = createServerAction().handler(async () => {
 });
 
 export const addTransporte = createServerAction()
-	.input(
-		z.object({
-			empresaId: z.coerce
-				.number()
-				.positive({ message: "Selecione uma opção válida" }),
-			motoristaId: z.coerce
-				.number()
-				.positive({ message: "Selecione uma opção válida" }),
-			tomadorId: z.coerce
-				.number()
-				.positive({ message: "Selecione uma opção válida" })
-				.optional(),
-			uf_origem: z
-				.string({ message: "UF: O valo esperado é uma string" })
-				.optional(),
-			cidade_origem: z
-				.string({ message: "Cidade: O valo esperado é uma string" })
-				.optional(),
-			uf_destino: z
-				.string({ message: "UF: O valo esperado é uma string" })
-				.optional(),
-			cidade_destino: z
-				.string({ message: "Cidade: O valo esperado é uma string" })
-				.optional(),
-			notas: z.coerce.number().array().optional(),
-		}),
-	)
+	.input(transporteSchema)
 	.handler(async ({ input }) => {
 		console.log(input);
 
@@ -72,7 +77,7 @@ export const addTransporte = createServerAction()
 					motoristaId: input.motoristaId,
 					tomadorId: input.tomadorId,
 					notas: input.notas,
-					// cte: body.cte,
+					cte: input.cte,
 					uf_origem: input.uf_origem,
 					cidade_origem: input.cidade_origem,
 					uf_destino: input.uf_destino,
@@ -97,6 +102,19 @@ export const addTransporte = createServerAction()
 			) {
 				console.log(error.message);
 				throw error;
+			}
+			if (error instanceof ZSAError) {
+				console.log(error);
+				throw new ZSAError("INPUT_PARSE_ERROR", {
+					cause: error.cause,
+					code: error.code,
+					name: error.name,
+					data: error.data,
+					message: error.message,
+					inputParseErrors: error.inputParseErrors,
+					outputParseErrors: error.outputParseErrors,
+					stack: error.stack,
+				});
 			}
 			console.log(error);
 			throw error;

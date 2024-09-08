@@ -12,7 +12,7 @@ import {
 	SelectTrigger,
 	SelectValue,
 } from "@/components/ui/select";
-import { FieldError } from "./FieldError";
+import { ErrorField } from "./ErrorField";
 import { Label } from "@/components/ui/label";
 
 interface SelectFieldProps {
@@ -62,7 +62,7 @@ export function SelectField({
 					</Select>
 				)}
 			/>
-			{stateError && <FieldError field={name} errors={stateError} />}
+			{stateError && <ErrorField field={name} errors={stateError} />}
 		</>
 	);
 }

@@ -1,21 +1,15 @@
 "use client";
-import Select, { components, type MultiValue } from "react-select";
+import type { MultiValue } from "react-select";
 import CreatableSelect from "react-select/creatable";
 import type { SelectItemProps } from "@/utils/types";
 import {
 	Controller,
 	type Control,
-	type FieldErrors,
-	type FieldValues,
-	type FormState,
-	type UseFormGetFieldState,
-	type UseFormGetValues,
 	type UseFormRegister,
 	type UseFormSetValue,
 } from "react-hook-form";
 
-import { FieldError } from "./FieldError";
-import { ChevronDownIcon } from "@radix-ui/react-icons";
+import { ErrorField } from "./ErrorField";
 import { cn } from "@/lib/utils";
 import {
 	type KeyboardEventHandler,
@@ -23,7 +17,7 @@ import {
 	useId,
 	useState,
 } from "react";
-import { tr } from "@faker-js/faker";
+import { LabelField } from "./LabelField";
 
 {
 	// Styles
@@ -63,13 +57,7 @@ interface ReactSelectProps {
 	label?: string;
 	name: string;
 	control: Control<any, any>;
-	register: UseFormRegister<any>;
-	items?: SelectItemProps[];
 	placeholder?: ReactNode;
-	stateError?: FieldErrors<FieldValues>;
-	getFieldState: UseFormGetFieldState<FieldValues>;
-	formState: FormState<FieldValues>;
-	getValues: (fiels?: string) => UseFormGetValues<any>;
 	setValue: UseFormSetValue<any>;
 	fieldErrors: any;
 }
@@ -83,13 +71,8 @@ export function ReactSelectInputMulti({
 	label,
 	name,
 	control,
-	items,
 	placeholder,
-	stateError,
-	getValues,
 	setValue,
-	getFieldState,
-	formState,
 	fieldErrors,
 	...props
 }: ReactSelectProps) {
@@ -127,31 +110,21 @@ export function ReactSelectInputMulti({
 
 		// atualiza o campo "notas" no formState
 		setValue("notas", atualNotas);
-
-		console.log(formState);
-		console.log(getFieldState("notas", formState));
-		console.log(getFieldState("notas"));
 	}
 
 	function onChangeValues(newValue: MultiValue<SelectItemProps>) {
 		const atualNotas = newValue.map((item) => item.value);
 		setValue("notas", atualNotas);
 		setMultiValue(newValue);
-
-		console.log(getValues("notas"));
 	}
 
 	return (
 		<div>
-			{label && (
-				<label className="text-sm font-medium ml-1 leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70">
-					{label}
-				</label>
-			)}
+			{label && <LabelField label={label} />}
 			<Controller
 				name={name}
 				control={control}
-				render={({ field: { onChange, value, ref }, formState }) => (
+				render={({ field: { ref } }) => (
 					<CreatableSelect
 						//{...field}
 						{...props}
@@ -164,9 +137,7 @@ export function ReactSelectInputMulti({
 						isClearable
 						isMulti
 						menuIsOpen={false}
-						onChange={(newValue) => {
-							onChangeValues(newValue);
-						}}
+						onChange={(newValue) => onChangeValues(newValue)}
 						onInputChange={(newValue) => setInputValue(newValue)}
 						onKeyDown={handleKeyDown}
 						value={multiValue}
@@ -197,21 +168,25 @@ export function ReactSelectInputMulti({
 										: "border-gray-300 hover:border-gray-400",
 									"border rounded-md bg-white hover:cursor-pointer pl-2",
 									"dark:bg-zinc-950 dark:border-zinc-800",
-									"dark:text-sm dark:text-zinc-100",
+									"dark:text-sm dark:text-gray-400",
 								),
 							placeholder: () => "text-blue-500 pl-1 py-0.5 text-sm",
 							input: () => "pl-1 py-0.5",
 							valueContainer: () => "gap-1",
 							singleValue: () => "leading-7 ml-1",
 							multiValue: () =>
-								"bg-gray-600 rounded items-center py-0.5 pl-2 pr-1 gap-1.5",
+								cn(
+									"rounded-full border p-0.5 border-gray-700 pl-2 pr-1 gap-1.5 py-[0.05rem] items-center",
+									"cursor-default",
+								),
 							// componente contendo o rótulo de cada item em um componente multiValue
-							multiValueLabel: () => "leading-6 py-0.5",
+							multiValueLabel: () => "text-gray-400",
 							// componente contendo o botão que remove o item em um componente multiValue
 							multiValueRemove: () =>
 								cn(
-									"border border-gray-200 bg-white hover:bg-red-50 hover:text-red-800",
-									"text-gray-500 hover:border-red-300 rounded-md",
+									// "border border-gray-200 bg-white hover:bg-red-50 hover:text-red-800",
+									// "text-gray-500 hover:border-red-300 rounded-md",
+									"text-red-500 hover:text-red-600 ",
 								),
 							//indicatorsContainer: () => "p-1 gap-1",
 							clearIndicator: () =>
@@ -239,9 +214,7 @@ export function ReactSelectInputMulti({
 				)}
 			/>
 
-			{/* {stateError && <FieldError field={name} errors={stateError} />} */}
-			{fieldErrors && <FieldError field={name} errors={fieldErrors} />}
-			{<pre>erros:{JSON.stringify(stateError)}</pre>}
+			{fieldErrors && <ErrorField field={name} errors={fieldErrors} />}
 		</div>
 	);
 }
