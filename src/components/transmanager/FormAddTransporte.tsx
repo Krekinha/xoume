@@ -17,7 +17,7 @@ import { getMotoristas } from "@/server/MotoristaActions";
 import { getTomadores } from "@/server/TomadorActions";
 import { ReactSelectInputMulti } from "../form/ReactSelectInputMulti";
 import type { transporteSchema } from "@/utils/schemas";
-import InputField from "../form/InputField";
+import { InputField } from "../form/InputField";
 
 export function FormAddTransporte() {
 	const { data: empresas } = useServerActionQuery(getEmpresas, {
