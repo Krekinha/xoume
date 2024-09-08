@@ -11,60 +11,54 @@ import {
  * @version 1.0
  */
 export function formatarData(data: Date | undefined) {
-	if (data != null && data != undefined) {
+	if (data !== null && data !== undefined) {
 		return moment(data).format("DD/MM/YYYY");
-	} else {
-		return undefined;
 	}
+	return undefined;
 }
 
 export function formatarDataHora(data: Date | undefined) {
-	if (data != null && data != undefined) {
+	if (data !== null && data !== undefined) {
 		return moment(data).locale("pt-br").format("DD/MM/YY HH:mm");
-	} else {
-		return undefined;
 	}
+	return undefined;
 }
 
 export function formatarDataByMY(data: Date | undefined) {
-	if (data != null && data != undefined) {
+	if (data !== null && data !== undefined) {
 		return moment(data).locale("pt-br").format("MMMM/YYYY");
-	} else {
-		return undefined;
 	}
+	return undefined;
 }
 
 export function formatarDataByDM(data: Date | undefined) {
-	if (data != null && data != undefined) {
+	if (data !== null && data !== undefined) {
 		return moment(data).locale("pt-br").format("DD [de] MMMM");
-	} else {
-		return undefined;
 	}
+	return undefined;
 }
 
 export function formatarDataByWDM(data: Date | undefined) {
-	if (data != null && data != undefined) {
+	if (data !== null && data !== undefined) {
 		return moment(data)
 			.locale("pt-br")
 			.format("ddd, DD/MM/YY")
 			.replace(/^./, (match) => match.toUpperCase());
-	} else {
-		return undefined;
 	}
+	return undefined;
 }
 
 export function formatarDataByDMAndAddDays(
 	data: Date | undefined,
 	dias: number,
 ) {
-	if (data != null && data != undefined) {
+	if (data !== null && data !== undefined) {
 		return moment(data)
 			.add(dias, "days")
 			.locale("pt-br")
 			.format("DD [de] MMMM");
-	} else {
-		return undefined;
 	}
+	return undefined;
 }
 
 export function formatPercent(valor: string) {
@@ -84,11 +78,14 @@ export function formatCurrency(valor: string) {
 	});
 }
 
-export function formatDecimal(valor: string) {
-	return Number.parseFloat(valor).toLocaleString("pt-BR", {
-		style: "decimal",
-		maximumFractionDigits: 2,
-	});
+export function formatDecimal(valor?: string) {
+	if (valor) {
+		return Number.parseFloat(valor).toLocaleString("pt-BR", {
+			style: "decimal",
+			maximumFractionDigits: 2,
+		});
+	}
+	return valor;
 }
 
 export function anteciparSeFimDeSemana(data: any) {
@@ -106,11 +103,10 @@ export function anteciparSeFimDeSemana(data: any) {
 }
 
 export function initialDate(data: Date) {
-	if (data != null) {
+	if (data !== null) {
 		return new Date(data);
-	} else {
-		return undefined;
 	}
+	return undefined;
 }
 
 export function formatarEvolucao(eventos: EventoEvolucaoAtendimento[]) {

@@ -45,7 +45,7 @@ export const InputField = React.forwardRef<HTMLInputElement, InputFieldProps>(
 					control={control}
 					render={({ field }) => ( */}
 				<Input
-					// {...field}
+					{...props}
 					{...register(name)}
 					id={id}
 					type={type}

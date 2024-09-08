@@ -8,6 +8,7 @@ import { TransporteListItem } from "@/components/transmanager/TransporteListItem
 import { useServerActionQuery } from "@/lib/server-action-hooks";
 import { getTransportes } from "@/server/TransporteActions";
 import QueryStatus from "@/components/main/QueryStatus";
+import { formatDecimal } from "@/utils/format";
 
 export function TransportesList() {
 	const { isLoading, isRefetching, isSuccess, isError, error, data } =
@@ -64,7 +65,7 @@ export function TransportesList() {
 										title="CTe"
 									/>
 									<TransporteListItem.Tag
-										tag={transporte.peso?.toString()}
+										tag={formatDecimal(transporte.peso?.toString())}
 										icon={RiWeightFill}
 										title="Peso"
 									/>

@@ -82,7 +82,7 @@ export const addTransporte = createServerAction()
 					cidade_origem: input.cidade_origem,
 					uf_destino: input.uf_destino,
 					cidade_destino: input.cidade_destino,
-					// peso: body.peso,
+					peso: input.peso,
 					// val_tonelada: body.val_tonelada,
 					// val_frete: body.val_frete,
 					// val_cte: body.val_cte,

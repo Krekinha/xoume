@@ -35,9 +35,30 @@ export const transporteSchema = z.object({
 		.array()
 		.optional(),
 	cte: z.coerce
-
 		.number({ message: "O valor deve ser um número válido" })
 		.transform((val) => {
+			if (val === 0) {
+				return null;
+			}
+			return val;
+		})
+		.superRefine((val, ctx) => {
+			if (val !== null && val !== undefined && val < 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.too_big,
+					maximum: 1,
+					type: "number",
+					inclusive: true,
+					message: "O número deve ser positivo",
+				});
+			}
+		})
+		.nullable()
+		.optional(),
+	peso: z.coerce
+		.number({ message: "O valor deve ser um número válido" })
+		.transform((val) => {
+			console.log(val);
 			if (val === 0) {
 				return null;
 			}

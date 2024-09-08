@@ -48,6 +48,7 @@ export function FormAddTransporte() {
 			motoristaId: undefined,
 			notas: undefined,
 			cte: undefined,
+			peso: undefined,
 		},
 	});
 
@@ -88,10 +89,26 @@ export function FormAddTransporte() {
 		}
 	}
 
+	function transformValues(values: any) {
+		if (values.peso) {
+			const peso = values.peso.toString().replace(".", "").replace(",", ".");
+
+			return {
+				...values,
+				peso: peso,
+			};
+		}
+		return values;
+	}
+
 	async function onSubmit(values: z.infer<typeof transporteSchema>) {
 		console.log(values);
+		const newValues = transformValues(values) as z.infer<
+			typeof transporteSchema
+		>;
+		console.log(newValues);
 
-		const [data, err] = await execute(values);
+		const [data, err] = await execute(newValues);
 
 		console.log(data);
 		console.log(err);
@@ -196,6 +213,14 @@ export function FormAddTransporte() {
 							placeholder="Digite um número"
 						/>
 					</div>
+					<InputField
+						name="peso"
+						label="Peso"
+						control={control}
+						register={register}
+						fieldErrors={fieldErrors}
+						placeholder="Digite um número"
+					/>
 
 					<div className="flex justify-center self-end mt-5 gap-2">
 						<Button
