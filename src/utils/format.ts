@@ -83,6 +83,7 @@ export function formatDecimal(valor?: string) {
 		return Number.parseFloat(valor).toLocaleString("pt-BR", {
 			style: "decimal",
 			maximumFractionDigits: 2,
+			minimumFractionDigits: 2,
 		});
 	}
 	return valor;

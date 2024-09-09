@@ -17,7 +17,8 @@ import { getMotoristas } from "@/server/MotoristaActions";
 import { getTomadores } from "@/server/TomadorActions";
 import { ReactSelectInputMulti } from "../form/ReactSelectInputMulti";
 import type { transporteSchema } from "@/utils/schemas";
-import { InputField } from "../form/InputField";
+import { DecimalInputField } from "../form/DecimalInputField";
+import { NumberInputField } from "../form/NumberInputField";
 
 export function FormAddTransporte() {
 	const { data: empresas } = useServerActionQuery(getEmpresas, {
@@ -91,7 +92,7 @@ export function FormAddTransporte() {
 
 	function transformValues(values: any) {
 		if (values.peso) {
-			const peso = values.peso.toString().replace(".", "").replace(",", ".");
+			const peso = values.peso.toString().replace(",", ".");
 
 			return {
 				...values,
@@ -203,20 +204,20 @@ export function FormAddTransporte() {
 							fieldErrors={fieldErrors}
 							placeholder="Digite um número e pressione enter"
 						/>
-						<InputField
+						<NumberInputField
 							name="cte"
 							label="CTe"
 							type="number"
-							register={register}
+							control={control}
 							fieldErrors={fieldErrors}
 							placeholder="Digite um número"
 						/>
 					</div>
-					<InputField
+					<DecimalInputField
 						name="peso"
 						label="Peso"
 						type="number"
-						register={register}
+						control={control}
 						fieldErrors={fieldErrors}
 						placeholder="Digite um número"
 					/>

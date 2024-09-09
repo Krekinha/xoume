@@ -5,8 +5,6 @@ import type { SelectItemProps } from "@/utils/types";
 import {
 	Controller,
 	type Control,
-	type UseFormGetValues,
-	type UseFormRegister,
 	type UseFormSetValue,
 } from "react-hook-form";
 
@@ -19,6 +17,11 @@ import {
 	useState,
 } from "react";
 import { LabelField } from "./LabelField";
+import {
+	components,
+	type InputProps as ReactSelectInputProps,
+} from "react-select";
+import type { InputProps } from "react-select";
 
 {
 	// Styles
@@ -67,6 +70,10 @@ const createOption = (label: string) => ({
 	label: label,
 	value: label,
 });
+
+const CustomInput = (props: ReactSelectInputProps<SelectItemProps, true>) => (
+	<components.Input {...props} inputMode="decimal" />
+);
 
 export function ReactSelectInputMulti({
 	label,
@@ -133,7 +140,10 @@ export function ReactSelectInputMulti({
 						instanceId={id}
 						placeholder={placeholder}
 						unstyled
-						components={{ DropdownIndicator: null }}
+						components={{
+							DropdownIndicator: null,
+							Input: CustomInput,
+						}}
 						inputValue={inputValue}
 						isClearable
 						isMulti
@@ -167,12 +177,12 @@ export function ReactSelectInputMulti({
 									isFocused
 										? "border-primary-600 ring-1 ring-primary-500"
 										: "border-gray-300 hover:border-gray-400",
-									"border rounded-md bg-white hover:cursor-pointer pl-2",
+									"border rounded-md bg-white hover:cursor-pointer px-2",
 									"dark:bg-zinc-950 dark:border-zinc-800",
-									"dark:text-sm dark:text-gray-400",
+									"dark:text-sm dark:text-gray-400 max-h-[38px]",
 								),
-							placeholder: () => "text-blue-500 pl-1 py-0.5 text-sm",
-							input: () => "pl-1 py-0.5",
+							placeholder: () => "text-blue-500 pl-1 py-0.5 text-sm truncate",
+							input: () => cn("pl-1 py-0.5 truncate"),
 							valueContainer: () => "gap-1",
 							singleValue: () => "leading-7 ml-1",
 							multiValue: () =>
