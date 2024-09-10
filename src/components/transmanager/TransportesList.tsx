@@ -8,7 +8,7 @@ import { TransporteListItem } from "@/components/transmanager/TransporteListItem
 import { useServerActionQuery } from "@/lib/server-action-hooks";
 import { getTransportes } from "@/server/TransporteActions";
 import QueryStatus from "@/components/main/QueryStatus";
-import { formatDecimal } from "@/utils/format";
+import { formatCurrency, formatDecimal } from "@/utils/format";
 
 export function TransportesList() {
 	const { isLoading, isRefetching, isSuccess, isError, error, data } =
@@ -29,10 +29,16 @@ export function TransportesList() {
 						<ul key={transporte.id}>
 							<TransporteListItem.Root>
 								<TransporteListItem.Header>
-									<TransporteListItem.Empresa
-										empresa={transporte.empresa?.razaoNome}
-									/>
-									<TransporteListItem.Menu transporte={transporte} />
+									<TransporteListItem.HeaderStart>
+										<TransporteListItem.Empresa
+											empresa={transporte.empresa?.razaoNome}
+										/>
+										<TransporteListItem.CTe cte={transporte?.cte?.toString()} />
+									</TransporteListItem.HeaderStart>
+									<TransporteListItem.HeaderEnd>
+										<TransporteListItem.ValCTe transporte={transporte} />
+										<TransporteListItem.Menu transporte={transporte} />
+									</TransporteListItem.HeaderEnd>
 								</TransporteListItem.Header>
 
 								<TransporteListItem.Content>
@@ -61,18 +67,15 @@ export function TransportesList() {
 										title="Notas fiscais"
 									/>
 									<TransporteListItem.Tag
-										tag={transporte.cte?.toString()}
-										title="CTe"
-									/>
-									<TransporteListItem.Tag
 										tag={formatDecimal(transporte.peso?.toString())}
 										icon={RiWeightFill}
 										title="Peso"
 									/>
 									<TransporteListItem.Tag
-										tag={transporte.val_tonelada?.toString()}
+										tag={formatCurrency(transporte.val_tonelada?.toString())}
 										icon={PiInvoiceBold}
 										title="Valor por tonelada"
+										other="/ton."
 									/>
 								</TransporteListItem.Footer>
 

@@ -17,11 +17,7 @@ import {
 	useState,
 } from "react";
 import { LabelField } from "./LabelField";
-import {
-	components,
-	type InputProps as ReactSelectInputProps,
-} from "react-select";
-import type { InputProps } from "react-select";
+import { components } from "react-select";
 
 {
 	// Styles
@@ -71,8 +67,14 @@ const createOption = (label: string) => ({
 	value: label,
 });
 
-const CustomInput = (props: ReactSelectInputProps<SelectItemProps, true>) => (
+const CustomInput = (props: any) => (
 	<components.Input {...props} inputMode="decimal" />
+);
+
+const CustomDropdownIndicator = (props: any) => (
+	<components.DropdownIndicator {...props}>
+		<button />
+	</components.DropdownIndicator>
 );
 
 export function ReactSelectInputMulti({
@@ -87,20 +89,47 @@ export function ReactSelectInputMulti({
 	const id = useId();
 	const [inputValue, setInputValue] = useState("");
 	const [multiValue, setMultiValue] = useState<MultiValue<SelectItemProps>>([]);
+	const [localError, setLocalError] = useState("");
 
-	const handleKeyDown: KeyboardEventHandler = (event) => {
+	const keysPermitidas = [
+		"0",
+		"1",
+		"2",
+		"3",
+		"4",
+		"5",
+		"6",
+		"7",
+		"8",
+		"9",
+		"Backspace",
+		"ArrowLeft",
+		"ArrowRight",
+		"Tab",
+		"Enter",
+	];
+
+	const handleKeyDown: KeyboardEventHandler = (e) => {
+		if (!keysPermitidas.includes(e.key)) {
+			e.preventDefault();
+		}
 		if (!inputValue) return;
-		switch (event.key) {
+
+		switch (e.key) {
 			case "Enter":
 			case "Tab":
-				// função para prever o valor atual de multiValue
+				e.preventDefault();
+				// se o valor atual de inputValue já existe no estado, não adiciona novamente
+				if (multiValue.some((item) => item.value === inputValue)) {
+					setLocalError("Item já adicionado");
+					return;
+				}
+				setLocalError("");
 				setRealMultiValues();
 				setMultiValue((prev) => [...prev, createOption(inputValue)]);
 				setInputValue("");
-				event.preventDefault();
+				break;
 		}
-		const values = multiValue.map((item) => item.value);
-		console.log(values);
 	};
 
 	function setRealMultiValues() {
@@ -134,18 +163,17 @@ export function ReactSelectInputMulti({
 				control={control}
 				render={({ field: { ref } }) => (
 					<CreatableSelect
-						//{...field}
 						{...props}
 						ref={ref}
 						instanceId={id}
 						placeholder={placeholder}
 						unstyled
 						components={{
-							DropdownIndicator: null,
+							DropdownIndicator: CustomDropdownIndicator,
 							Input: CustomInput,
 						}}
 						inputValue={inputValue}
-						isClearable
+						isClearable={false}
 						isMulti
 						menuIsOpen={false}
 						onChange={(newValue) => onChangeValues(newValue)}
@@ -179,7 +207,7 @@ export function ReactSelectInputMulti({
 										: "border-gray-300 hover:border-gray-400",
 									"border rounded-md bg-white hover:cursor-pointer px-2",
 									"dark:bg-zinc-950 dark:border-zinc-800",
-									"dark:text-sm dark:text-gray-400 max-h-[38px]",
+									"dark:text-sm dark:text-gray-400 ",
 								),
 							placeholder: () => "text-blue-500 pl-1 py-0.5 text-sm truncate",
 							input: () => cn("pl-1 py-0.5 truncate"),
@@ -226,6 +254,9 @@ export function ReactSelectInputMulti({
 			/>
 
 			{fieldErrors && <ErrorField field={name} errors={fieldErrors} />}
+			{localError && (
+				<p className="text-[#f02424] ml-1 text-xs">{localError}</p>
+			)}
 		</div>
 	);
 }

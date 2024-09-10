@@ -71,11 +71,14 @@ export function formatPercent(valor: string) {
 	return `${conv}%`;
 }
 
-export function formatCurrency(valor: string) {
-	return Number.parseFloat(valor).toLocaleString("pt-BR", {
-		style: "currency",
-		currency: "BRL",
-	});
+export function formatCurrency(valor?: string) {
+	if (valor) {
+		return Number.parseFloat(valor).toLocaleString("pt-BR", {
+			style: "currency",
+			currency: "BRL",
+		});
+	}
+	return valor;
 }
 
 export function formatDecimal(valor?: string) {

@@ -77,6 +77,7 @@ const DecimalInputField = React.forwardRef<
 				<Controller
 					name={name}
 					control={control}
+					defaultValue=""
 					render={({ field: { ref, value, onChange } }) => (
 						<Input
 							{...props}

@@ -45,7 +45,7 @@ const NumberInputField = React.forwardRef<
 		});
 
 		const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-			const allowedKeys = [
+			const keysPermitidas = [
 				"0",
 				"1",
 				"2",
@@ -61,7 +61,7 @@ const NumberInputField = React.forwardRef<
 				"ArrowRight",
 				"Tab",
 			];
-			if (!allowedKeys.includes(e.key)) {
+			if (!keysPermitidas.includes(e.key)) {
 				e.preventDefault();
 			}
 		};
@@ -77,6 +77,7 @@ const NumberInputField = React.forwardRef<
 				<Controller
 					name={name}
 					control={control}
+					defaultValue=""
 					render={({ field: { ref, value, onChange } }) => (
 						<Input
 							{...props}

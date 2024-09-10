@@ -6,6 +6,7 @@ import { FaTruck, FaUser } from "react-icons/fa6";
 import { FaHashtag } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { ComplementoItem } from "./ComplementoItem";
+import { formatCurrency } from "@/utils/format";
 
 /**
  * Item da lista de transportes/viagens cadastradas.
@@ -16,7 +17,11 @@ import { ComplementoItem } from "./ComplementoItem";
 export const TransporteListItem = {
 	Root: TransporteListItemRoot,
 	Header: TransporteListItemHeader,
+	HeaderStart: TransporteListItemHeaderStart,
 	Empresa: TransporteListItemEmpresa,
+	CTe: TransporteListItemCTe,
+	HeaderEnd: TransporteListItemHeaderEnd,
+	ValCTe: TransporteListItemValCTe,
 	Menu: TransporteListItemMenu,
 	Content: TransporteListItemContent,
 	Motorista: TransporteListItemMotorista,
@@ -42,7 +47,7 @@ export function TransporteListItemRoot({
 }
 
 /**
- *  HEADER
+ *  HEADER ROOT
  */
 interface TransporteListItemHeaderProps {
 	children: ReactNode;
@@ -50,14 +55,29 @@ interface TransporteListItemHeaderProps {
 export function TransporteListItemHeader({
 	children,
 }: TransporteListItemHeaderProps) {
-	// return <div className="grid grid-flow-col items-center">{children}</div>;
 	return (
 		<div className="flex flex-row items-center justify-between">{children}</div>
 	);
 }
 
 /**
- *  HEADER: EMPRESA = ICON | EMPRESA
+ *  HEADER-START-CONTAINER (EMPRESA && CTe)
+ */
+interface TransporteListItemHeaderStartProps {
+	children: ReactNode;
+}
+export function TransporteListItemHeaderStart({
+	children,
+}: TransporteListItemHeaderStartProps) {
+	return (
+		<div className="flex flex-row items-center justify-start gap-2">
+			{children}
+		</div>
+	);
+}
+
+/**
+ *  HEADER-START: EMPRESA = (ICON | EMPRESA)
  */
 interface TransporteListItemEmpresaProps {
 	icon?: ElementType;
@@ -76,7 +96,81 @@ export function TransporteListItemEmpresa({
 }
 
 /**
- *  HEADER: MENU
+ *  HEADER-START: CTe = (CTE | VALOR CTe)
+ */
+interface TransporteListItemCTeProps {
+	cte?: string;
+}
+export function TransporteListItemCTe({ cte }: TransporteListItemCTeProps) {
+	return (
+		<>
+			{cte && (
+				<>
+					<Separator orientation="vertical" className="bg-gray-500 mx-1" />
+					<div className="flex gap-2 items-center ">
+						<span className="text-[0.650rem] font-semibold dark:text-slate-200">
+							CTe:{" "}
+						</span>
+						<div className="text-[0.650rem] font-semibold dark:text-blue-500">
+							{cte}
+						</div>
+					</div>
+				</>
+			)}
+		</>
+	);
+}
+
+/**
+ *  HEADER-END (VALOR CTe | MENU)
+ */
+interface TransporteListItemHeaderEndProps {
+	children: ReactNode;
+}
+export function TransporteListItemHeaderEnd({
+	children,
+}: TransporteListItemHeaderEndProps) {
+	// return <div className="grid grid-flow-col items-center">{children}</div>;
+	return (
+		<div className="flex flex-row items-center justify-end gap-2">
+			{children}
+		</div>
+	);
+}
+
+/**
+ *  HEADER-END: VALOR CTe
+ */
+interface TransporteListItemMenuProps {
+	transporte: Transporte;
+}
+export function TransporteListItemValCTe({
+	transporte,
+}: TransporteListItemMenuProps) {
+	let val_frete = 0;
+	if (transporte.peso && transporte.val_tonelada) {
+		val_frete =
+			(Number(transporte.peso) / 1000) * Number(transporte.val_tonelada);
+	}
+	return (
+		<div className="flex gap-1 items-center ">
+			<div className="text-xs font-semibold dark:text-amber-400">
+				{formatCurrency(transporte.val_cte?.toString())}
+			</div>
+			{val_frete > 0 && (
+				<>
+					<span className="text-[0.650rem] dark:text-gray-400">/</span>
+					<span className="text-[0.650rem] font-semibold dark:text-gray-400">
+						{formatCurrency(val_frete.toString())}
+					</span>
+				</>
+			)}
+		</div>
+	);
+}
+
+/**
+ *  HEADER-END: MENU
  */
 interface TransporteListItemMenuProps {
 	transporte: Transporte;
@@ -141,7 +235,7 @@ export function TransporteListItemOrigem({
 		<>
 			{cidadeOrigem && (
 				<>
-					<Separator orientation="vertical" className="bg-gray-200 mx-1" />
+					<Separator orientation="vertical" className="bg-gray-500 mx-1" />
 					<div className="text-xs truncate">
 						{cidadeOrigem}-{ufOrigem}
 					</div>
@@ -199,18 +293,23 @@ interface TransporteListItemTagProps {
 	icon?: ElementType;
 	tag?: string;
 	title?: string;
+	other?: string;
 }
 export function TransporteListItemTag({
 	icon: Icon = FaHashtag,
 	tag,
 	title,
+	other,
 }: TransporteListItemTagProps) {
 	return (
 		<>
 			{tag && (
 				<div title={title} className="flex items-center gap-1">
 					<Icon className="text-amber-600 w-3 h-3" />
-					<div className="font-medium">{tag}</div>
+					<div className="font-medium">
+						{tag}
+						{other}
+					</div>
 				</div>
 			)}
 		</>

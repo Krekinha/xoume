@@ -7,7 +7,8 @@ import { addTransporte } from "@/server/TransporteActions";
 import type { Empresa, Motorista, Tomador } from "@/utils/types";
 import { useForm } from "react-hook-form";
 import type { z, ZodError } from "zod";
-import React, { useState } from "react";
+import type React from "react";
+import { useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
 import { useModalDialogContext } from "@/providers/ModaDialogProvider";
@@ -50,6 +51,7 @@ export function FormAddTransporte() {
 			notas: undefined,
 			cte: undefined,
 			peso: undefined,
+			val_tonelada: undefined,
 		},
 	});
 
@@ -91,15 +93,27 @@ export function FormAddTransporte() {
 	}
 
 	function transformValues(values: any) {
-		if (values.peso) {
-			const peso = values.peso.toString().replace(",", ".");
+		const transformedValues = { ...values };
 
-			return {
-				...values,
-				peso: peso,
-			};
+		if (transformedValues.peso) {
+			transformedValues.peso = transformedValues.peso
+				.toString()
+				.replace(",", ".");
 		}
-		return values;
+
+		if (transformedValues.val_tonelada) {
+			transformedValues.val_tonelada = transformedValues.val_tonelada
+				.toString()
+				.replace(",", ".");
+		}
+
+		if (transformedValues.val_cte) {
+			transformedValues.val_cte = transformedValues.val_cte
+				.toString()
+				.replace(",", ".");
+		}
+
+		return transformedValues;
 	}
 
 	async function onSubmit(values: z.infer<typeof transporteSchema>) {
@@ -179,48 +193,66 @@ export function FormAddTransporte() {
 						nameUf="uf_origem"
 						nameMunicipio="cidade_origem"
 						label="Origem"
+						placeholder="Selecione um município"
 						control={control}
 						setValue={setValue}
 						fieldErrors={fieldErrors}
-						placeholder="Selecione um município"
 					/>
 
 					<ReactSelectCity
 						nameUf="uf_destino"
 						nameMunicipio="cidade_destino"
 						label="Destino"
+						placeholder="Selecione um município"
 						control={control}
 						setValue={setValue}
 						fieldErrors={fieldErrors}
-						placeholder="Selecione um município"
 					/>
 
 					<div className="grid grid-flow-col grid-cols-2 gap-3">
 						<ReactSelectInputMulti
 							name="notas"
 							label="Notas"
+							placeholder="Digite um número e pressione enter"
 							control={control}
 							setValue={setValue}
 							fieldErrors={fieldErrors}
-							placeholder="Digite um número e pressione enter"
 						/>
 						<NumberInputField
 							name="cte"
 							label="CTe"
+							placeholder="Digite um número"
 							type="number"
 							control={control}
 							fieldErrors={fieldErrors}
-							placeholder="Digite um número"
 						/>
 					</div>
-					<DecimalInputField
-						name="peso"
-						label="Peso"
-						type="number"
-						control={control}
-						fieldErrors={fieldErrors}
-						placeholder="Digite um número"
-					/>
+					<div className="grid grid-flow-col grid-cols-3 gap-3">
+						<DecimalInputField
+							name="peso"
+							label="Peso"
+							placeholder="Digite um número"
+							type="number"
+							control={control}
+							fieldErrors={fieldErrors}
+						/>
+						<DecimalInputField
+							name="val_tonelada"
+							label="Val/Ton"
+							placeholder="Digite um valor"
+							type="number"
+							control={control}
+							fieldErrors={fieldErrors}
+						/>
+						<DecimalInputField
+							name="val_cte"
+							label="Val. CTe"
+							placeholder="Digite um valor"
+							type="number"
+							control={control}
+							fieldErrors={fieldErrors}
+						/>
+					</div>
 
 					<div className="flex justify-center self-end mt-5 gap-2">
 						<Button

@@ -46,10 +46,6 @@ export function ErrorField({ field, errors }: FieldErrorProps) {
 	const erro = errorArr.find((c) => c.path.includes(field)) ?? null;
 
 	return (
-		<>
-			{erro && (
-				<pre className="text-[#f02424] ml-1 text-xs">{erro.message}</pre>
-			)}
-		</>
+		<>{erro && <p className="text-[#f02424] ml-1 text-xs">{erro.message}</p>}</>
 	);
 }
