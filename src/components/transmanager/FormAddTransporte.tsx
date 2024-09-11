@@ -20,6 +20,7 @@ import { ReactSelectInputMulti } from "../form/ReactSelectInputMulti";
 import type { transporteSchema } from "@/utils/schemas";
 import { DecimalInputField } from "../form/DecimalInputField";
 import { NumberInputField } from "../form/NumberInputField";
+import { DatePickerField } from "../form/DatePickerField";
 
 export function FormAddTransporte() {
 	const { data: empresas } = useServerActionQuery(getEmpresas, {
@@ -52,6 +53,9 @@ export function FormAddTransporte() {
 			cte: undefined,
 			peso: undefined,
 			val_tonelada: undefined,
+			val_cte: undefined,
+			reducao_bc_icms: undefined,
+			aliquota_icms: undefined,
 		},
 	});
 
@@ -109,6 +113,18 @@ export function FormAddTransporte() {
 
 		if (transformedValues.val_cte) {
 			transformedValues.val_cte = transformedValues.val_cte
+				.toString()
+				.replace(",", ".");
+		}
+
+		if (transformedValues.reducao_bc_icms) {
+			transformedValues.reducao_bc_icms = transformedValues.reducao_bc_icms
+				.toString()
+				.replace(",", ".");
+		}
+
+		if (transformedValues.aliquota_icms) {
+			transformedValues.aliquota_icms = transformedValues.aliquota_icms
 				.toString()
 				.replace(",", ".");
 		}
@@ -251,6 +267,32 @@ export function FormAddTransporte() {
 							type="number"
 							control={control}
 							fieldErrors={fieldErrors}
+						/>
+					</div>
+					<div className="grid grid-flow-col grid-cols-3 gap-3 items-center">
+						<DecimalInputField
+							name="reducao_bc_icms"
+							label="Redução BC ICMS"
+							placeholder="Digite um número"
+							type="number"
+							control={control}
+							fieldErrors={fieldErrors}
+						/>
+						<DecimalInputField
+							name="aliquota_icms"
+							label="Aliq. ICMS"
+							placeholder="Digite um valor"
+							type="number"
+							control={control}
+							fieldErrors={fieldErrors}
+						/>
+						<DatePickerField
+							name="emissao_cte"
+							label="Emissão CTe"
+							placeholder="Selecione uma data"
+							control={control}
+							fieldErrors={fieldErrors}
+							setValue={setValue}
 						/>
 					</div>
 

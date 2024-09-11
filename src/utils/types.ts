@@ -135,10 +135,11 @@ export type Transporte = {
 	cidade_destino?: string;
 	peso?: Decimal;
 	val_tonelada?: Decimal;
-	val_frete?: Decimal;
 	val_cte?: Decimal;
+	reducao_bc_icms?: Decimal;
 	aliquota_icms?: Decimal;
 	val_icms?: Decimal;
+	emissao_cte?: Date;
 	criadoEm?: Date;
 	atualizadoEm?: Date;
 

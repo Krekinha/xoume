@@ -7,6 +7,7 @@ import { FaHashtag } from "react-icons/fa";
 import { Separator } from "@/components/ui/separator";
 import { ComplementoItem } from "./ComplementoItem";
 import { formatCurrency } from "@/utils/format";
+import { cn } from "@/lib/utils";
 
 /**
  * Item da lista de transportes/viagens cadastradas.
@@ -56,7 +57,9 @@ export function TransporteListItemHeader({
 	children,
 }: TransporteListItemHeaderProps) {
 	return (
-		<div className="flex flex-row items-center justify-between">{children}</div>
+		<div className="flex flex-row items-center justify-between gap-2">
+			{children}
+		</div>
 	);
 }
 
@@ -89,8 +92,8 @@ export function TransporteListItemEmpresa({
 }: TransporteListItemEmpresaProps) {
 	return (
 		<div className="flex gap-2 items-center dark:text-slate-200">
-			<Icon className="text-blue-500" />
-			<div className="text-[0.650rem] font-semibold">{empresa}</div>
+			<Icon className="text-blue-500 flex-shrink-0" />
+			<div className="text-xs line-clamp-2 font-medium">{empresa}</div>
 		</div>
 	);
 }
@@ -106,12 +109,11 @@ export function TransporteListItemCTe({ cte }: TransporteListItemCTeProps) {
 		<>
 			{cte && (
 				<>
-					<Separator orientation="vertical" className="bg-gray-500 mx-1" />
-					<div className="flex gap-2 items-center ">
-						<span className="text-[0.650rem] font-semibold dark:text-slate-200">
-							CTe:{" "}
+					<div className="flex gap-1 items-center ">
+						<span className="text-xs font-semibold dark:text-slate-200">
+							CTe:
 						</span>
-						<div className="text-[0.650rem] font-semibold dark:text-blue-500">
+						<div className="text-xs font-semibold dark:text-blue-500">
 							{cte}
 						</div>
 					</div>
@@ -154,7 +156,7 @@ export function TransporteListItemValCTe({
 	}
 	return (
 		<div className="flex gap-1 items-center ">
-			<div className="text-xs font-semibold dark:text-amber-400">
+			<div className="text-sm font-semibold dark:text-amber-400">
 				{formatCurrency(transporte.val_cte?.toString())}
 			</div>
 			{val_frete > 0 && (
@@ -191,9 +193,7 @@ export function TransporteListItemContent({
 	children,
 }: TransporteListItemContentProps) {
 	return (
-		<div className="flex items-center gap-1 dark:text-slate-300">
-			{children}
-		</div>
+		<div className="flex flex-col gap-1 dark:text-slate-300">{children}</div>
 	);
 }
 
@@ -211,10 +211,12 @@ export function TransporteListItemMotorista({
 	return (
 		<>
 			{motorista && (
-				<>
+				<div className="flex items-center gap-1">
 					<Icon className="text-blue-600 w-3 h-3" />
-					<div className="text-xs truncate">{motorista}</div>
-				</>
+					<span className="text-[0.7rem]/[1rem] sm:text-xs truncate">
+						{motorista}
+					</span>
+				</div>
 			)}
 		</>
 	);
@@ -235,9 +237,12 @@ export function TransporteListItemOrigem({
 		<>
 			{cidadeOrigem && (
 				<>
-					<Separator orientation="vertical" className="bg-gray-500 mx-1" />
-					<div className="text-xs truncate">
-						{cidadeOrigem}-{ufOrigem}
+					<div className="flex truncate items-center">
+						<span className="text-[0.7rem]/[1rem] sm:text-xs truncate">
+							{cidadeOrigem}
+						</span>
+						<span>-</span>
+						<span className="text-[0.7rem]/[1rem] sm:text-xs">{ufOrigem}</span>
 					</div>
 				</>
 			)}
@@ -260,9 +265,15 @@ export function TransporteListItemDestino({
 		<>
 			{cidadeDestino && (
 				<>
-					<div className="text-xs">x</div>
-					<div className="text-xs truncate">
-						{cidadeDestino}-{ufDestino}
+					<div className="flex truncate items-center">
+						<span className="text-[0.7rem]/[1rem] mr-1 sm:text-xs text-blue-500">
+							x
+						</span>
+						<span className="text-[0.7rem]/[1rem] sm:text-xs truncate">
+							{cidadeDestino}
+						</span>
+						<span>-</span>
+						<span className="text-[0.7rem]/[1rem] sm:text-xs">{ufDestino}</span>
 					</div>
 				</>
 			)}
@@ -289,7 +300,8 @@ export function TransporteListItemFooter({
 /**
  *  FOOTER: TAG (ICON | STRING)
  */
-interface TransporteListItemTagProps {
+interface TransporteListItemTagProps
+	extends React.HtmlHTMLAttributes<HTMLSpanElement> {
 	icon?: ElementType;
 	tag?: string;
 	title?: string;
@@ -300,16 +312,18 @@ export function TransporteListItemTag({
 	tag,
 	title,
 	other,
+	className,
+	...props
 }: TransporteListItemTagProps) {
 	return (
 		<>
 			{tag && (
-				<div title={title} className="flex items-center gap-1">
+				<div title={title} className="grid grid-flow-col items-center gap-1">
 					<Icon className="text-amber-600 w-3 h-3" />
-					<div className="font-medium">
+					<span {...props} className={cn("font-medium", className)}>
 						{tag}
 						{other}
-					</div>
+					</span>
 				</div>
 			)}
 		</>

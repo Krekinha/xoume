@@ -84,13 +84,10 @@ export const addTransporte = createServerAction()
 					cidade_destino: input.cidade_destino,
 					peso: input.peso,
 					val_tonelada: input.val_tonelada,
-					// val_frete: body.val_frete,
 					val_cte: input.val_cte,
-					// aliquota_icms: body.aliquota_icms,
-					// val_icms: body.val_icms,
-					// empresaId: body.empresaId,
-					// motoristaId: body.motoristaId,
-					// tomadorId: body.tomadorId,
+					reducao_bc_icms: input.reducao_bc_icms,
+					aliquota_icms: input.aliquota_icms,
+					emissao_cte: input.emissao_cte,
 				},
 			});
 

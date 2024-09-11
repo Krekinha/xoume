@@ -4,11 +4,14 @@ import { MdFactory } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";
 import { RiWeightFill } from "react-icons/ri";
 import { PiInvoiceBold } from "react-icons/pi";
+import { PercentCircle } from "lucide-react";
 import { TransporteListItem } from "@/components/transmanager/TransporteListItem";
 import { useServerActionQuery } from "@/lib/server-action-hooks";
 import { getTransportes } from "@/server/TransporteActions";
 import QueryStatus from "@/components/main/QueryStatus";
 import { formatCurrency, formatDecimal } from "@/utils/format";
+import { Separator } from "@/components/ui/separator";
+import type { Decimal } from "@prisma/client/runtime/library";
 
 export function TransportesList() {
 	const { isLoading, isRefetching, isSuccess, isError, error, data } =
@@ -16,6 +19,22 @@ export function TransportesList() {
 			input: undefined,
 			queryKey: ["getTransportes"],
 		});
+
+	const valIcms = (
+		val_cte: Decimal | undefined,
+		aliquota_icms: Decimal | undefined,
+		reducao_bc_icms: Decimal | undefined,
+	) => {
+		if (val_cte && aliquota_icms) {
+			const valCteNum = Number(val_cte);
+			const bc = reducao_bc_icms
+				? valCteNum * (1 - Number(reducao_bc_icms) / 100)
+				: valCteNum;
+			const val_icms = bc * (Number(aliquota_icms) / 100);
+			return val_icms;
+		}
+		return 0;
+	};
 	return (
 		<div className="h-full max-h-screen w-full space-y-3 overflow-y-auto p-4 overflow-x-hidden">
 			<QueryStatus
@@ -33,26 +52,48 @@ export function TransportesList() {
 										<TransporteListItem.Empresa
 											empresa={transporte.empresa?.razaoNome}
 										/>
-										<TransporteListItem.CTe cte={transporte?.cte?.toString()} />
 									</TransporteListItem.HeaderStart>
 									<TransporteListItem.HeaderEnd>
-										<TransporteListItem.ValCTe transporte={transporte} />
 										<TransporteListItem.Menu transporte={transporte} />
 									</TransporteListItem.HeaderEnd>
 								</TransporteListItem.Header>
 
 								<TransporteListItem.Content>
-									<TransporteListItem.Motorista
-										motorista={transporte.motorista?.nome}
-									/>
-									<TransporteListItem.Origem
-										cidadeOrigem={transporte.cidade_origem}
-										ufOrigem={transporte.uf_origem}
-									/>
-									<TransporteListItem.Destino
-										cidadeDestino={transporte.cidade_destino}
-										ufDestino={transporte.uf_destino}
-									/>
+									<div className="flex flex-row gap-2 justify-between">
+										<div className="flex gap-2 items-center">
+											<TransporteListItem.CTe
+												cte={transporte?.cte?.toString()}
+											/>
+											<Separator
+												orientation="vertical"
+												className="bg-gray-600 w-[1px] h-[0.5rem]"
+											/>
+											<TransporteListItem.Tag
+												tag={transporte.notas?.join("/")}
+												icon={FaFileAlt}
+												title="Notas fiscais"
+												className="text-xs truncate"
+											/>
+										</div>
+										<TransporteListItem.ValCTe transporte={transporte} />
+									</div>
+									<div className="flex gap-1 items-center">
+										<TransporteListItem.Motorista
+											motorista={transporte.motorista?.nome}
+										/>
+										<Separator
+											orientation="vertical"
+											className="bg-gray-600 w-[1px] mx-1 h-[0.5rem]"
+										/>
+										<TransporteListItem.Origem
+											cidadeOrigem={transporte.cidade_origem}
+											ufOrigem={transporte.uf_origem}
+										/>
+										<TransporteListItem.Destino
+											cidadeDestino={transporte.cidade_destino}
+											ufDestino={transporte.uf_destino}
+										/>
+									</div>
 								</TransporteListItem.Content>
 
 								<TransporteListItem.Footer>
@@ -61,11 +102,7 @@ export function TransportesList() {
 										icon={MdFactory}
 										title="Tomador"
 									/>
-									<TransporteListItem.Tag
-										tag={transporte.notas?.join("/")}
-										icon={FaFileAlt}
-										title="Notas fiscais"
-									/>
+
 									<TransporteListItem.Tag
 										tag={formatDecimal(transporte.peso?.toString())}
 										icon={RiWeightFill}
@@ -76,6 +113,18 @@ export function TransportesList() {
 										icon={PiInvoiceBold}
 										title="Valor por tonelada"
 										other="/ton."
+									/>
+
+									<TransporteListItem.Tag
+										tag={formatCurrency(
+											valIcms(
+												transporte?.val_cte,
+												transporte?.aliquota_icms,
+												transporte?.reducao_bc_icms,
+											).toString(),
+										)}
+										icon={PercentCircle}
+										title="Valor do ICMS"
 									/>
 								</TransporteListItem.Footer>
 

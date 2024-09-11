@@ -160,19 +160,19 @@ enum SituacaoEventoEvolucaoAtendimento {
 //* TRANSPORTE
 
 model Transporte {
-  id             Int      @id @default(autoincrement())
-  notas          Int[]
-  cte            Int?
-  uf_origem      String?
-  cidade_origem  String?
-  uf_destino     String?
-  cidade_destino String?
-  peso           Decimal?
-  val_tonelada   Decimal?
-  val_frete      Decimal?
-  val_cte        Decimal?
-  aliquota_icms  Decimal?
-  val_icms       Decimal?
+  id              Int       @id @default(autoincrement())
+  notas           Int[]
+  cte             Int?
+  uf_origem       String?
+  cidade_origem   String?
+  uf_destino      String?
+  cidade_destino  String?
+  peso            Decimal?
+  val_tonelada    Decimal?
+  val_cte         Decimal?
+  reducao_bc_icms Decimal?
+  aliquota_icms   Decimal?
+  emissao_cte     DateTime?
 
   criadoEm     DateTime? @default(now())
   atualizadoEm DateTime?
