@@ -1,55 +1,38 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { ReactSelect } from "@/components/form/ReactSelect";
 import { Button } from "@/components/ui/button";
-import { addTransporte } from "@/server/TransporteActions";
-import type { Empresa, Motorista, Tomador } from "@/utils/types";
 import { useForm } from "react-hook-form";
 import type { z, ZodError } from "zod";
 import type React from "react";
 import { useState } from "react";
-import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
 import { useModalDialogContext } from "@/providers/ModaDialogProvider";
-import { useServerActionQuery } from "@/hooks/server-action-hooks";
-import { getEmpresas } from "@/server/EmpresaActions";
-import { getMotoristas } from "@/server/MotoristaActions";
-import { getTomadores } from "@/server/TomadorActions";
-import { ReactSelectInputMulti } from "../form/ReactSelectInputMulti";
-import type { transporteSchema } from "@/utils/schemas";
+import type { complementoSchema } from "@/utils/schemas";
 import { DecimalInputField } from "../form/DecimalInputField";
 import { NumberInputField } from "../form/NumberInputField";
 import { DatePickerField } from "../form/DatePickerField";
+import { addComplemento } from "@/server/ComplementoActions";
 
-export function FormAddTransporte() {
-	const { data: empresas } = useServerActionQuery(getEmpresas, {
-		input: undefined,
-		queryKey: ["getEmpresas"],
-	});
+interface FormAddComplementoProps {
+	id: number;
+}
 
-	const { data: motoristas } = useServerActionQuery(getMotoristas, {
-		input: undefined,
-		queryKey: ["getMotoristas"],
-	});
+export function FormAddComplemento({ id }: FormAddComplementoProps) {
+	// const { data: empresas } = useServerActionQuery(getEmpresas, {
+	// 	input: undefined,
+	// 	queryKey: ["getEmpresas"],
+	// });
 
-	const { data: tomadores } = useServerActionQuery(getTomadores, {
-		input: undefined,
-		queryKey: ["getTomadores"],
-	});
-
-	const { execute } = useServerAction(addTransporte);
+	const { execute } = useServerAction(addComplemento);
 	const { setModalDialog } = useModalDialogContext();
 	const [fieldErrors, setFieldErrors] = useState({});
 	const router = useRouter();
 
-	const { register, control, handleSubmit, setValue, getValues } = useForm<
-		z.infer<typeof transporteSchema>
+	const { control, handleSubmit, setValue, getValues } = useForm<
+		z.infer<typeof complementoSchema>
 	>({
 		defaultValues: {
-			empresaId: undefined,
-			motoristaId: undefined,
-			notas: undefined,
 			cte: undefined,
 			peso: undefined,
 			val_tonelada: undefined,
@@ -58,36 +41,6 @@ export function FormAddTransporte() {
 			aliquota_icms: undefined,
 		},
 	});
-
-	const empresaItems = () => {
-		if (empresas) {
-			return empresas.map((empresa: Empresa) => ({
-				label: empresa.razaoNome,
-				value: empresa.id,
-			}));
-		}
-		return [];
-	};
-
-	const motoristaItems = () => {
-		if (motoristas) {
-			return motoristas.map((motorista: Motorista) => ({
-				label: motorista.nome,
-				value: motorista.id,
-			}));
-		}
-		return [];
-	};
-
-	const tomadorItems = () => {
-		if (tomadores) {
-			return tomadores.map((tomador: Tomador) => ({
-				label: tomador.razaoNome,
-				value: tomador.id,
-			}));
-		}
-		return [];
-	};
 
 	function onClose(data: unknown) {
 		if (data) {
@@ -98,6 +51,8 @@ export function FormAddTransporte() {
 
 	function transformValues(values: any) {
 		const transformedValues = { ...values };
+
+		transformedValues.transporteId = id;
 
 		if (transformedValues.peso) {
 			transformedValues.peso = transformedValues.peso
@@ -112,9 +67,13 @@ export function FormAddTransporte() {
 		}
 
 		if (transformedValues.val_cte) {
+			console.log(transformedValues.val_cte);
 			transformedValues.val_cte = transformedValues.val_cte
 				.toString()
 				.replace(",", ".");
+		} else if (transformedValues.val_cte === "") {
+			console.log("val_cte é vazio");
+			transformedValues.val_cte = undefined;
 		}
 
 		if (transformedValues.reducao_bc_icms) {
@@ -132,10 +91,10 @@ export function FormAddTransporte() {
 		return transformedValues;
 	}
 
-	async function onSubmit(values: z.infer<typeof transporteSchema>) {
+	async function onSubmit(values: z.infer<typeof complementoSchema>) {
 		console.log(values);
 		const newValues = transformValues(values) as z.infer<
-			typeof transporteSchema
+			typeof complementoSchema
 		>;
 		console.log(newValues);
 
@@ -176,64 +135,7 @@ export function FormAddTransporte() {
 		<div className="h-full w-full flex flex-col overflow-y-auto">
 			<form onSubmit={handleSubmit(onSubmit)}>
 				<div className="flex flex-col w-full p-4 gap-3 dark:bg-[#191c1f] ">
-					<ReactSelect
-						name="empresaId"
-						label="Empresa"
-						control={control}
-						register={register}
-						items={empresaItems()}
-						placeholder="Selecione uma empresa"
-						fieldErrors={fieldErrors}
-					/>
-					<ReactSelect
-						name="motoristaId"
-						label="Motorista"
-						control={control}
-						register={register}
-						items={motoristaItems()}
-						placeholder="Selecione um motorista"
-						fieldErrors={fieldErrors}
-					/>
-
-					<ReactSelect
-						name="tomadorId"
-						label="Tomador"
-						control={control}
-						register={register}
-						items={tomadorItems()}
-						placeholder="Selecione um tomador"
-						fieldErrors={fieldErrors}
-					/>
-
-					<ReactSelectCity
-						nameUf="uf_origem"
-						nameMunicipio="cidade_origem"
-						label="Origem"
-						placeholder="Selecione um município"
-						control={control}
-						setValue={setValue}
-						fieldErrors={fieldErrors}
-					/>
-
-					<ReactSelectCity
-						nameUf="uf_destino"
-						nameMunicipio="cidade_destino"
-						label="Destino"
-						placeholder="Selecione um município"
-						control={control}
-						setValue={setValue}
-						fieldErrors={fieldErrors}
-					/>
-
 					<div className="grid grid-flow-col grid-cols-2 gap-3">
-						<ReactSelectInputMulti
-							name="notas"
-							label="Notas"
-							placeholder="Digite um número e pressione enter"
-							control={control}
-							setValue={setValue}
-							fieldErrors={fieldErrors}
-						/>
 						<NumberInputField
 							name="cte"
 							label="CTe"
@@ -242,8 +144,6 @@ export function FormAddTransporte() {
 							control={control}
 							fieldErrors={fieldErrors}
 						/>
-					</div>
-					<div className="grid grid-flow-col grid-cols-3 gap-3">
 						<DecimalInputField
 							name="peso"
 							label="Peso"
@@ -252,6 +152,8 @@ export function FormAddTransporte() {
 							control={control}
 							fieldErrors={fieldErrors}
 						/>
+					</div>
+					<div className="grid grid-flow-col grid-cols-2 gap-3">
 						<DecimalInputField
 							name="val_tonelada"
 							label="Val/Ton"

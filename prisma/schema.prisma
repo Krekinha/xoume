@@ -190,14 +190,14 @@ model Transporte {
 }
 
 model CteComplementar {
-  id            Int      @id @default(autoincrement())
-  cte           Int
-  peso          Decimal?
-  val_tonelada  Decimal?
-  val_frete     Decimal?
-  val_cte       Decimal
-  aliquota_icms Decimal?
-  val_icms      Decimal?
+  id              Int       @id @default(autoincrement())
+  cte             Int?
+  peso            Decimal?
+  val_tonelada    Decimal?
+  val_cte         Decimal
+  reducao_bc_icms Decimal?
+  aliquota_icms   Decimal?
+  emissao_cte     DateTime?
 
   criadoEm     DateTime? @default(now())
   atualizadoEm DateTime?

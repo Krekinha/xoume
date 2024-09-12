@@ -51,6 +51,9 @@ export const getTransportes = createServerAction().handler(async () => {
 				tomador: true,
 				cteComplementar: true,
 			},
+			orderBy: {
+				criadoEm: "desc",
+			},
 		});
 		return JSON.parse(JSON.stringify(transportes));
 	} catch (error: unknown) {
@@ -130,18 +133,31 @@ export const delTransporte = createServerAction()
 		console.log(input.id);
 
 		try {
-			const transporte = await prisma.transporte.delete({
-				where: {
-					id: input.id,
-				},
-				select: {
-					cte: true,
-					notas: true,
-				},
+			const resultado = await prisma.$transaction(async (prisma) => {
+				// Primeiro, deletamos o cteComplementar se existir
+				await prisma.cteComplementar.deleteMany({
+					where: {
+						transporteId: input.id,
+					},
+				});
+
+				// Agora deletamos o transporte
+				const transporte = await prisma.transporte.delete({
+					where: {
+						id: input.id,
+					},
+					select: {
+						cte: true,
+						notas: true,
+					},
+				});
+
+				return transporte;
 			});
-			console.log(transporte);
+
+			console.log(resultado);
 			return {
-				message: `Transporte referente ao CT-e "${transporte.cte ?? "(não informado)"}", nota(s) "${transporte.notas.length > 0 ? transporte.notas : "(não informado)"}" excluído com sucesso!`,
+				message: `Transporte referente ao CT-e "${resultado.cte ?? "(não informado)"}", nota(s) "${resultado.notas.length > 0 ? resultado.notas : "(não informado)"}" excluído com sucesso!`,
 			};
 		} catch (error: unknown) {
 			if (

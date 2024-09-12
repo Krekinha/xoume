@@ -4,12 +4,17 @@ import { MdFactory } from "react-icons/md";
 import { FaFileAlt } from "react-icons/fa";
 import { RiWeightFill } from "react-icons/ri";
 import { PiInvoiceBold } from "react-icons/pi";
-import { PercentCircle } from "lucide-react";
+import { PercentCircle, Calendar } from "lucide-react";
 import { TransporteListItem } from "@/components/transmanager/TransporteListItem";
-import { useServerActionQuery } from "@/lib/server-action-hooks";
+import { useServerActionQuery } from "@/hooks/server-action-hooks";
 import { getTransportes } from "@/server/TransporteActions";
 import QueryStatus from "@/components/main/QueryStatus";
-import { formatCurrency, formatDecimal } from "@/utils/format";
+import {
+	formatarData,
+	formatarDataHora,
+	formatCurrency,
+	formatDecimal,
+} from "@/utils/format";
 import { Separator } from "@/components/ui/separator";
 import type { Decimal } from "@prisma/client/runtime/library";
 
@@ -54,6 +59,12 @@ export function TransportesList() {
 										/>
 									</TransporteListItem.HeaderStart>
 									<TransporteListItem.HeaderEnd>
+										<span
+											title="Data da criação"
+											className="text-[0.7rem] text-gray-500"
+										>
+											{formatarDataHora(transporte.criadoEm)}
+										</span>
 										<TransporteListItem.Menu transporte={transporte} />
 									</TransporteListItem.HeaderEnd>
 								</TransporteListItem.Header>
@@ -64,10 +75,12 @@ export function TransportesList() {
 											<TransporteListItem.CTe
 												cte={transporte?.cte?.toString()}
 											/>
-											<Separator
-												orientation="vertical"
-												className="bg-gray-600 w-[1px] h-[0.5rem]"
-											/>
+											{transporte.cte && transporte?.notas && (
+												<Separator
+													orientation="vertical"
+													className="bg-gray-600 w-[1px] mx-1 h-[0.5rem]"
+												/>
+											)}
 											<TransporteListItem.Tag
 												tag={transporte.notas?.join("/")}
 												icon={FaFileAlt}
@@ -81,10 +94,12 @@ export function TransportesList() {
 										<TransporteListItem.Motorista
 											motorista={transporte.motorista?.nome}
 										/>
-										<Separator
-											orientation="vertical"
-											className="bg-gray-600 w-[1px] mx-1 h-[0.5rem]"
-										/>
+										{transporte.cidade_origem && (
+											<Separator
+												orientation="vertical"
+												className="bg-gray-600 w-[1px] mx-1 h-[0.5rem]"
+											/>
+										)}
 										<TransporteListItem.Origem
 											cidadeOrigem={transporte.cidade_origem}
 											ufOrigem={transporte.uf_origem}
@@ -125,6 +140,11 @@ export function TransportesList() {
 										)}
 										icon={PercentCircle}
 										title="Valor do ICMS"
+									/>
+									<TransporteListItem.Tag
+										tag={formatarData(transporte.emissao_cte)}
+										icon={Calendar}
+										title="Emissão"
 									/>
 								</TransporteListItem.Footer>
 

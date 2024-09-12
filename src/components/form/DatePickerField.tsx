@@ -11,7 +11,6 @@ import { cn } from "@/lib/utils";
 import { type ReactNode, useId, useState } from "react";
 import { LabelField } from "./LabelField";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
-import { FormControl } from "../ui/form";
 import { Button } from "../ui/button";
 import { CalendarIcon } from "lucide-react";
 import { Calendar } from "../ui/calendar";
@@ -36,12 +35,6 @@ export function DatePickerField({
 }: DatePickerFieldProps) {
 	const id = useId();
 
-	// function onChangeValues(newValue: MultiValue<SelectItemProps>) {
-	// 	const atualNotas = newValue.map((item) => item.value);
-	// 	setValue("notas", atualNotas);
-	// 	setMultiValue(newValue);
-	// }
-
 	return (
 		<div className="flex flex-col gap-1 mt-1">
 			{label && <LabelField label={label} />}
@@ -61,13 +54,14 @@ export function DatePickerField({
 								{value ? (
 									format(value, "PPP")
 								) : (
-									<span className="text-blue-500">{placeholder}</span>
+									<span className="text-blue-500 truncate">{placeholder}</span>
 								)}
-								<CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+								<CalendarIcon className="ml-auto h-4 w-4 opacity-50 flex-shrink-0" />
 							</Button>
 						</PopoverTrigger>
 						<PopoverContent className="w-auto p-0" align="start">
 							<Calendar
+								id={id}
 								mode="single"
 								selected={value}
 								onSelect={onChange}

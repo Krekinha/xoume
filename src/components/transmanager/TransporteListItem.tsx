@@ -8,6 +8,7 @@ import { Separator } from "@/components/ui/separator";
 import { ComplementoItem } from "./ComplementoItem";
 import { formatCurrency } from "@/utils/format";
 import { cn } from "@/lib/utils";
+import Image from "next/image";
 
 /**
  * Item da lista de transportes/viagens cadastradas.
@@ -110,8 +111,17 @@ export function TransporteListItemCTe({ cte }: TransporteListItemCTeProps) {
 			{cte && (
 				<>
 					<div className="flex gap-1 items-center ">
-						<span className="text-xs font-semibold dark:text-slate-200">
+						{/* <span className="text-xs font-semibold dark:text-slate-200">
 							CTe:
+						</span> */}
+						<span
+							className={cn(
+								"border-t border-b border-amber-500",
+								"h-4 w-4 text-amber-500 text-[0.55rem]",
+								"text-center align-middle",
+							)}
+						>
+							CTe
 						</span>
 						<div className="text-xs font-semibold dark:text-blue-500">
 							{cte}

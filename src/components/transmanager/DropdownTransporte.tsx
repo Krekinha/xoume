@@ -1,37 +1,37 @@
 "use client";
 import { RiDeleteBin6Line } from "react-icons/ri";
-import { AiFillEdit } from "react-icons/ai";
-import { MoreHorizontal } from "lucide-react";
+import { AiFillEdit, AiFillFileAdd } from "react-icons/ai";
+import { MoreHorizontal, CopyPlus, FilePlus, Trash2 } from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuLabel,
+	DropdownMenuPortal,
 	DropdownMenuSeparator,
+	DropdownMenuSub,
+	DropdownMenuSubContent,
+	DropdownMenuSubTrigger,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import type { ErrorResponse, Transporte } from "@/utils/types";
+import type { Transporte } from "@/utils/types";
 import { delTransporte } from "@/server/TransporteActions";
 import { cn } from "@/lib/utils";
-import {
-	QueryKeyFactory,
-	useServerActionQuery,
-} from "@/lib/server-action-hooks";
-import { useState } from "react";
-import ModalDialog from "./ModalDialog";
+import { QueryKeyFactory } from "@/hooks/server-action-hooks";
 import { useServerAction } from "zsa-react";
 import { useModalDialogContext } from "@/providers/ModaDialogProvider";
 import { useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 
 interface Props {
 	transporte: Transporte;
 }
 
 export function DropdownTransporte({ transporte }: Props) {
-	const [id, setId] = useState(false);
 	const { data, error, execute } = useServerAction(delTransporte);
 	const { setModalDialog } = useModalDialogContext();
 	const queryClient = useQueryClient();
+	const router = useRouter();
 
 	function onClose() {
 		queryClient.refetchQueries({
@@ -51,10 +51,6 @@ export function DropdownTransporte({ transporte }: Props) {
 				: undefined,
 			onClose: onClose,
 		});
-		// console.log(error);
-		// console.log(data);
-		// setModalResponse({ data: data, err: error });
-		// setIsModalOpen(true);
 	}
 
 	return (
@@ -62,31 +58,69 @@ export function DropdownTransporte({ transporte }: Props) {
 			<DropdownMenuTrigger asChild>
 				<button
 					className={cn(
-						"inline-flex h-5 w-5 p-0 hover:bg-gray-200 active:bg-gray-300 ease-linear transition-all",
+						"inline-flex border-0 h-5 w-5 p-1 hover:bg-gray-600 active:bg-transparent ease-linear transition-all",
 						"cursor-pointer duration-150 select-none items-center justify-center rounded-md",
 					)}
 				>
 					<span className="sr-only">Open menu</span>
-					<MoreHorizontal className="h-4 w-4" />
+					<MoreHorizontal className="h-4 w-4 flex-shrink-0" />
 				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="bg-white">
-				<DropdownMenuLabel>Transporte</DropdownMenuLabel>
+				<DropdownMenuLabel className="text-blue-500">
+					Transporte
+				</DropdownMenuLabel>
 				<DropdownMenuSeparator className="bg-gray-300" />
 				<DropdownMenuItem
 					onClick={() => {}}
 					className="hover:bg-gray-300 cursor-pointer rounded gap-2"
 				>
-					<AiFillEdit className="text-blue-600" />
+					<AiFillEdit className="text-blue-600 w-4 h-4" />
 					Editar
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					onClick={() => excluirTransporte(transporte.id || 0)}
 					className="hover:bg-gray-300 cursor-pointer rounded gap-2"
 				>
-					<RiDeleteBin6Line className="text-red-600" />
-					Excluir
+					<Trash2 className="text-red-600 w-4 h-4" />
+					<span>Deletar</span>
 				</DropdownMenuItem>
+				<DropdownMenuSeparator className="bg-gray-300" />
+				<DropdownMenuSub>
+					<DropdownMenuSubTrigger className="gap-1">
+						<CopyPlus className="text-green-500 w-4 h-4" />
+						<span>Complemento</span>
+					</DropdownMenuSubTrigger>
+					<DropdownMenuPortal>
+						<DropdownMenuSubContent>
+							<DropdownMenuItem
+								onClick={() =>
+									router.push(
+										`/transmanager/transportes/complemento/${transporte.id}`,
+									)
+								}
+								className="hover:bg-gray-300 cursor-pointer rounded gap-2"
+							>
+								<FilePlus className="text-green-600 w-4 h-4" />
+								Adicionar
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => {}}
+								className="hover:bg-gray-300 cursor-pointer rounded gap-2"
+							>
+								<AiFillEdit className="text-blue-600 w-4 h-4" />
+								Editar
+							</DropdownMenuItem>
+							<DropdownMenuItem
+								onClick={() => {}}
+								className="hover:bg-gray-300 cursor-pointer rounded gap-2"
+							>
+								<Trash2 className="text-red-600 w-4 h-4" />
+								Deletar
+							</DropdownMenuItem>
+						</DropdownMenuSubContent>
+					</DropdownMenuPortal>
+				</DropdownMenuSub>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
