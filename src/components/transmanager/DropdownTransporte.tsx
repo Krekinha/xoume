@@ -1,6 +1,5 @@
 "use client";
-import { RiDeleteBin6Line } from "react-icons/ri";
-import { AiFillEdit, AiFillFileAdd } from "react-icons/ai";
+import { AiFillEdit } from "react-icons/ai";
 import { MoreHorizontal, CopyPlus, FilePlus, Trash2 } from "lucide-react";
 import {
 	DropdownMenu,
@@ -28,7 +27,7 @@ interface Props {
 }
 
 export function DropdownTransporte({ transporte }: Props) {
-	const { data, error, execute } = useServerAction(delTransporte);
+	const { execute } = useServerAction(delTransporte);
 	const { setModalDialog } = useModalDialogContext();
 	const queryClient = useQueryClient();
 	const router = useRouter();
@@ -67,6 +66,7 @@ export function DropdownTransporte({ transporte }: Props) {
 				</button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent align="end" className="bg-white">
+				{/* Transporte */}
 				<DropdownMenuLabel className="text-blue-500">
 					Transporte
 				</DropdownMenuLabel>
@@ -86,6 +86,8 @@ export function DropdownTransporte({ transporte }: Props) {
 					<span>Deletar</span>
 				</DropdownMenuItem>
 				<DropdownMenuSeparator className="bg-gray-300" />
+
+				{/* Complemento */}
 				<DropdownMenuSub>
 					<DropdownMenuSubTrigger className="gap-1">
 						<CopyPlus className="text-green-500 w-4 h-4" />
@@ -94,15 +96,24 @@ export function DropdownTransporte({ transporte }: Props) {
 					<DropdownMenuPortal>
 						<DropdownMenuSubContent>
 							<DropdownMenuItem
+								disabled={!!transporte.cteComplementar}
 								onClick={() =>
 									router.push(
 										`/transmanager/transportes/complemento/${transporte.id}`,
 									)
 								}
-								className="hover:bg-gray-300 cursor-pointer rounded gap-2"
+								className="hover:bg-gray-300 cursor-pointer rounded gap-2 disabled:opacity-50"
 							>
-								<FilePlus className="text-green-600 w-4 h-4" />
-								Adicionar
+								<FilePlus
+									className={`w-4 h-4 text-green-600 disabled:text-gray-500 ${
+										transporte.cteComplementar ? "opacity-50" : ""
+									}`}
+								/>
+								<span
+									className={transporte.cteComplementar ? "opacity-40" : ""}
+								>
+									Adicionar
+								</span>
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								onClick={() => {}}

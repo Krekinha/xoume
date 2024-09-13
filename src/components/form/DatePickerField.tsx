@@ -5,6 +5,7 @@ import {
 	type Control,
 	type UseFormSetValue,
 } from "react-hook-form";
+import { ptBR } from "date-fns/locale";
 
 import { ErrorField } from "./ErrorField";
 import { cn } from "@/lib/utils";
@@ -52,7 +53,7 @@ export function DatePickerField({
 								)}
 							>
 								{value ? (
-									format(value, "PPP")
+									format(value, "P", { locale: ptBR })
 								) : (
 									<span className="text-blue-500 truncate">{placeholder}</span>
 								)}

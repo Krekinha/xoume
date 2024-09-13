@@ -68,6 +68,41 @@ export const getTransportes = createServerAction().handler(async () => {
 	}
 });
 
+export const getTransporteById = createServerAction()
+	.input(
+		z.object({
+			id: z.coerce.number(),
+		}),
+	)
+	.handler(async ({ input }) => {
+		console.log(input.id);
+
+		try {
+			const transporte = await prisma.transporte.findUnique({
+				where: {
+					id: input.id,
+				},
+				include: {
+					empresa: true,
+					motorista: true,
+					tomador: true,
+					cteComplementar: true,
+				},
+			});
+
+			return JSON.parse(JSON.stringify(transporte));
+		} catch (error: unknown) {
+			if (
+				error instanceof Prisma.PrismaClientKnownRequestError ||
+				error instanceof Prisma.PrismaClientUnknownRequestError
+			) {
+				console.log("Erro conhecido do Prisma:", error.message);
+				return new Error(error.message);
+			}
+			throw new Error(`Falha ao buscar municípios: ${String(error)}`);
+		}
+	});
+
 export const addTransporte = createServerAction()
 	.input(transporteSchema)
 	.handler(async ({ input }) => {

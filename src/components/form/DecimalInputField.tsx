@@ -31,6 +31,7 @@ const DecimalInputField = React.forwardRef<
 			control,
 			type,
 			pattern,
+			defaultValue,
 			...props
 		},
 		ref,
@@ -77,7 +78,7 @@ const DecimalInputField = React.forwardRef<
 				<Controller
 					name={name}
 					control={control}
-					defaultValue=""
+					defaultValue={defaultValue ?? ""}
 					render={({ field: { ref, value, onChange } }) => (
 						<Input
 							{...props}
