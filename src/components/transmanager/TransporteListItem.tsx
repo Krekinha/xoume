@@ -100,30 +100,36 @@ export function TransporteListItemEmpresa({
 /**
  *  HEADER-START: CTe = (CTE | VALOR CTe)
  */
-interface TransporteListItemCTeProps {
+interface TransporteListItemCTeProps
+	extends React.HtmlHTMLAttributes<HTMLSpanElement> {
 	cte?: string;
 }
-export function TransporteListItemCTe({ cte }: TransporteListItemCTeProps) {
+export function TransporteListItemCTe({
+	cte,
+	className,
+}: TransporteListItemCTeProps) {
 	return (
 		<>
 			{cte && (
 				<>
 					<div className="flex gap-1 items-center ">
-						{/* <span className="text-xs font-semibold dark:text-slate-200">
-							CTe:
-						</span> */}
 						<span
 							className={cn(
 								"border-t border-b border-amber-500",
 								"h-4 w-4 text-amber-500 text-[0.55rem]",
-								"text-center align-middle",
+								"text-center",
 							)}
 						>
 							CTe
 						</span>
-						<div className="text-xs font-semibold dark:text-blue-500">
+						<span
+							className={cn(
+								"text-xs font-semibold dark:text-blue-500",
+								className,
+							)}
+						>
 							{cte}
-						</div>
+						</span>
 					</div>
 				</>
 			)}
@@ -158,10 +164,17 @@ export function TransporteListItemValCTe({
 	transporte,
 }: TransporteListItemMenuProps) {
 	let val_frete = 0;
-	if (transporte.peso && transporte.val_tonelada) {
+	if (transporte.cteComplementar) {
 		val_frete =
-			(Number(transporte.peso) / 1000) * Number(transporte.val_tonelada);
+			(Number(transporte.cteComplementar.peso) / 1000) *
+			Number(transporte.val_tonelada);
+	} else {
+		if (transporte.peso && transporte.val_tonelada) {
+			val_frete =
+				(Number(transporte.peso) / 1000) * Number(transporte.val_tonelada);
+		}
 	}
+
 	return (
 		<div className="flex gap-1 items-center ">
 			<div className="text-sm font-semibold dark:text-amber-400">

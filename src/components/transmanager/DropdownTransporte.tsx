@@ -21,6 +21,28 @@ import { useServerAction } from "zsa-react";
 import { useModalDialogContext } from "@/providers/ModaDialogProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
+import DialogItem from "./DialogItem";
+import DialogAlertItem from "./DialogAlertItem";
+import { useState } from "react";
+import {
+	Dialog,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import {
+	AlertDialog,
+	AlertDialogAction,
+	AlertDialogCancel,
+	AlertDialogContent,
+	AlertDialogDescription,
+	AlertDialogFooter,
+	AlertDialogTitle,
+	AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 interface Props {
 	transporte: Transporte;
@@ -31,6 +53,7 @@ export function DropdownTransporte({ transporte }: Props) {
 	const { setModalDialog } = useModalDialogContext();
 	const queryClient = useQueryClient();
 	const router = useRouter();
+	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
 
 	function onClose() {
 		queryClient.refetchQueries({
@@ -53,7 +76,10 @@ export function DropdownTransporte({ transporte }: Props) {
 	}
 
 	return (
-		<DropdownMenu>
+		<DropdownMenu
+			open={showDropdownMenu}
+			onOpenChange={(change) => setShowDropdownMenu(change)}
+		>
 			<DropdownMenuTrigger asChild>
 				<button
 					className={cn(
@@ -78,13 +104,32 @@ export function DropdownTransporte({ transporte }: Props) {
 					<AiFillEdit className="text-blue-600 w-4 h-4" />
 					Editar
 				</DropdownMenuItem>
-				<DropdownMenuItem
-					onClick={() => excluirTransporte(transporte.id || 0)}
-					className="hover:bg-gray-300 cursor-pointer rounded gap-2"
-				>
-					<Trash2 className="text-red-600 w-4 h-4" />
-					<span>Deletar</span>
-				</DropdownMenuItem>
+				<AlertDialog onOpenChange={(change) => setShowDropdownMenu(change)}>
+					<AlertDialogTrigger asChild>
+						<DropdownMenuItem
+							className="hover:bg-gray-300 cursor-pointer rounded gap-2"
+							onSelect={(e) => e.preventDefault()}
+						>
+							<Trash2 className="text-red-600 w-4 h-4" />
+							<span>Deletar</span>
+						</DropdownMenuItem>
+					</AlertDialogTrigger>
+					<AlertDialogContent className="bg-zinc-950 border border-zinc-900">
+						<AlertDialogTitle />
+						<AlertDialogDescription>
+							Tem certeza que deseja deletar o transporte? O complemento
+							vinculado será deletado também.
+						</AlertDialogDescription>
+						<AlertDialogFooter>
+							<AlertDialogCancel>Cancelar</AlertDialogCancel>
+							<AlertDialogAction
+								onClick={() => excluirTransporte(transporte.id ?? 0)}
+							>
+								Continuar
+							</AlertDialogAction>
+						</AlertDialogFooter>
+					</AlertDialogContent>
+				</AlertDialog>
 				<DropdownMenuSeparator className="bg-gray-300" />
 
 				{/* Complemento */}

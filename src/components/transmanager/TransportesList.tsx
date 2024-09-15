@@ -38,7 +38,7 @@ export function TransportesList() {
 			const val_icms = bc * (Number(aliquota_icms) / 100);
 			return val_icms;
 		}
-		return 0;
+		return null;
 	};
 	return (
 		<div className="h-full max-h-screen w-full space-y-3 overflow-y-auto p-4 overflow-x-hidden">
@@ -136,7 +136,7 @@ export function TransportesList() {
 												transporte?.val_cte,
 												transporte?.aliquota_icms,
 												transporte?.reducao_bc_icms,
-											).toString(),
+											)?.toString(),
 										)}
 										icon={PercentCircle}
 										title="Valor do ICMS"
@@ -151,46 +151,69 @@ export function TransportesList() {
 								<TransporteListItem.Complemento
 									complemento={transporte.cteComplementar}
 								>
-									<TransporteListItem.Tag
-										tag={transporte.cteComplementar?.cte?.toString()}
-										title="CTe"
-									/>
+									<div className="flex flex-row w-full gap-2 justify-between">
+										<div className="flex gap-2 items-center flex-wrap">
+											<TransporteListItem.CTe
+												cte={transporte.cteComplementar?.cte?.toString()}
+												className="text-sm font-semibold dark:text-fuchsia-500"
+											/>
 
-									<TransporteListItem.Tag
-										tag={transporte.cteComplementar?.peso?.toString()}
-										icon={RiWeightFill}
-										title="Peso"
-									/>
+											<TransporteListItem.Tag
+												tag={formatDecimal(
+													transporte.cteComplementar?.peso?.toString(),
+												)}
+												icon={RiWeightFill}
+												title="Peso"
+												className="text-sm font-semibold dark:text-fuchsia-500"
+											/>
 
-									<TransporteListItem.Tag
-										tag={transporte.cteComplementar?.val_tonelada?.toString()}
-										icon={PiInvoiceBold}
-										title="Valor por tonelada"
-									/>
+											<TransporteListItem.Tag
+												tag={formatCurrency(
+													transporte.val_tonelada?.toString(),
+												)}
+												icon={PiInvoiceBold}
+												title="Valor por tonelada"
+												other="/ton."
+												className="text-sm font-semibold dark:text-fuchsia-500"
+											/>
 
-									<TransporteListItem.Tag
-										tag={transporte.cteComplementar?.val_frete?.toString()}
-										icon={PiInvoiceBold}
-										title="Valor total do frete"
-									/>
+											<TransporteListItem.Tag
+												tag={transporte.cteComplementar?.aliquota_icms?.toString()}
+												icon={PiInvoiceBold}
+												title="Alíquota ICMS"
+											/>
 
-									<TransporteListItem.Tag
-										tag={transporte.cteComplementar?.val_cte?.toString()}
-										icon={PiInvoiceBold}
-										title="Valor do CTe"
-									/>
+											<TransporteListItem.Tag
+												tag={formatCurrency(
+													valIcms(
+														transporte?.cteComplementar?.val_cte,
+														transporte?.cteComplementar?.aliquota_icms,
+														transporte?.cteComplementar?.reducao_bc_icms,
+													)?.toString(),
+												)}
+												icon={PercentCircle}
+												title="Valor do ICMS"
+												className="text-sm font-semibold dark:text-fuchsia-500"
+											/>
 
-									<TransporteListItem.Tag
-										tag={transporte.cteComplementar?.aliquota_icms?.toString()}
-										icon={PiInvoiceBold}
-										title="Alíquota ICMS"
-									/>
-
-									<TransporteListItem.Tag
-										tag={transporte.cteComplementar?.val_icms?.toString()}
-										icon={PiInvoiceBold}
-										title="Valor do ICMS"
-									/>
+											<TransporteListItem.Tag
+												tag={formatarData(
+													transporte.cteComplementar?.emissao_cte,
+												)}
+												icon={Calendar}
+												title="Emissão"
+												className="text-sm font-semibold dark:text-fuchsia-500"
+											/>
+										</div>
+										<TransporteListItem.Tag
+											tag={formatCurrency(
+												transporte.cteComplementar?.val_cte?.toString(),
+											)}
+											icon={PiInvoiceBold}
+											title="Valor do CTe"
+											className="text-sm font-semibold dark:text-amber-400"
+										/>
+									</div>
 								</TransporteListItem.Complemento>
 							</TransporteListItem.Root>
 						</ul>
