@@ -205,14 +205,11 @@ export function TransportesList() {
 												className="text-sm font-semibold dark:text-fuchsia-500"
 											/>
 										</div>
-										<TransporteListItem.Tag
-											tag={formatCurrency(
+										<div className="text-sm font-semibold dark:text-amber-400">
+											{formatCurrency(
 												transporte.cteComplementar?.val_cte?.toString(),
 											)}
-											icon={PiInvoiceBold}
-											title="Valor do CTe"
-											className="text-sm font-semibold dark:text-amber-400"
-										/>
+										</div>
 									</div>
 								</TransporteListItem.Complemento>
 							</TransporteListItem.Root>

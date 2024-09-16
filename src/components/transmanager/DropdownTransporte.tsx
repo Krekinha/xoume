@@ -1,6 +1,12 @@
 "use client";
 import { AiFillEdit } from "react-icons/ai";
-import { MoreHorizontal, CopyPlus, FilePlus, Trash2 } from "lucide-react";
+import {
+	MoreHorizontal,
+	CopyPlus,
+	FilePlus,
+	Trash2,
+	FunctionSquare,
+} from "lucide-react";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -32,13 +38,27 @@ import {
 	AlertDialogTitle,
 	AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import {
+	Dialog,
+	DialogClose,
+	DialogContent,
+	DialogDescription,
+	DialogFooter,
+	DialogHeader,
+	DialogTitle,
+	DialogTrigger,
+} from "@/components/ui/dialog";
+import { delComplemento } from "@/server/ComplementoActions";
+import { Button } from "../ui/button";
+import { TransporteAutomacoes } from "./TransporteAutomacoes";
 
 interface Props {
 	transporte: Transporte;
 }
 
 export function DropdownTransporte({ transporte }: Props) {
-	const { execute } = useServerAction(delTransporte);
+	const { execute: execTransporte } = useServerAction(delTransporte);
+	const { execute: execComplemento } = useServerAction(delComplemento);
 	const { setModalDialog } = useModalDialogContext();
 	const queryClient = useQueryClient();
 	const router = useRouter();
@@ -48,11 +68,23 @@ export function DropdownTransporte({ transporte }: Props) {
 		queryClient.refetchQueries({
 			queryKey: QueryKeyFactory.getTransportes(), //retornar a mesma chave de consulta definida em factory
 		});
-		console.log("onclose");
 	}
 
 	async function excluirTransporte(id: number) {
-		const [data, err] = await execute({ id: id });
+		const [data, err] = await execTransporte({ id: id });
+
+		setModalDialog({
+			open: true,
+			data: data ? data.message : null,
+			error: err
+				? { code: err.code, name: err.name, message: err.message }
+				: undefined,
+			onClose: onClose,
+		});
+	}
+
+	async function excluirComplemento(id: number) {
+		const [data, err] = await execComplemento({ id: id });
 
 		setModalDialog({
 			open: true,
@@ -106,8 +138,8 @@ export function DropdownTransporte({ transporte }: Props) {
 					<AlertDialogContent className="bg-zinc-950 border border-zinc-900">
 						<AlertDialogTitle />
 						<AlertDialogDescription>
-							Tem certeza que deseja deletar o transporte? O complemento
-							vinculado será deletado também.
+							{`Tem certeza que deseja deletar o transporte CTe "${transporte.cte}"? 
+							${transporte.cteComplementar ? `O complemento CTe "${transporte.cteComplementar.cte}" vinculado também será deletado.` : ""}`}
 						</AlertDialogDescription>
 						<AlertDialogFooter>
 							<AlertDialogCancel>Cancelar</AlertDialogCancel>
@@ -120,7 +152,6 @@ export function DropdownTransporte({ transporte }: Props) {
 					</AlertDialogContent>
 				</AlertDialog>
 				<DropdownMenuSeparator className="bg-gray-300" />
-
 				{/* Complemento */}
 				<DropdownMenuSub>
 					<DropdownMenuSubTrigger className="gap-1">
@@ -139,7 +170,7 @@ export function DropdownTransporte({ transporte }: Props) {
 								className="hover:bg-gray-300 cursor-pointer rounded gap-2 disabled:opacity-50"
 							>
 								<FilePlus
-									className={`w-4 h-4 text-green-600 disabled:text-gray-500 ${
+									className={`w-4 h-4 text-green-600 ${
 										transporte.cteComplementar ? "opacity-50" : ""
 									}`}
 								/>
@@ -150,22 +181,87 @@ export function DropdownTransporte({ transporte }: Props) {
 								</span>
 							</DropdownMenuItem>
 							<DropdownMenuItem
+								disabled={!transporte.cteComplementar}
 								onClick={() => {}}
-								className="hover:bg-gray-300 cursor-pointer rounded gap-2"
+								className="cursor-pointer rounded gap-2"
 							>
-								<AiFillEdit className="text-blue-600 w-4 h-4" />
-								Editar
+								<AiFillEdit
+									className={`w-4 h-4 text-blue-600 ${
+										!transporte.cteComplementar ? "opacity-40" : ""
+									}`}
+								/>
+								<span
+									className={!transporte.cteComplementar ? "opacity-40" : ""}
+								>
+									Editar
+								</span>
 							</DropdownMenuItem>
-							<DropdownMenuItem
-								onClick={() => {}}
-								className="hover:bg-gray-300 cursor-pointer rounded gap-2"
+							<AlertDialog
+								onOpenChange={(change) => setShowDropdownMenu(change)}
 							>
-								<Trash2 className="text-red-600 w-4 h-4" />
-								Deletar
-							</DropdownMenuItem>
+								<AlertDialogTrigger asChild>
+									<DropdownMenuItem
+										disabled={!transporte.cteComplementar}
+										className="hover:bg-gray-300 cursor-pointer rounded gap-2"
+										onSelect={(e) => e.preventDefault()}
+									>
+										<Trash2
+											className={`w-4 h-4 text-red-600 ${
+												!transporte.cteComplementar ? "opacity-50" : ""
+											}`}
+										/>
+										<span
+											className={
+												!transporte.cteComplementar ? "opacity-40" : ""
+											}
+										>
+											Deletar
+										</span>
+									</DropdownMenuItem>
+								</AlertDialogTrigger>
+								<AlertDialogContent className="bg-zinc-950 border border-zinc-900">
+									<AlertDialogTitle />
+									<AlertDialogDescription>
+										{`Tem certeza que deseja deletar o complemento CTe "${transporte.cteComplementar?.cte}"? `}
+									</AlertDialogDescription>
+									<AlertDialogFooter>
+										<AlertDialogCancel>Cancelar</AlertDialogCancel>
+										<AlertDialogAction
+											onClick={() =>
+												excluirComplemento(transporte.cteComplementar?.id ?? 0)
+											}
+										>
+											Continuar
+										</AlertDialogAction>
+									</AlertDialogFooter>
+								</AlertDialogContent>
+							</AlertDialog>
 						</DropdownMenuSubContent>
 					</DropdownMenuPortal>
 				</DropdownMenuSub>
+				<DropdownMenuSeparator className="bg-gray-300" />
+				{/* Automações */}
+				<Dialog onOpenChange={(change) => setShowDropdownMenu(change)}>
+					<DialogTrigger asChild>
+						<DropdownMenuItem
+							className=" cursor-pointer rounded gap-2"
+							onSelect={(e) => e.preventDefault()}
+						>
+							<FunctionSquare className="text-violet-500 w-4 h-4" />
+							<span>Automações</span>
+						</DropdownMenuItem>
+					</DialogTrigger>
+					<DialogContent className="bg-zinc-950 border border-zinc-900">
+						<DialogTitle>Automações</DialogTitle>
+						<DialogDescription />
+						<TransporteAutomacoes transporte={transporte} />
+						<DialogFooter>
+							<DialogClose asChild>
+								<Button variant="outline">Fechar</Button>
+							</DialogClose>
+						</DialogFooter>
+					</DialogContent>
+				</Dialog>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);

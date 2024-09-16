@@ -67,18 +67,16 @@ export const delComplemento = createServerAction()
 		console.log(input.id);
 
 		try {
-			const transporte = await prisma.transporte.delete({
+			const cteComplementar = await prisma.cteComplementar.delete({
 				where: {
 					id: input.id,
 				},
 				select: {
 					cte: true,
-					notas: true,
 				},
 			});
-			console.log(transporte);
 			return {
-				message: `Transporte referente ao CT-e "${transporte.cte ?? "(não informado)"}", nota(s) "${transporte.notas.length > 0 ? transporte.notas : "(não informado)"}" excluído com sucesso!`,
+				message: `Cte complementar "${cteComplementar.cte}" excluído com sucesso!`,
 			};
 		} catch (error: unknown) {
 			if (
