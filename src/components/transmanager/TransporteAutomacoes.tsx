@@ -13,11 +13,6 @@ import { useRef, forwardRef } from "react";
 import { TextToClipboard } from "./TextToClipboard";
 import { Separator } from "../ui/separator";
 
-const SpanWithRef = forwardRef<
-	HTMLSpanElement,
-	React.HTMLProps<HTMLSpanElement>
->((props, ref) => <span ref={ref} {...props} />);
-
 interface TransporteAutomacoesProps {
 	transporte: Transporte;
 }
