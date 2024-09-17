@@ -18,6 +18,7 @@ import { getTransporteById } from "@/server/TransporteActions";
 import { formatCurrency, formatDecimal } from "@/utils/format";
 import type { Decimal } from "@prisma/client/runtime/library";
 import { cn } from "@/lib/utils";
+import CopyToClipboard from "../main/CopyToClipboard";
 
 interface FormAddComplementoProps {
 	transporteId: number;
@@ -211,7 +212,7 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 
 				<span className="text-sm text-amber-500">
 					Val. CTe Anterior:{" "}
-					<span className="text-sm text-gray-400">
+					<span id="teste" className="text-sm text-gray-400">
 						{formatCurrency(transporte?.val_cte) ?? "?"}
 					</span>
 				</span>
