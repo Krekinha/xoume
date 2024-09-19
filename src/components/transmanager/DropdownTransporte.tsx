@@ -6,7 +6,6 @@ import {
 	FilePlus,
 	Trash2,
 	FunctionSquare,
-	TestTube,
 } from "lucide-react";
 import {
 	DropdownMenu,
@@ -31,7 +30,6 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 import { delComplemento } from "@/server/ComplementoActions";
 import { TransporteAutomacoes } from "./TransporteAutomacoes";
-import DialogItem from "./DialogItem";
 import { AlertDropdownMenuItem } from "../main/AlertDropdownMenuItem";
 import {
 	ErrorDialogContent,
@@ -126,13 +124,6 @@ export function DropdownTransporte({ transporte }: Props) {
 					Transporte
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator className="bg-gray-300" />
-				{/* <DropdownMenuItem
-					onClick={handleDialogItemSelect}
-					className="cursor-pointer rounded gap-2"
-				>
-					<TestTube className="w-4 h-4 text-pink-600" />
-					<span>Teste</span>
-				</DropdownMenuItem> */}
 				<DropdownMenuItem
 					onClick={() => {}}
 					className="hover:bg-gray-300 cursor-pointer rounded gap-2"
