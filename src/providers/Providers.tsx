@@ -5,10 +5,7 @@ import ReactQueryProvider from "./ReactQueryProvider";
 import { ThemeProvider } from "./ThemeContext";
 import type { ReactNode } from "react";
 import NextAuthSessionProvider from "./NextAuthSessionProvider";
-import { ModalDialogContextProvider } from "./ModaDialogProvider";
-import { ToastContainer, toast } from "react-toastify";
-
-import "react-toastify/dist/ReactToastify.css";
+import { MainDialogContextProvider } from "./MainDialogProvider";
 
 interface ProvidersProps {
 	children: ReactNode;
@@ -24,10 +21,9 @@ export default function Providers({ children, session }: ProvidersProps) {
 			//enableSystem
 			//disableTransitionOnChange
 		>
-			<ToastContainer style={{ width: "max-content" }} />
 			<NextAuthSessionProvider session={session}>
 				<ReactQueryProvider>
-					<ModalDialogContextProvider>{children}</ModalDialogContextProvider>
+					<MainDialogContextProvider>{children}</MainDialogContextProvider>
 				</ReactQueryProvider>
 			</NextAuthSessionProvider>
 		</ThemeProvider>

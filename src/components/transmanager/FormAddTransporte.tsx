@@ -11,7 +11,6 @@ import type React from "react";
 import { useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
-import { useModalDialogContext } from "@/providers/ModaDialogProvider";
 import { useServerActionQuery } from "@/hooks/server-action-hooks";
 import { getEmpresas } from "@/server/EmpresaActions";
 import { getMotoristas } from "@/server/MotoristaActions";
@@ -21,6 +20,11 @@ import type { transporteSchema } from "@/utils/schemas";
 import { DecimalInputField } from "../form/DecimalInputField";
 import { NumberInputField } from "../form/NumberInputField";
 import { DatePickerField } from "../form/DatePickerField";
+import { useMainDialogContext } from "@/providers/MainDialogProvider";
+import {
+	ErrorDialogContent,
+	SuccessDialogContent,
+} from "./MessageDialogContent";
 
 export function FormAddTransporte() {
 	const { data: empresas } = useServerActionQuery(getEmpresas, {
@@ -39,7 +43,7 @@ export function FormAddTransporte() {
 	});
 
 	const { execute } = useServerAction(addTransporte);
-	const { setModalDialog } = useModalDialogContext();
+	const { setMainDialog } = useMainDialogContext();
 	const [fieldErrors, setFieldErrors] = useState({});
 	const router = useRouter();
 
@@ -152,21 +156,24 @@ export function FormAddTransporte() {
 				console.log(zodError.issues);
 				setFieldErrors(zodError.issues);
 			} else {
-				setModalDialog({
+				setMainDialog({
 					open: true,
-					data: data ? data : null,
-					error: err
-						? { code: err.code, name: err.name, message: err.message }
-						: undefined,
+					content: (
+						<ErrorDialogContent
+							title={`${err.code}: (${err.name})`}
+							message={err.message}
+						/>
+					),
 					onClose: () => onClose(data),
 				});
 			}
 		} else {
 			setFieldErrors({});
-			setModalDialog({
+			setMainDialog({
 				open: true,
-				data: data ? data : null,
-				error: undefined,
+				content: (
+					<SuccessDialogContent message="Transporte adicionado com sucesso" />
+				),
 				onClose: () => onClose(data),
 			});
 		}

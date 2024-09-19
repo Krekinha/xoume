@@ -7,7 +7,6 @@ import type { z, ZodError } from "zod";
 import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { useServerAction } from "zsa-react";
-import { useModalDialogContext } from "@/providers/ModaDialogProvider";
 import type { complementoSchema } from "@/utils/schemas";
 import { DecimalInputField } from "../form/DecimalInputField";
 import { NumberInputField } from "../form/NumberInputField";
@@ -19,6 +18,11 @@ import { formatCurrency, formatDecimal } from "@/utils/format";
 import type { Decimal } from "@prisma/client/runtime/library";
 import { cn } from "@/lib/utils";
 import CopyToClipboard from "../main/CopyToClipboard";
+import { useMainDialogContext } from "@/providers/MainDialogProvider";
+import {
+	ErrorDialogContent,
+	SuccessDialogContent,
+} from "./MessageDialogContent";
 
 interface FormAddComplementoProps {
 	transporteId: number;
@@ -33,7 +37,7 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 	});
 	console.log(transporte);
 	const { execute } = useServerAction(addComplemento);
-	const { setModalDialog } = useModalDialogContext();
+	const { setMainDialog } = useMainDialogContext();
 	const [fieldErrors, setFieldErrors] = useState({});
 	const router = useRouter();
 
@@ -86,13 +90,6 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 		const previsao = freteTotal() - Number(transporte.val_cte);
 		return Number(previsao.toFixed(2));
 	}
-
-	// useEffect(() => {
-
-	// 	if (transporte) {
-	// 		setValue("peso", transporte.peso);
-	// 	}
-	// }, [transporte]);
 
 	function onClose(data: unknown) {
 		if (data) {
@@ -164,21 +161,24 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 				console.log(zodError.issues);
 				setFieldErrors(zodError.issues);
 			} else {
-				setModalDialog({
+				setMainDialog({
 					open: true,
-					data: data ? data : null,
-					error: err
-						? { code: err.code, name: err.name, message: err.message }
-						: undefined,
+					content: (
+						<ErrorDialogContent
+							title={`${err.code}: (${err.name})`}
+							message={err.message}
+						/>
+					),
 					onClose: () => onClose(data),
 				});
 			}
 		} else {
 			setFieldErrors({});
-			setModalDialog({
+			setMainDialog({
 				open: true,
-				data: data ? data : null,
-				error: undefined,
+				content: (
+					<SuccessDialogContent message="Complemento adicionado com sucesso" />
+				),
 				onClose: () => onClose(data),
 			});
 		}

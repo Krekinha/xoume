@@ -1,6 +1,5 @@
 import "@/globals.css";
-// import "@/styles.css";
-// import "react-toastify/dist/ReactToastify.css";
+import "react-toastify/dist/ReactToastify.css";
 
 import type { Metadata } from "next";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
@@ -10,6 +9,8 @@ import MainSidebar from "@/components/main/MainSidebar";
 import React from "react";
 import MainHeader from "@/components/main/MainHeader";
 import Providers from "@/providers/Providers";
+import { MainDialog } from "@/components/main/MainDialog";
+import { ToastContainer } from "react-toastify";
 /**
  * Neste arquivo irei determinar o padrão de layout para todas as rotas do grupo (menu)
  * e configurar parâmetros que serão compartilhados com essa rotas (metadados,
@@ -39,7 +40,10 @@ export default async function RootLayout({ children }: any) {
 		<html suppressHydrationWarning lang="en" className="dark">
 			<body className="overflow-hidden">
 				<Providers session={session}>
+					<ToastContainer style={{ width: "max-content" }} />
+
 					<div className="flex flex-col h-dvh">
+						<MainDialog />
 						<MainHeader />
 						<div className="flex h-full w-full overflow-hidden">
 							<MainSidebar />

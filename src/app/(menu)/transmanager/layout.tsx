@@ -1,7 +1,5 @@
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
-import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
-import Providers from "@/providers/Providers";
 
 export const metadata = {
 	title: "XOUME - TRANSMANAGER",
