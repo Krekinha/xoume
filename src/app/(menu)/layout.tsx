@@ -4,7 +4,6 @@ import "react-toastify/dist/ReactToastify.css";
 import type { Metadata } from "next";
 import { auth } from "@/app/api/auth/[...nextauth]/auth";
 import { redirect } from "next/navigation";
-import NextAuthSessionProvider from "@/providers/NextAuthSessionProvider";
 import MainSidebar from "@/components/main/MainSidebar";
 import React from "react";
 import MainHeader from "@/components/main/MainHeader";

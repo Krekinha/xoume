@@ -3,6 +3,11 @@
 	"organizeImports": {
 		"enabled": true
 	},
+	"formatter": {
+		"indentStyle": "tab",
+		"indentWidth": 4,
+		"lineWidth": 80
+	},
 	"linter": {
 		"enabled": true,
 		"rules": {
@@ -11,7 +16,7 @@
 				"useButtonType": "off"
 			},
 			"suspicious": {
-				"noShadowRestrictedNames":"info",
+				"noShadowRestrictedNames": "info",
 				"noExplicitAny": "info"
 			}
 		}

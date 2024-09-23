@@ -2,14 +2,10 @@
 
 import type { Transporte } from "@/utils/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Label } from "@/components/ui/label";
 import { FaCopyright } from "react-icons/fa6";
 import { FaSquareWhatsapp } from "react-icons/fa6";
-import { cn } from "@/lib/utils";
 import { formatCurrency, formatDecimal } from "@/utils/format";
-import CopyToClipboard from "../main/CopyToClipboard";
 import type React from "react";
-import { useRef, forwardRef } from "react";
 import { TextToClipboard } from "./TextToClipboard";
 import { Separator } from "../ui/separator";
 
@@ -34,13 +30,42 @@ export function TransporteAutomacoes({
 		)} = ${formatCurrency(transporte.val_cte?.toString())}`;
 	};
 
-	const valWhatsApp = () => {
-		return `Segue CT-e *${transporte.cte} (Nota ${transporte.notas?.join(
+	const valCoralComplemento = () => {
+		const model =
+			"COMPLEMENTO DO CTE X. VALOR FRETE = PESO REAL NOTA X (XX.XXX,00) x XXX,00 = R$ XX.XXX,00 " +
+			"- VALOR FRETE NO CTE X (R$ XX.XXX,00) = R$ XX.XXX,00";
+
+		if (!transporte.cteComplementar?.peso || !transporte.val_tonelada)
+			return model;
+		const val_peso =
+			Number.parseFloat(transporte.cteComplementar.peso.toString()) /
+			1000;
+		const valTransporte = val_peso * Number(transporte.val_tonelada);
+
+		return `COMPLEMENTO DO CTE ${transporte.cte}. VALOR FRETE = PESO REAL NOTA(S) ${transporte.notas?.join(
+			"/",
+		)} (${formatDecimal(transporte.cteComplementar?.peso?.toString())}) x ${formatCurrency(
+			transporte.val_tonelada?.toString(),
+		)} = ${formatCurrency(valTransporte.toString())} - VALOR FRETE NO CTE ${transporte.cte} (${formatCurrency(transporte.val_cte?.toString())}) = ${formatCurrency(transporte.cteComplementar.val_cte?.toString())}`;
+	};
+
+	const valCTeWhatsApp = () => {
+		return `Segue CT-e *${transporte.cte} (Nota(s) ${transporte.notas?.join(
 			"/",
 		)})* + MANIFESTO - (${transporte.cidade_origem} x ${
 			transporte.cidade_destino
 		}) - ${transporte.tomador?.razaoNome} - *${formatCurrency(
 			transporte.val_cte?.toString(),
+		)}*👇🏼`;
+	};
+
+	const valComplementoWhatsApp = () => {
+		return `Segue CT-e *${transporte.cteComplementar?.cte}* COMPLEMENTAR ao CT-e *${transporte.cte} (Nota(s) ${transporte.notas?.join(
+			"/",
+		)})* - (${transporte.cidade_origem} x ${
+			transporte.cidade_destino
+		}) - ${transporte.tomador?.razaoNome} - *${formatCurrency(
+			transporte.cteComplementar?.val_cte?.toString(),
 		)}*👇🏼`;
 	};
 
@@ -84,20 +109,58 @@ export function TransporteAutomacoes({
 						<TextToClipboard.Root>
 							<TextToClipboard.Label
 								label="WhatsApp"
-								icon={<FaSquareWhatsapp className="text-green-500" />}
+								icon={
+									<FaSquareWhatsapp className="text-green-500" />
+								}
 							/>
 							<TextToClipboard.ValueContainer>
-								<TextToClipboard.Value value={valWhatsApp()} />
+								<TextToClipboard.Value
+									value={valCTeWhatsApp()}
+								/>
 								<TextToClipboard.CopyButton
 									className="text-blue-700 hover:text-blue-500"
-									textToCopy={valWhatsApp()}
+									textToCopy={valCTeWhatsApp()}
 								/>
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
 					</div>
 				</TabsContent>
 				<TabsContent value="complemento">
-					Change your password here.
+					<div className="flex flex-col gap-4 mt-3">
+						<TextToClipboard.Root>
+							<TextToClipboard.Label
+								label="Coral"
+								icon={<FaCopyright className="text-gray-500" />}
+							/>
+							<TextToClipboard.ValueContainer>
+								<TextToClipboard.Value
+									value={valCoralComplemento()}
+								/>
+								<TextToClipboard.CopyButton
+									className="text-blue-700 hover:text-blue-500"
+									textToCopy={valCoralComplemento()}
+								/>
+							</TextToClipboard.ValueContainer>
+						</TextToClipboard.Root>
+
+						<TextToClipboard.Root>
+							<TextToClipboard.Label
+								label="WhatsApp"
+								icon={
+									<FaSquareWhatsapp className="text-green-500" />
+								}
+							/>
+							<TextToClipboard.ValueContainer>
+								<TextToClipboard.Value
+									value={valComplementoWhatsApp()}
+								/>
+								<TextToClipboard.CopyButton
+									className="text-blue-700 hover:text-blue-500"
+									textToCopy={valComplementoWhatsApp()}
+								/>
+							</TextToClipboard.ValueContainer>
+						</TextToClipboard.Root>
+					</div>
 				</TabsContent>
 			</Tabs>
 		</div>
