@@ -60,6 +60,7 @@ interface ReactSelectProps {
 	placeholder?: ReactNode;
 	setValue: UseFormSetValue<any>;
 	fieldErrors: any;
+	refInput?: React.RefObject<any>;
 }
 
 const createOption = (label: string) => ({
@@ -84,11 +85,14 @@ export function ReactSelectInputMulti({
 	placeholder,
 	setValue,
 	fieldErrors,
+	refInput,
 	...props
 }: ReactSelectProps) {
 	const id = useId();
 	const [inputValue, setInputValue] = useState("");
-	const [multiValue, setMultiValue] = useState<MultiValue<SelectItemProps>>([]);
+	const [multiValue, setMultiValue] = useState<MultiValue<SelectItemProps>>(
+		[],
+	);
 	const [localError, setLocalError] = useState("");
 
 	const keysPermitidas = [
@@ -164,7 +168,8 @@ export function ReactSelectInputMulti({
 				render={({ field: { ref } }) => (
 					<CreatableSelect
 						{...props}
-						ref={ref}
+						// ref={ref}
+						ref={refInput}
 						instanceId={id}
 						placeholder={placeholder}
 						unstyled
@@ -209,7 +214,8 @@ export function ReactSelectInputMulti({
 									"dark:bg-zinc-950 dark:border-zinc-800",
 									"dark:text-sm dark:text-gray-400 ",
 								),
-							placeholder: () => "text-blue-500 pl-1 py-0.5 text-sm truncate",
+							placeholder: () =>
+								"text-blue-500 pl-1 py-0.5 text-sm truncate",
 							input: () => cn("pl-1 py-0.5 truncate"),
 							valueContainer: () => "gap-1",
 							singleValue: () => "leading-7 ml-1",
@@ -238,7 +244,8 @@ export function ReactSelectInputMulti({
 									"p-1 mt-1 border border-gray-200 bg-white rounded-md text-sm",
 									"dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-50",
 								),
-							groupHeading: () => "ml-3 mt-2 mb-1 text-gray-500 text-sm",
+							groupHeading: () =>
+								"ml-3 mt-2 mb-1 text-gray-500 text-sm",
 							option: ({ isFocused, isSelected }) =>
 								cn(
 									isFocused && "bg-gray-100 dark:bg-zinc-900",

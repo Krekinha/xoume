@@ -47,7 +47,8 @@ const groupHeadingStyles = "ml-3 mt-2 mb-1 text-gray-500 text-sm";
 const optionStyles = {
 	base: "hover:cursor-pointer px-3 py-2 rounded",
 	focus: "bg-gray-100 active:bg-gray-200",
-	selected: "after:content-['✔'] after:ml-2 after:text-green-500 text-gray-500",
+	selected:
+		"after:content-['✔'] after:ml-2 after:text-green-500 text-gray-500",
 };
 const noOptionsMessageStyles =
 	"text-gray-500 p-2 bg-gray-50 border border-dashed border-gray-200 rounded-sm";
@@ -82,7 +83,6 @@ export function ReactSelect({
 				control={control}
 				render={({ field: { onChange, value, ref } }) => (
 					<Select
-						//{...field}
 						{...props}
 						instanceId={id}
 						placeholder={placeholder}
@@ -120,7 +120,8 @@ export function ReactSelect({
 									"dark:bg-zinc-950 dark:border-zinc-800",
 									"dark:text-sm dark:text-gray-400",
 								),
-							placeholder: () => "text-blue-500 pl-1 py-0.5 text-sm",
+							placeholder: () =>
+								"text-blue-500 pl-1 py-0.5 text-sm",
 							input: () => "pl-1 py-0.5",
 							valueContainer: () => "gap-1",
 							singleValue: () => "leading-7 ml-1",
@@ -135,7 +136,8 @@ export function ReactSelect({
 									"p-1 mt-1 border border-gray-200 bg-white rounded-md text-sm",
 									"dark:bg-zinc-950 dark:border-zinc-800 dark:text-gray-400",
 								),
-							groupHeading: () => "ml-3 mt-2 mb-1 text-gray-500 text-sm",
+							groupHeading: () =>
+								"ml-3 mt-2 mb-1 text-gray-500 text-sm",
 							option: ({ isFocused, isSelected }) =>
 								cn(
 									isFocused && "bg-gray-100 dark:bg-zinc-900",

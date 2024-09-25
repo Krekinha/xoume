@@ -66,19 +66,22 @@ interface ReactSelectCityProps {
 	setValue: UseFormSetValue<any>;
 	placeholder?: ReactNode;
 	fieldErrors: any;
+	refUf?: React.RefObject<any>;
+	refMunicipio?: React.RefObject<any>;
 }
 
 export function ReactSelectCity({
 	label,
 	nameUf,
+	refUf,
 	nameMunicipio,
+	refMunicipio,
 	control,
 	setValue,
 	placeholder,
 	fieldErrors,
 	...props
 }: ReactSelectCityProps) {
-	const refMunicipio = useRef<SelectInstance>(null);
 	const [municipios, setMunicipios] = useState<SelectItemProps[]>([]);
 	const [item, setItem] = useState<SelectItemProps | null>(null);
 	const { isPending, execute, error, isError } =
@@ -119,13 +122,16 @@ export function ReactSelectCity({
 					render={({ field: { onChange, value, ref } }) => (
 						<Select
 							{...props}
-							ref={ref}
+							// ref={ref}
+							ref={refUf}
 							instanceId={idUf}
 							placeholder="UF"
 							unstyled
 							components={{ DropdownIndicator }}
 							options={estadosBrasil}
-							value={estadosBrasil?.find((c) => c.value === value)}
+							value={estadosBrasil?.find(
+								(c) => c.value === value,
+							)}
 							onChange={(val) => {
 								onChange(val?.label);
 								setItem(null);
@@ -161,7 +167,8 @@ export function ReactSelectCity({
 										"dark:bg-zinc-950 dark:border-zinc-800",
 										"dark:text-sm dark:text-gray-400 w-16",
 									),
-								placeholder: () => "text-blue-500 pl-1 py-0.5 text-sm",
+								placeholder: () =>
+									"text-blue-500 pl-1 py-0.5 text-sm",
 								input: () => "pl-1 py-0.5",
 								valueContainer: () => "gap-1",
 								singleValue: () => "leading-7 ml-1",
@@ -179,12 +186,15 @@ export function ReactSelectCity({
 									),
 								menuList: () => cn("no-scrollbar"),
 								menuPortal: () => "",
-								group: () => cn("bg-green-500 overflow-y-hidden"),
-								groupHeading: () => "ml-3 mt-2 mb-1 text-gray-500 text-sm",
+								group: () =>
+									cn("bg-green-500 overflow-y-hidden"),
+								groupHeading: () =>
+									"ml-3 mt-2 mb-1 text-gray-500 text-sm",
 
 								option: ({ isFocused, isSelected }) =>
 									cn(
-										isFocused && "bg-gray-100 dark:bg-zinc-900",
+										isFocused &&
+											"bg-gray-100 dark:bg-zinc-900",
 										isSelected && "text-amber-500",
 										"hover:cursor-pointer px-2 py-2 rounded",
 									),
@@ -246,7 +256,8 @@ export function ReactSelectCity({
 								// componente raiz
 								container: () => "w-full",
 								// componente contendo a descrição do controle quando nenhuma opção foi selecionada
-								placeholder: () => "text-blue-500 pl-1 py-0.5 text-sm",
+								placeholder: () =>
+									"text-blue-500 pl-1 py-0.5 text-sm",
 								// componente contendo o input
 								input: () => "pl-1 py-0.5",
 								// componente entorno do valor do controle, fica atrás do input
@@ -264,10 +275,12 @@ export function ReactSelectCity({
 										"p-1 mt-1 border border-gray-200 bg-white rounded-md text-sm",
 										"dark:bg-zinc-950 dark:border-zinc-800 dark:text-gray-400 mb-6",
 									),
-								groupHeading: () => "ml-3 mt-2 mb-1 text-gray-500 text-sm",
+								groupHeading: () =>
+									"ml-3 mt-2 mb-1 text-gray-500 text-sm",
 								option: ({ isFocused, isSelected }) =>
 									cn(
-										isFocused && "bg-gray-100 dark:bg-zinc-900",
+										isFocused &&
+											"bg-gray-100 dark:bg-zinc-900",
 										isSelected &&
 											"after:content-['✔'] after:ml-3 after:text-sm after:text-center after:text-blue-500 text-amber-500",
 										"hover:cursor-pointer px-3 py-2 rounded",
@@ -281,7 +294,9 @@ export function ReactSelectCity({
 			</div>
 
 			{fieldErrors && <ErrorField field={nameUf} errors={fieldErrors} />}
-			{fieldErrors && <ErrorField field={nameMunicipio} errors={fieldErrors} />}
+			{fieldErrors && (
+				<ErrorField field={nameMunicipio} errors={fieldErrors} />
+			)}
 		</div>
 	);
 }

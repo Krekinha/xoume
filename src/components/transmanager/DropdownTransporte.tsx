@@ -125,7 +125,11 @@ export function DropdownTransporte({ transporte }: Props) {
 				</DropdownMenuLabel>
 				<DropdownMenuSeparator className="bg-gray-300" />
 				<DropdownMenuItem
-					onClick={() => {}}
+					onClick={() =>
+						router.push(
+							`/transmanager/transportes/update/${transporte.id}`,
+						)
+					}
 					className="hover:bg-gray-300 cursor-pointer rounded gap-2"
 				>
 					<AiFillEdit className="text-blue-600 w-4 h-4" />
@@ -167,11 +171,17 @@ export function DropdownTransporte({ transporte }: Props) {
 							>
 								<FilePlus
 									className={`w-4 h-4 text-green-600 ${
-										transporte.cteComplementar ? "opacity-50" : ""
+										transporte.cteComplementar
+											? "opacity-50"
+											: ""
 									}`}
 								/>
 								<span
-									className={transporte.cteComplementar ? "opacity-40" : ""}
+									className={
+										transporte.cteComplementar
+											? "opacity-40"
+											: ""
+									}
 								>
 									Adicionar
 								</span>
@@ -183,22 +193,32 @@ export function DropdownTransporte({ transporte }: Props) {
 							>
 								<AiFillEdit
 									className={`w-4 h-4 text-blue-600 ${
-										!transporte.cteComplementar ? "opacity-40" : ""
+										!transporte.cteComplementar
+											? "opacity-40"
+											: ""
 									}`}
 								/>
 								<span
-									className={!transporte.cteComplementar ? "opacity-40" : ""}
+									className={
+										!transporte.cteComplementar
+											? "opacity-40"
+											: ""
+									}
 								>
 									Editar
 								</span>
 							</DropdownMenuItem>
 							<AlertDropdownMenuItem
-								onOpenChange={(change) => setShowDropdownMenu(change)}
+								onOpenChange={(change) =>
+									setShowDropdownMenu(change)
+								}
 								title="Aviso"
 								message={`Você esta prestes a deletar o complemento CTe "${transporte.cteComplementar?.cte}". 
 									Deseja continuar?`}
 								onAction={() =>
-									excluirComplemento(transporte.cteComplementar?.id ?? 0)
+									excluirComplemento(
+										transporte.cteComplementar?.id ?? 0,
+									)
 								}
 							>
 								<DropdownMenuItem
@@ -208,11 +228,17 @@ export function DropdownTransporte({ transporte }: Props) {
 								>
 									<Trash2
 										className={`w-4 h-4 text-red-600 ${
-											!transporte.cteComplementar ? "opacity-50" : ""
+											!transporte.cteComplementar
+												? "opacity-50"
+												: ""
 										}`}
 									/>
 									<span
-										className={!transporte.cteComplementar ? "opacity-40" : ""}
+										className={
+											!transporte.cteComplementar
+												? "opacity-40"
+												: ""
+										}
 									>
 										Deletar
 									</span>
@@ -228,7 +254,9 @@ export function DropdownTransporte({ transporte }: Props) {
 					onClick={() => {
 						setMainDialog({
 							open: true,
-							content: <TransporteAutomacoes transporte={transporte} />,
+							content: (
+								<TransporteAutomacoes transporte={transporte} />
+							),
 						});
 					}}
 				>

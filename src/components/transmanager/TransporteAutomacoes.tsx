@@ -52,19 +52,21 @@ export function TransporteAutomacoes({
 	const valCTeWhatsApp = () => {
 		return `Segue CT-e *${transporte.cte} (Nota(s) ${transporte.notas?.join(
 			"/",
-		)})* + MANIFESTO - (${transporte.cidade_origem} x ${
-			transporte.cidade_destino
-		}) - ${transporte.tomador?.razaoNome} - *${formatCurrency(
-			transporte.val_cte?.toString(),
-		)}*👇🏼`;
+		)})* + MANIFESTO - (${transporte.cidade_origem}-${
+			transporte.uf_origem
+		} x ${transporte.cidade_destino}-${transporte.uf_destino}) - ${
+			transporte.tomador?.razaoNome
+		} - *${formatCurrency(transporte.val_cte?.toString())}*👇🏼`;
 	};
 
 	const valComplementoWhatsApp = () => {
 		return `Segue CT-e *${transporte.cteComplementar?.cte}* COMPLEMENTAR ao CT-e *${transporte.cte} (Nota(s) ${transporte.notas?.join(
 			"/",
-		)})* - (${transporte.cidade_origem} x ${
-			transporte.cidade_destino
-		}) - ${transporte.tomador?.razaoNome} - *${formatCurrency(
+		)})* - (${transporte.cidade_origem}-${
+			transporte.uf_origem
+		} x ${transporte.cidade_destino}-${transporte.uf_destino}) - ${
+			transporte.tomador?.razaoNome
+		} - *${formatCurrency(
 			transporte.cteComplementar?.val_cte?.toString(),
 		)}*👇🏼`;
 	};
@@ -77,7 +79,7 @@ export function TransporteAutomacoes({
 					<TabsTrigger value="complemento">Complemento</TabsTrigger>
 				</TabsList>
 				<TabsContent value="cte">
-					<div className="flex flex-col gap-2 mt-3">
+					<div className="flex flex-col gap-4 mt-3">
 						<TextToClipboard.Root>
 							<TextToClipboard.Label
 								label="Coral"
@@ -101,10 +103,6 @@ export function TransporteAutomacoes({
 								/>
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
-						<Separator
-							orientation="vertical"
-							className="w-full dark:bg-zinc-800 h-[0.01rem]"
-						/>
 
 						<TextToClipboard.Root>
 							<TextToClipboard.Label
