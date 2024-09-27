@@ -7,6 +7,7 @@ import { useId } from "react";
 import { LabelField } from "./LabelField";
 import { Input } from "../ui/input";
 import React from "react";
+import { number } from "zod";
 
 interface NumberInputFieldProps
 	extends React.InputHTMLAttributes<HTMLInputElement> {
@@ -78,18 +79,33 @@ const NumberInputField = React.forwardRef<
 				<Controller
 					name={name}
 					control={control}
-					defaultValue={defaultValue ?? ""}
-					render={({ field: { ref, value, onChange } }) => (
+					defaultValue={() => {
+						if (
+							defaultValue === undefined ||
+							defaultValue === null
+						) {
+							return "";
+						}
+						return defaultValue;
+					}}
+					render={({ field: { value, onChange } }) => (
 						<Input
 							{...props}
+							ref={ref}
 							id={id}
 							type="text"
 							inputMode="numeric"
 							placeholder={placeholder}
 							value={value}
 							onChange={(e) => {
-								const formattedValue = formatValue(e.target.value);
-								onChange(formattedValue === "" ? "" : Number(formattedValue));
+								const formattedValue = formatValue(
+									e.target.value,
+								);
+								onChange(
+									formattedValue === ""
+										? ""
+										: Number(formattedValue),
+								);
 							}}
 							onKeyDown={handleKeyDown}
 							className={cn(
@@ -102,7 +118,9 @@ const NumberInputField = React.forwardRef<
 					)}
 				/>
 
-				{fieldErrors && <ErrorField field={name} errors={fieldErrors} />}
+				{fieldErrors && (
+					<ErrorField field={name} errors={fieldErrors} />
+				)}
 			</div>
 		);
 	},

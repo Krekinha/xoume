@@ -9,7 +9,7 @@ import { ptBR } from "date-fns/locale";
 
 import { ErrorField } from "./ErrorField";
 import { cn } from "@/lib/utils";
-import { type ReactNode, useId, useState } from "react";
+import { type ReactNode, useId } from "react";
 import { LabelField } from "./LabelField";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
@@ -21,8 +21,10 @@ interface DatePickerFieldProps {
 	name: string;
 	control: Control<any, any>;
 	placeholder?: ReactNode;
-	setValue: UseFormSetValue<any>;
 	fieldErrors: any;
+	defaultValue?: Date;
+	isUpdate?: boolean;
+	refCalendar?: React.RefObject<any>;
 }
 
 export function DatePickerField({
@@ -30,19 +32,20 @@ export function DatePickerField({
 	name,
 	control,
 	placeholder,
-	setValue,
 	fieldErrors,
-	...props
+	defaultValue,
+	isUpdate,
+	refCalendar,
 }: DatePickerFieldProps) {
 	const id = useId();
-
 	return (
 		<div className="flex flex-col gap-1 mt-1">
 			{label && <LabelField label={label} />}
 			<Controller
 				name={name}
 				control={control}
-				render={({ field: { ref, value, onChange } }) => (
+				defaultValue={defaultValue}
+				render={({ field: { value, onChange } }) => (
 					<Popover>
 						<PopoverTrigger asChild>
 							<Button
@@ -55,7 +58,9 @@ export function DatePickerField({
 								{value ? (
 									format(value, "P", { locale: ptBR })
 								) : (
-									<span className="text-blue-500 truncate">{placeholder}</span>
+									<span className="text-blue-500 truncate">
+										{placeholder}
+									</span>
 								)}
 								<CalendarIcon className="ml-auto h-4 w-4 opacity-50 flex-shrink-0" />
 							</Button>
@@ -64,12 +69,17 @@ export function DatePickerField({
 							<Calendar
 								id={id}
 								mode="single"
-								selected={value}
+								selected={value ? new Date(value) : undefined}
 								onSelect={onChange}
 								disabled={(date) =>
-									date > new Date() || date < new Date("1900-01-01")
+									date > new Date() ||
+									date < new Date("1900-01-01")
 								}
 								initialFocus
+								classNames={{
+									day_selected:
+										"dark:bg-amber-300 dark:text-zinc-900 dark:hover:bg-amber-300 dark:hover:text-zinc-900 dark:focus:bg-amber-300 dark:focus:text-zinc-900",
+								}}
 							/>
 						</PopoverContent>
 					</Popover>

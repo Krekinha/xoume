@@ -14,7 +14,7 @@ export const getMunicipiosByUf = createServerAction()
 		}),
 	)
 	.handler(async ({ input }) => {
-		console.log(input.uf);
+		// console.log(input.uf);
 
 		try {
 			const response = await fetch(
@@ -27,7 +27,7 @@ export const getMunicipiosByUf = createServerAction()
 			const municipios = await response.json();
 
 			const municipiosMap = municipioItems(municipios);
-			console.log(municipiosMap);
+			// console.log(municipiosMap);
 
 			return municipiosMap;
 		} catch (error: unknown) {

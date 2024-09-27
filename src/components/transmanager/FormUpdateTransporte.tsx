@@ -3,10 +3,7 @@
 import { useRouter } from "next/navigation";
 import { ReactSelect } from "@/components/form/ReactSelect";
 import { Button } from "@/components/ui/button";
-import {
-	getTransporteById,
-	updateTransporte,
-} from "@/server/TransporteActions";
+import { updateTransporte } from "@/server/TransporteActions";
 import type { Empresa, Motorista, Tomador, Transporte } from "@/utils/types";
 import { useForm } from "react-hook-form";
 import type { z, ZodError } from "zod";
@@ -14,7 +11,10 @@ import type React from "react";
 import { useEffect, useRef, useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
-import { useServerActionQuery } from "@/hooks/server-action-hooks";
+import {
+	QueryKeyFactory,
+	useServerActionQuery,
+} from "@/hooks/server-action-hooks";
 import { getEmpresas } from "@/server/EmpresaActions";
 import { getMotoristas } from "@/server/MotoristaActions";
 import { getTomadores } from "@/server/TomadorActions";
@@ -26,10 +26,11 @@ import { DatePickerField } from "../form/DatePickerField";
 import { useMainDialogContext } from "@/providers/MainDialogProvider";
 import {
 	ErrorDialogContent,
+	InfoDialogContent,
 	SuccessDialogContent,
 } from "./MessageDialogContent";
 import { estadosBrasil } from "@/utils/constants";
-import { getMunicipiosByUf } from "@/server/OthersActions";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface FormUpdateTransporteProps {
 	transporteId: number;
@@ -38,16 +39,23 @@ interface FormUpdateTransporteProps {
 export function FormUpdateTransporte({
 	transporteId,
 }: FormUpdateTransporteProps) {
-	const { data: transporte } = useServerActionQuery(getTransporteById, {
-		input: { id: transporteId },
-		queryKey: ["getTransporteById", transporteId.toString()],
-	});
+	const queryClient = useQueryClient();
+	const data = queryClient.getQueryData<Transporte[]>(
+		QueryKeyFactory.getTransportes(),
+	);
+	const { execute } = useServerAction(updateTransporte);
+	const { setMainDialog } = useMainDialogContext();
+	const [fieldErrors, setFieldErrors] = useState({});
+	const router = useRouter();
+
+	const transporte = data?.find((t) => t.id === Number(transporteId));
 
 	const refUfOrigem = useRef<any>(undefined);
 	const refMunicipioOrigem = useRef<any>(undefined);
 	const refUfDestino = useRef<any>(undefined);
 	const refMunicipioDestino = useRef<any>(undefined);
 	const refNotas = useRef<any>(null);
+	const refCte = useRef<HTMLInputElement | null>(null);
 
 	const defaultValues = {
 		empresaId: undefined,
@@ -65,6 +73,12 @@ export function FormUpdateTransporte({
 		cidade_destino: undefined,
 	};
 
+	const { control, handleSubmit, setValue } = useForm<
+		z.infer<typeof transporteUpdateSchema>
+	>({
+		defaultValues: defaultValues,
+	});
+
 	const { data: empresas } = useServerActionQuery(getEmpresas, {
 		input: undefined,
 		queryKey: ["getEmpresas"],
@@ -78,17 +92,6 @@ export function FormUpdateTransporte({
 	const { data: tomadores } = useServerActionQuery(getTomadores, {
 		input: undefined,
 		queryKey: ["getTomadores"],
-	});
-
-	const { execute } = useServerAction(updateTransporte);
-	const { setMainDialog } = useMainDialogContext();
-	const [fieldErrors, setFieldErrors] = useState({});
-	const router = useRouter();
-
-	const { register, control, handleSubmit, setValue, getValues } = useForm<
-		z.infer<typeof transporteUpdateSchema>
-	>({
-		defaultValues: defaultValues,
 	});
 
 	const empresaItems = () => {
@@ -121,48 +124,98 @@ export function FormUpdateTransporte({
 		return [];
 	};
 
-	useEffect(() => {
-		if (transporte) {
-			const ufOrigem = estadosBrasil.find(
-				(estado) => estado.label === transporte.uf_origem,
-			);
-			const ufDestino = estadosBrasil.find(
-				(estado) => estado.label === transporte.uf_destino,
-			);
+	// useEffect(() => {
+	// 	queryClient.refetchQueries({
+	// 		queryKey: QueryKeyFactory.getTransporteById(
+	// 			transporteId.toString(),
+	// 		), //retornar a mesma chave de consulta definida em factory
+	// 	});
+	// 	if (transporte) {
+	// 		if (transporte.uf_origem) {
+	// 			// setValue("uf_origem", transporte.uf_origem);
+	// 			// refUfOrigem.current.setValue({
+	// 			// 	label: transporte.uf_origem,
+	// 			// });
+	// 			// setValue("cidade_origem", transporte.cidade_origem);
+	// 			// refMunicipioOrigem.current.setValue({
+	// 			// 	label: transporte.cidade_origem,
+	// 			// });
+	// 			// const ufOrigem = estadosBrasil.find(
+	// 			// 	(estado) => estado.label === transporte.uf_origem,
+	// 			// );
+	// 			// refUfOrigem.current.setValue({
+	// 			// 	label: ufOrigem?.label,
+	// 			// 	value: ufOrigem?.value,
+	// 			// });
+	// 			// setValue("uf_origem", transporte.uf_origem);
+	// 			// refUfOrigem.current.selectOption((o: any) => {
+	// 			// 	console.log({ o });
+	// 			// 	return ufOrigem;
+	// 			// });
+	// 			// const options = refMunicipioOrigem.current.props.options;
+	// 			// console.log({ options });
+	// 		}
 
-			setValue("empresaId", transporte.empresaId);
-			setValue("motoristaId", transporte.motoristaId);
-			setValue("tomadorId", transporte.tomadorId);
-			setValue("uf_origem", transporte.uf_origem);
-			refUfOrigem.current.setValue(ufOrigem);
-			setValue("cidade_origem", transporte.cidade_origem);
-			refMunicipioOrigem.current.setValue({
-				label: transporte.cidade_origem,
-			});
-			setValue("uf_destino", transporte.uf_destino);
-			refUfDestino.current.setValue(ufDestino);
-			setValue("cidade_destino", transporte.cidade_destino);
-			refMunicipioDestino.current.setValue({
-				label: transporte.cidade_destino,
-			});
-			setValue("notas", transporte.notas);
-			const notas = transporte.notas?.map((nota: string) => ({
-				label: nota,
-				value: nota,
-			}));
-			refNotas.current.setValue(notas);
-			setValue("cte", transporte.cte);
-			setValue("peso", transporte.peso);
-			setValue("val_tonelada", transporte.val_tonelada);
-			setValue("val_cte", transporte.val_cte);
-			setValue("reducao_bc_icms", transporte.reducao_bc_icms);
-			setValue("aliquota_icms", transporte.aliquota_icms);
-			setValue("emissao_cte", transporte.emissao_cte);
-		}
-	}, [transporte, setValue]);
+	// 		// if (transporte.cidade_origem) {
+	// 		// 	const teste = refMunicipioOrigem.current;
+	// 		// 	console.log({ teste });
+	// 		// 	refMunicipioOrigem.current.setValue({
+	// 		// 		label: transporte.cidade_origem,
+	// 		// 	});
+	// 		// }
+	// 		// 		const ufOrigem = estadosBrasil.find(
+	// 		// 			(estado) => estado.label === transporte.uf_origem,
+	// 		// 		);
+	// 		// 		const ufDestino = estadosBrasil.find(
+	// 		// 			(estado) => estado.label === transporte.uf_destino,
+	// 		// 		);
+	// 		// 		setValue("empresaId", transporte.empresaId);
+	// 		// 		setValue("motoristaId", transporte.motoristaId);
+	// 		// 		setValue("tomadorId", transporte.tomadorId);
+	// 		// 		setValue("uf_origem", transporte.uf_origem);
+	// 		// 		refUfOrigem.current.setValue(ufOrigem);
+	// 		// 		setValue("cidade_origem", transporte.cidade_origem);
+	// 		// 		refMunicipioOrigem.current.setValue({
+	// 		// 			label: transporte.cidade_origem,
+	// 		// 		});
+	// 		// 		setValue("uf_destino", transporte.uf_destino);
+	// 		// 		refUfDestino.current.setValue(ufDestino);
+	// 		// 		setValue("cidade_destino", transporte.cidade_destino);
+	// 		// 		refMunicipioDestino.current.setValue({
+	// 		// 			label: transporte.cidade_destino,
+	// 		// 		});
+	// 		// 		setValue("notas", transporte.notas);
+	// 		// 		const notas = transporte.notas?.map((nota: string) => ({
+	// 		// 			label: nota,
+	// 		// 			value: nota,
+	// 		// 		}));
+	// 		// 		refNotas.current?.setValue(notas);
+	// 		// 		setValue("cte", transporte.cte);
+	// 		// 		if (refCte.current) {
+	// 		// 			refCte.current.value = transporte.cte;
+	// 		// 			refCte.current.defaultValue = transporte.cte;
+	// 		// 			console.log({ refCte: refCte.current.defaultValue });
+	// 		// 		}
+	// 		// 		setValue("peso", transporte.peso);
+	// 		// 		setValue("val_tonelada", transporte.val_tonelada);
+	// 		// 		setValue("val_cte", transporte.val_cte);
+	// 		// 		setValue("reducao_bc_icms", transporte.reducao_bc_icms);
+	// 		// 		setValue("aliquota_icms", transporte.aliquota_icms);
+	// 		// 		setValue("emissao_cte", transporte.emissao_cte);
+	// 	}
+	// }, [queryClient, transporteId, transporte]);
 
+	async function refetchQuery() {
+		await queryClient.refetchQueries({
+			queryKey: QueryKeyFactory.getTransporteById(
+				transporteId.toString(),
+			), //retornar a mesma chave de consulta definida em factory
+		});
+		// console.log({ query });
+	}
 	function onClose(data: unknown) {
 		if (data) {
+			refetchQuery();
 			router.push("/transmanager");
 			console.log("indo para /transmanager");
 		}
@@ -171,10 +224,74 @@ export function FormUpdateTransporte({
 	function transformValues(values: any) {
 		const transformedValues = { ...values };
 
+		if (transformedValues.uf_origem === undefined) {
+			transformedValues.uf_origem = null;
+		}
+
+		if (transformedValues.uf_destino === undefined) {
+			transformedValues.uf_destino = null;
+		}
+
+		if (transformedValues.cidade_origem === undefined) {
+			transformedValues.cidade_origem = null;
+		}
+
+		if (transformedValues.cidade_destino === undefined) {
+			transformedValues.cidade_destino = null;
+		}
+
+		if (transformedValues.empresaId === "") {
+			if (transporte?.empresaId) {
+				transformedValues.empresaId = null;
+			} else {
+				transformedValues.empresaId = undefined;
+			}
+		}
+
+		if (transformedValues.cte === "") {
+			if (transporte?.cte) {
+				transformedValues.cte = null;
+			} else {
+				transformedValues.cte = undefined;
+			}
+		}
+
+		if (transformedValues.motoristaId === "") {
+			if (transporte?.motoristaId) {
+				transformedValues.motoristaId = null;
+			} else {
+				transformedValues.motoristaId = undefined;
+			}
+		}
+
+		if (transformedValues.tomadorId === "") {
+			if (transporte?.tomadorId) {
+				transformedValues.tomadorId = null;
+			} else {
+				transformedValues.tomadorId = undefined;
+			}
+		}
+
+		if (transformedValues.peso === "") {
+			if (transporte?.peso) {
+				transformedValues.peso = null;
+			} else {
+				transformedValues.peso = undefined;
+			}
+		}
+
 		if (transformedValues.peso) {
 			transformedValues.peso = transformedValues.peso
 				.toString()
 				.replace(",", ".");
+		}
+
+		if (transformedValues.val_tonelada === "") {
+			if (transporte?.val_tonelada) {
+				transformedValues.val_tonelada = null;
+			} else {
+				transformedValues.val_tonelada = undefined;
+			}
 		}
 
 		if (transformedValues.val_tonelada) {
@@ -183,15 +300,39 @@ export function FormUpdateTransporte({
 				.replace(",", ".");
 		}
 
+		if (transformedValues.val_cte === "") {
+			if (transporte?.val_cte) {
+				transformedValues.val_cte = null;
+			} else {
+				transformedValues.val_cte = undefined;
+			}
+		}
+
 		if (transformedValues.val_cte) {
 			transformedValues.val_cte = transformedValues.val_cte
 				.toString()
 				.replace(",", ".");
 		}
 
+		if (transformedValues.reducao_bc_icms === "") {
+			if (transporte?.reducao_bc_icms) {
+				transformedValues.reducao_bc_icms = null;
+			} else {
+				transformedValues.reducao_bc_icms = undefined;
+			}
+		}
+
 		if (transformedValues.reducao_bc_icms) {
 			transformedValues.reducao_bc_icms =
 				transformedValues.reducao_bc_icms.toString().replace(",", ".");
+		}
+
+		if (transformedValues.aliquota_icms === "") {
+			if (transporte?.aliquota_icms) {
+				transformedValues.aliquota_icms = null;
+			} else {
+				transformedValues.aliquota_icms = undefined;
+			}
 		}
 
 		if (transformedValues.aliquota_icms) {
@@ -200,30 +341,21 @@ export function FormUpdateTransporte({
 				.replace(",", ".");
 		}
 
-		return { ...transformedValues, id: transporte.id };
+		return { ...transformedValues, id: transporte?.id };
 	}
 
 	async function onSubmit(values: z.infer<typeof transporteUpdateSchema>) {
-		// console.log({ values });
+		console.log({ values });
 		const newValues = transformValues(values) as z.infer<
 			typeof transporteUpdateSchema
 		>;
 
 		console.log({ newValues });
 
-		// const camposModificados = obterCamposAlterados(
-		// 	transporte,
-		// 	newValues as Partial<Transporte>,
-		// );
-
-		// console.log("Transporte:", transporte);
-		// console.log("Novos Valores:", newValues);
-		// console.log("Campos modificados:", camposModificados);
-
 		const [data, err] = await execute(newValues);
 
-		// console.log(data);
-		// console.log(err);
+		console.log(data);
+		console.log(err);
 
 		if (err) {
 			if (err.code === "NOT_AUTHORIZED") {
@@ -246,180 +378,231 @@ export function FormUpdateTransporte({
 			}
 		} else {
 			setFieldErrors({});
-			setMainDialog({
-				open: true,
-				content: <SuccessDialogContent message={data.message} />,
-				onClose: () => onClose(data),
-			});
+			if (data.code === 201) {
+				setMainDialog({
+					open: true,
+					content: <SuccessDialogContent message={data.message} />,
+					onClose: () => onClose(data),
+				});
+			}
+			if (data.code === 204) {
+				setMainDialog({
+					open: true,
+					content: (
+						<InfoDialogContent
+							message={data.message}
+							title="Nada para atualizar"
+						/>
+					),
+					onClose: () => onClose(data),
+				});
+			}
 		}
 	}
 
 	return (
 		<div className="h-full w-full flex flex-col overflow-y-auto">
-			<form onSubmit={handleSubmit(onSubmit)}>
-				<div className="flex flex-col w-full p-4 gap-3 dark:bg-[#191c1f] ">
-					<ReactSelect
-						name="empresaId"
-						label="Empresa"
-						control={control}
-						register={register}
-						items={empresaItems()}
-						placeholder="Selecione uma empresa"
-						fieldErrors={fieldErrors}
-					/>
-					<ReactSelect
-						name="motoristaId"
-						label="Motorista"
-						control={control}
-						register={register}
-						items={motoristaItems()}
-						placeholder="Selecione um motorista"
-						fieldErrors={fieldErrors}
-					/>
-
-					<ReactSelect
-						name="tomadorId"
-						label="Tomador"
-						control={control}
-						register={register}
-						items={tomadorItems()}
-						placeholder="Selecione um tomador"
-						fieldErrors={fieldErrors}
-					/>
-
-					<ReactSelectCity
-						nameUf="uf_origem"
-						refUf={refUfOrigem}
-						nameMunicipio="cidade_origem"
-						refMunicipio={refMunicipioOrigem}
-						label="Origem"
-						placeholder="Selecione um município"
-						control={control}
-						setValue={setValue}
-						fieldErrors={fieldErrors}
-					/>
-
-					<ReactSelectCity
-						nameUf="uf_destino"
-						refUf={refUfDestino}
-						nameMunicipio="cidade_destino"
-						refMunicipio={refMunicipioDestino}
-						label="Destino"
-						placeholder="Selecione um município"
-						control={control}
-						setValue={setValue}
-						fieldErrors={fieldErrors}
-					/>
-
-					<div className="grid grid-flow-col grid-cols-2 gap-3">
-						<ReactSelectInputMulti
-							refInput={refNotas}
-							name="notas"
-							label="Notas"
-							placeholder="Digite um número e pressione enter"
-							control={control}
-							setValue={setValue}
-							fieldErrors={fieldErrors}
-						/>
-						<NumberInputField
-							name="cte"
-							label="CTe"
-							placeholder="Digite um número"
-							type="number"
-							control={control}
-							fieldErrors={fieldErrors}
-						/>
-					</div>
-					<div className="grid grid-flow-col grid-cols-3 gap-3">
-						<DecimalInputField
-							name="peso"
-							label="Peso"
-							placeholder="Digite um número"
-							type="number"
-							control={control}
-							fieldErrors={fieldErrors}
-						/>
-						<DecimalInputField
-							name="val_tonelada"
-							label="Val/Ton"
-							placeholder="Digite um valor"
-							type="number"
-							control={control}
-							fieldErrors={fieldErrors}
-						/>
-						<DecimalInputField
-							name="val_cte"
-							label="Val. CTe"
-							placeholder="Digite um valor"
-							type="number"
-							control={control}
-							fieldErrors={fieldErrors}
-						/>
-					</div>
-					<div className="grid grid-flow-col grid-cols-3 gap-3 items-center">
-						<DecimalInputField
-							name="reducao_bc_icms"
-							label="Redução BC ICMS"
-							placeholder="Digite um número"
-							type="number"
-							control={control}
-							fieldErrors={fieldErrors}
-						/>
-						<DecimalInputField
-							name="aliquota_icms"
-							label="Aliq. ICMS"
-							placeholder="Digite um valor"
-							type="number"
-							control={control}
-							fieldErrors={fieldErrors}
-						/>
-						<DatePickerField
-							name="emissao_cte"
-							label="Emissão CTe"
-							placeholder="Selecione uma data"
-							control={control}
-							fieldErrors={fieldErrors}
-							setValue={setValue}
-						/>
-					</div>
-
-					<div className="flex justify-center self-end mt-5 gap-2">
-						<Button
-							onClick={() => {
-								// setValue("uf_origem", "SP");
-								// console.log(refUfOrigem.current.getValue());
-								// refUfOrigem.current.setValue({ label: "SP" });
-								refNotas.current.setValue([
-									{
-										label: "1",
-										value: 1,
-									},
-								]);
-								console.log(refNotas.current.getValue());
-								console.log(refUfOrigem.current);
-								// refNotas.current.setValue([33, 34]);
-							}}
-							type="button"
-							className="bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600 dark:text-white shadow-sm dark:shadow-black/90"
-						>
-							Teste
-						</Button>
-						<Button
-							type="button"
-							onClick={() => router.push("/transmanager")}
-							className="bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 dark:text-white shadow-sm dark:shadow-black/90"
-						>
-							Cancelar
-						</Button>
-						<Button
-							type="submit"
-							className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white shadow-sm dark:shadow-black/90"
-						>
-							Enviar
-						</Button>
-					</div>
+			{/* {isLoading && (
+				<div className="flex justify-center items-center w-full mt-5">
+					<div className="loader" />
 				</div>
-			</form>
+			)} */}
+			{transporte && (
+				<form onSubmit={handleSubmit(onSubmit)}>
+					<div className="flex flex-col w-full p-4 gap-3 dark:bg-[#191c1f] ">
+						<ReactSelect
+							name="empresaId"
+							label="Empresa"
+							control={control}
+							defaultValue={transporte?.empresaId}
+							items={empresaItems()}
+							placeholder="Selecione uma empresa"
+							fieldErrors={fieldErrors}
+						/>
+						<ReactSelect
+							name="motoristaId"
+							label="Motorista"
+							control={control}
+							defaultValue={transporte?.motoristaId}
+							items={motoristaItems()}
+							placeholder="Selecione um motorista"
+							fieldErrors={fieldErrors}
+						/>
+
+						<ReactSelect
+							name="tomadorId"
+							label="Tomador"
+							control={control}
+							defaultValue={transporte?.tomadorId}
+							items={tomadorItems()}
+							placeholder="Selecione um tomador"
+							fieldErrors={fieldErrors}
+						/>
+
+						<ReactSelectCity
+							label="Origem"
+							placeholder="Selecione um município"
+							control={control}
+							setValue={setValue}
+							fieldErrors={fieldErrors}
+							isUpdate
+							nameUf="uf_origem"
+							refUf={refUfOrigem}
+							itemsUf={estadosBrasil}
+							defaultValueUf={transporte?.uf_origem}
+							nameMunicipio="cidade_origem"
+							refMunicipio={refMunicipioOrigem}
+							defaultValueMunicipio={transporte?.cidade_origem}
+						/>
+
+						<ReactSelectCity
+							nameUf="uf_destino"
+							refUf={refUfDestino}
+							itemsUf={estadosBrasil}
+							nameMunicipio="cidade_destino"
+							refMunicipio={refMunicipioDestino}
+							defaultValueUf={transporte?.uf_destino}
+							defaultValueMunicipio={transporte?.cidade_destino}
+							label="Destino"
+							placeholder="Selecione um município"
+							control={control}
+							setValue={setValue}
+							fieldErrors={fieldErrors}
+							isUpdate
+						/>
+
+						<div className="grid grid-flow-col grid-cols-2 gap-3">
+							<ReactSelectInputMulti
+								refInput={refNotas}
+								name="notas"
+								label="Notas"
+								placeholder="Digite um número e pressione enter"
+								control={control}
+								setValue={setValue}
+								fieldErrors={fieldErrors}
+								defaultValue={transporte?.notas}
+								isUpdate
+							/>
+							<NumberInputField
+								name="cte"
+								defaultValue={transporte?.cte}
+								label="CTe"
+								ref={refCte}
+								placeholder="Digite um número"
+								type="number"
+								control={control}
+								fieldErrors={fieldErrors}
+							/>
+						</div>
+						<div className="grid grid-flow-col grid-cols-3 gap-3">
+							<DecimalInputField
+								name="peso"
+								label="Peso"
+								placeholder="Digite um número"
+								type="number"
+								control={control}
+								fieldErrors={fieldErrors}
+								defaultValue={transporte?.peso
+									?.toString()
+									.replace(".", ",")}
+							/>
+							<DecimalInputField
+								name="val_tonelada"
+								label="Val/Ton"
+								placeholder="Digite um valor"
+								type="number"
+								control={control}
+								fieldErrors={fieldErrors}
+								defaultValue={transporte?.val_tonelada
+									?.toString()
+									.replace(".", ",")}
+							/>
+							<DecimalInputField
+								name="val_cte"
+								label="Val. CTe"
+								placeholder="Digite um valor"
+								type="number"
+								control={control}
+								fieldErrors={fieldErrors}
+								defaultValue={transporte?.val_cte
+									?.toString()
+									.replace(".", ",")}
+							/>
+						</div>
+						<div className="grid grid-flow-col grid-cols-3 gap-3 items-center">
+							<DecimalInputField
+								name="reducao_bc_icms"
+								label="Redução BC ICMS"
+								placeholder="Digite um número"
+								type="number"
+								control={control}
+								fieldErrors={fieldErrors}
+								defaultValue={transporte?.reducao_bc_icms
+									?.toString()
+									.replace(".", ",")}
+							/>
+							<DecimalInputField
+								name="aliquota_icms"
+								label="Aliq. ICMS"
+								placeholder="Digite um valor"
+								type="number"
+								control={control}
+								fieldErrors={fieldErrors}
+								defaultValue={transporte?.aliquota_icms
+									?.toString()
+									.replace(".", ",")}
+							/>
+							<DatePickerField
+								name="emissao_cte"
+								label="Emissão CTe"
+								placeholder="Selecione uma data"
+								defaultValue={transporte?.emissao_cte}
+								control={control}
+								fieldErrors={fieldErrors}
+							/>
+						</div>
+
+						<div className="flex justify-center self-end mt-5 gap-2">
+							<Button
+								onClick={() => {
+									const element =
+										document.getElementById("calendar");
+									console.log({ teste: element });
+								}}
+								type="button"
+								className="bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600 dark:text-white shadow-sm dark:shadow-black/90"
+							>
+								Teste
+							</Button>
+							<Button
+								type="button"
+								onClick={() => router.push("/transmanager")}
+								className="bg-red-700 dark:bg-red-700 dark:hover:bg-red-600 dark:text-white shadow-sm dark:shadow-black/90"
+							>
+								Cancelar
+							</Button>
+							<Button
+								type="submit"
+								className="bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 dark:text-white shadow-sm dark:shadow-black/90"
+							>
+								Enviar
+							</Button>
+						</div>
+					</div>
+				</form>
+			)}
+			{!transporte && (
+				<div className="flex flex-col gap-3 justify-center items-center h-full">
+					<p>Transporte indisponível</p>
+					<Button
+						variant="outline"
+						type="button"
+						onClick={() => router.push("/transmanager")}
+					>
+						Voltar
+					</Button>
+				</div>
+			)}
 		</div>
 	);
 }

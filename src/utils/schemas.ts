@@ -31,25 +31,29 @@ export const transporteSchema = z.object({
 		.optional(),
 	notas: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.positive({ message: "O número deve ser positivo" })
-		.array()
-		.optional(),
-	cte: z.coerce
-		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
-			if (val !== null && val !== undefined && val < 0) {
+			if (val !== null && val !== undefined && val <= 0) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.too_big,
 					maximum: 1,
 					type: "number",
 					inclusive: true,
-					message: "O número deve ser positivo",
+					message: "O número deve ser maior que 0",
+				});
+			}
+		})
+		.array()
+		.optional(),
+	cte: z.coerce
+		.number({ message: "O valor deve ser um número válido" })
+		.superRefine((val, ctx) => {
+			if (val !== null && val !== undefined && val <= 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.too_big,
+					maximum: 1,
+					type: "number",
+					inclusive: true,
+					message: "O número deve ser maior que 0",
 				});
 			}
 		})
@@ -57,14 +61,8 @@ export const transporteSchema = z.object({
 		.optional(),
 	peso: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
+			console.log({ peso: val });
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.too_big,
@@ -79,13 +77,6 @@ export const transporteSchema = z.object({
 		.optional(),
 	val_tonelada: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
@@ -101,13 +92,6 @@ export const transporteSchema = z.object({
 		.optional(),
 	val_cte: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			console.log(val);
 			if (val !== null && val !== undefined && val < 0) {
@@ -124,13 +108,6 @@ export const transporteSchema = z.object({
 		.optional(),
 	reducao_bc_icms: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
@@ -146,13 +123,6 @@ export const transporteSchema = z.object({
 		.optional(),
 	aliquota_icms: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
@@ -210,26 +180,30 @@ export const transporteUpdateSchema = z.object({
 		.optional(),
 	notas: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.positive({ message: "O número deve ser positivo" })
-		.array()
-		.nullable()
-		.optional(),
-	cte: z.coerce
-		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
-			if (val !== null && val !== undefined && val < 0) {
+			if (val !== null && val !== undefined && val <= 0) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.too_big,
 					maximum: 1,
 					type: "number",
 					inclusive: true,
-					message: "O número deve ser positivo",
+					message: "O número deve ser maior que 0",
+				});
+			}
+		})
+		.array()
+		.nullable()
+		.optional(),
+	cte: z.coerce
+		.number({ message: "O valor deve ser um número válido" })
+		.superRefine((val, ctx) => {
+			if (val !== null && val !== undefined && val <= 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.too_big,
+					maximum: 1,
+					type: "number",
+					inclusive: true,
+					message: "O número deve ser maior que 0",
 				});
 			}
 		})
@@ -237,13 +211,6 @@ export const transporteUpdateSchema = z.object({
 		.optional(),
 	peso: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
@@ -259,13 +226,6 @@ export const transporteUpdateSchema = z.object({
 		.optional(),
 	val_tonelada: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
@@ -281,13 +241,6 @@ export const transporteUpdateSchema = z.object({
 		.optional(),
 	val_cte: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			console.log(val);
 			if (val !== null && val !== undefined && val < 0) {
@@ -304,13 +257,6 @@ export const transporteUpdateSchema = z.object({
 		.optional(),
 	reducao_bc_icms: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
@@ -326,13 +272,6 @@ export const transporteUpdateSchema = z.object({
 		.optional(),
 	aliquota_icms: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
@@ -348,6 +287,7 @@ export const transporteUpdateSchema = z.object({
 		.optional(),
 	emissao_cte: z.coerce
 		.date({ message: "O valor deve ser uma data válida" })
+		.nullable()
 		.optional(),
 });
 
@@ -361,20 +301,14 @@ export const complementoSchema = z.object({
 		}),
 	cte: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
-			if (val !== null && val !== undefined && val < 0) {
+			if (val !== null && val !== undefined && val <= 0) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.too_big,
 					maximum: 1,
 					type: "number",
 					inclusive: true,
-					message: "O número deve ser positivo",
+					message: "O número deve ser maior que 0",
 				});
 			}
 		})
@@ -382,13 +316,6 @@ export const complementoSchema = z.object({
 		.optional(),
 	peso: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
@@ -404,13 +331,6 @@ export const complementoSchema = z.object({
 		.optional(),
 	val_tonelada: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
@@ -427,26 +347,18 @@ export const complementoSchema = z.object({
 	val_cte: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
 		.superRefine((val, ctx) => {
-			console.log(val);
-			if (val !== null && val !== undefined && val <= 0) {
+			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
 					code: z.ZodIssueCode.too_big,
 					maximum: 1,
 					type: "number",
 					inclusive: true,
-					message: "O número deve ser maior que 0",
+					message: "O número deve ser positivo",
 				});
 			}
 		}),
 	reducao_bc_icms: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({
@@ -462,13 +374,6 @@ export const complementoSchema = z.object({
 		.optional(),
 	aliquota_icms: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
-		.transform((val) => {
-			console.log(val);
-			if (val === 0) {
-				return null;
-			}
-			return val;
-		})
 		.superRefine((val, ctx) => {
 			if (val !== null && val !== undefined && val < 0) {
 				ctx.addIssue({

@@ -78,7 +78,15 @@ const DecimalInputField = React.forwardRef<
 				<Controller
 					name={name}
 					control={control}
-					defaultValue={defaultValue ?? ""}
+					defaultValue={() => {
+						if (
+							defaultValue === undefined ||
+							defaultValue === null
+						) {
+							return "";
+						}
+						return defaultValue;
+					}}
 					render={({ field: { ref, value, onChange } }) => (
 						<Input
 							{...props}
@@ -88,7 +96,9 @@ const DecimalInputField = React.forwardRef<
 							placeholder={placeholder}
 							value={value}
 							onChange={(e) => {
-								const formattedValue = formatValue(e.target.value);
+								const formattedValue = formatValue(
+									e.target.value,
+								);
 								onChange(formattedValue);
 							}}
 							onKeyDown={handleKeyDown}
@@ -105,7 +115,9 @@ const DecimalInputField = React.forwardRef<
 					)}
 				/>
 
-				{fieldErrors && <ErrorField field={name} errors={fieldErrors} />}
+				{fieldErrors && (
+					<ErrorField field={name} errors={fieldErrors} />
+				)}
 			</div>
 		);
 	},

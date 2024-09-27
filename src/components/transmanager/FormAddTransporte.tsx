@@ -25,6 +25,7 @@ import {
 	ErrorDialogContent,
 	SuccessDialogContent,
 } from "./MessageDialogContent";
+import { estadosBrasil } from "@/utils/constants";
 
 export function FormAddTransporte() {
 	const { data: empresas } = useServerActionQuery(getEmpresas, {
@@ -103,10 +104,34 @@ export function FormAddTransporte() {
 	function transformValues(values: any) {
 		const transformedValues = { ...values };
 
+		if (transformedValues.empresaId === "") {
+			transformedValues.empresaId = undefined;
+		}
+
+		if (transformedValues.motoristaId === "") {
+			transformedValues.motoristaId = undefined;
+		}
+
+		if (transformedValues.tomadorId === "") {
+			transformedValues.tomadorId = undefined;
+		}
+
+		if (transformedValues.cte === "") {
+			transformedValues.cte = undefined;
+		}
+
+		if (transformedValues.peso === "") {
+			transformedValues.peso = undefined;
+		}
+
 		if (transformedValues.peso) {
 			transformedValues.peso = transformedValues.peso
 				.toString()
 				.replace(",", ".");
+		}
+
+		if (transformedValues.val_tonelada === "") {
+			transformedValues.val_tonelada = undefined;
 		}
 
 		if (transformedValues.val_tonelada) {
@@ -115,16 +140,27 @@ export function FormAddTransporte() {
 				.replace(",", ".");
 		}
 
+		if (transformedValues.val_cte === "") {
+			transformedValues.val_cte = undefined;
+		}
+
 		if (transformedValues.val_cte) {
 			transformedValues.val_cte = transformedValues.val_cte
 				.toString()
 				.replace(",", ".");
 		}
 
+		if (transformedValues.reducao_bc_icms === "") {
+			transformedValues.reducao_bc_icms = undefined;
+		}
+
 		if (transformedValues.reducao_bc_icms) {
-			transformedValues.reducao_bc_icms = transformedValues.reducao_bc_icms
-				.toString()
-				.replace(",", ".");
+			transformedValues.reducao_bc_icms =
+				transformedValues.reducao_bc_icms.toString().replace(",", ".");
+		}
+
+		if (transformedValues.aliquota_icms === "") {
+			transformedValues.aliquota_icms = undefined;
 		}
 
 		if (transformedValues.aliquota_icms) {
@@ -137,11 +173,11 @@ export function FormAddTransporte() {
 	}
 
 	async function onSubmit(values: z.infer<typeof transporteSchema>) {
-		console.log(values);
+		console.log({ values });
 		const newValues = transformValues(values) as z.infer<
 			typeof transporteSchema
 		>;
-		console.log(newValues);
+		console.log({ newValues });
 
 		const [data, err] = await execute(newValues);
 
@@ -187,7 +223,6 @@ export function FormAddTransporte() {
 						name="empresaId"
 						label="Empresa"
 						control={control}
-						register={register}
 						items={empresaItems()}
 						placeholder="Selecione uma empresa"
 						fieldErrors={fieldErrors}
@@ -196,7 +231,6 @@ export function FormAddTransporte() {
 						name="motoristaId"
 						label="Motorista"
 						control={control}
-						register={register}
 						items={motoristaItems()}
 						placeholder="Selecione um motorista"
 						fieldErrors={fieldErrors}
@@ -206,30 +240,31 @@ export function FormAddTransporte() {
 						name="tomadorId"
 						label="Tomador"
 						control={control}
-						register={register}
 						items={tomadorItems()}
 						placeholder="Selecione um tomador"
 						fieldErrors={fieldErrors}
 					/>
 
 					<ReactSelectCity
-						nameUf="uf_origem"
-						nameMunicipio="cidade_origem"
 						label="Origem"
 						placeholder="Selecione um município"
 						control={control}
 						setValue={setValue}
 						fieldErrors={fieldErrors}
+						nameUf="uf_origem"
+						itemsUf={estadosBrasil}
+						nameMunicipio="cidade_origem"
 					/>
 
 					<ReactSelectCity
-						nameUf="uf_destino"
-						nameMunicipio="cidade_destino"
 						label="Destino"
 						placeholder="Selecione um município"
 						control={control}
 						setValue={setValue}
 						fieldErrors={fieldErrors}
+						nameUf="uf_destino"
+						itemsUf={estadosBrasil}
+						nameMunicipio="cidade_destino"
 					/>
 
 					<div className="grid grid-flow-col grid-cols-2 gap-3">
@@ -299,7 +334,6 @@ export function FormAddTransporte() {
 							placeholder="Selecione uma data"
 							control={control}
 							fieldErrors={fieldErrors}
-							setValue={setValue}
 						/>
 					</div>
 

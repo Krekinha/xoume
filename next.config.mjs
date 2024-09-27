@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-	//reactStrictMode: false,
+	// reactStrictMode: false,
 	env: {
 		SHADOW_DATABASE_URL: process.env.SHADOW_DATABASE_URL,
 		NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
