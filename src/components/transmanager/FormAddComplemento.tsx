@@ -41,17 +41,16 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 	const [fieldErrors, setFieldErrors] = useState({});
 	const router = useRouter();
 
-	const { control, handleSubmit, setValue, getValues, getFieldState } = useForm<
-		z.infer<typeof complementoSchema>
-	>({
-		defaultValues: {
-			cte: undefined,
-			peso: undefined,
-			val_cte: undefined,
-			reducao_bc_icms: undefined,
-			aliquota_icms: undefined,
-		},
-	});
+	const { control, handleSubmit, setValue, getValues, getFieldState } =
+		useForm<z.infer<typeof complementoSchema>>({
+			defaultValues: {
+				cte: undefined,
+				peso: undefined,
+				val_cte: undefined,
+				reducao_bc_icms: undefined,
+				aliquota_icms: undefined,
+			},
+		});
 
 	const pesoFieldValue = useWatch({
 		control,
@@ -127,9 +126,8 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 		}
 
 		if (transformedValues.reducao_bc_icms) {
-			transformedValues.reducao_bc_icms = transformedValues.reducao_bc_icms
-				.toString()
-				.replace(",", ".");
+			transformedValues.reducao_bc_icms =
+				transformedValues.reducao_bc_icms.toString().replace(",", ".");
 		}
 
 		if (transformedValues.aliquota_icms) {
@@ -206,7 +204,9 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 
 					<span className="text-sm text-blue-600">=</span>
 					<span className="text-sm">
-						{freteTotal() > 0 ? formatCurrency(freteTotal().toString()) : "?"}
+						{freteTotal() > 0
+							? formatCurrency(freteTotal().toString())
+							: "?"}
 					</span>
 				</div>
 
@@ -222,7 +222,9 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 						Val. CTe Previsto:
 						<span
 							className={`text-sm ${
-								isEqualValCte() ? "text-green-600" : "text-red-500"
+								isEqualValCte()
+									? "text-green-600"
+									: "text-red-500"
 							}`}
 						>
 							{valCtePrevision() > 0
@@ -302,7 +304,6 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 							placeholder="Selecione uma data"
 							control={control}
 							fieldErrors={fieldErrors}
-							setValue={setValue}
 						/>
 					</div>
 
