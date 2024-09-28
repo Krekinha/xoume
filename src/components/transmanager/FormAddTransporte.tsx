@@ -11,7 +11,11 @@ import type React from "react";
 import { useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import { useServerAction } from "zsa-react";
-import { useServerActionQuery } from "@/hooks/server-action-hooks";
+import {
+	QueryKeyFactory,
+	useServerActionMutation,
+	useServerActionQuery,
+} from "@/hooks/server-action-hooks";
 import { getEmpresas } from "@/server/EmpresaActions";
 import { getMotoristas } from "@/server/MotoristaActions";
 import { getTomadores } from "@/server/TomadorActions";
@@ -26,8 +30,46 @@ import {
 	SuccessDialogContent,
 } from "./MessageDialogContent";
 import { estadosBrasil } from "@/utils/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 export function FormAddTransporte() {
+	const queryClient = useQueryClient();
+
+	const mutation = useServerActionMutation(addTransporte, {
+		onSuccess: (data) => {
+			console.log(data);
+			setFieldErrors({});
+			invalidateQueries();
+			if (data.code === 200) {
+				setMainDialog({
+					open: true,
+					content: <SuccessDialogContent message={data.message} />,
+					onClose: () => onClose(),
+				});
+			}
+		},
+		onError: (error) => {
+			console.log(error);
+			if (error.code === "NOT_AUTHORIZED") {
+				// Handle not authorized error
+			} else if (error.code === "INPUT_PARSE_ERROR") {
+				const zodError = JSON.parse(error?.data) as ZodError;
+				console.log(zodError.issues);
+				setFieldErrors(zodError.issues);
+			} else {
+				setMainDialog({
+					open: true,
+					content: (
+						<ErrorDialogContent
+							title={`${error.code}: (${error.name})`}
+							message={error.message}
+						/>
+					),
+				});
+			}
+		},
+	});
+
 	const { data: empresas } = useServerActionQuery(getEmpresas, {
 		input: undefined,
 		queryKey: ["getEmpresas"],
@@ -43,12 +85,11 @@ export function FormAddTransporte() {
 		queryKey: ["getTomadores"],
 	});
 
-	const { execute } = useServerAction(addTransporte);
 	const { setMainDialog } = useMainDialogContext();
 	const [fieldErrors, setFieldErrors] = useState({});
 	const router = useRouter();
 
-	const { register, control, handleSubmit, setValue, getValues } = useForm<
+	const { control, handleSubmit, setValue } = useForm<
 		z.infer<typeof transporteSchema>
 	>({
 		defaultValues: {
@@ -94,11 +135,15 @@ export function FormAddTransporte() {
 		return [];
 	};
 
-	function onClose(data: unknown) {
-		if (data) {
-			router.push("/transmanager");
-			console.log("indo para /transmanager");
-		}
+	function invalidateQueries() {
+		queryClient.invalidateQueries({
+			queryKey: QueryKeyFactory.getTransportes(),
+		});
+	}
+
+	function onClose() {
+		router.push("/transmanager");
+		console.log("indo para /transmanager");
 	}
 
 	function transformValues(values: any) {
@@ -179,40 +224,7 @@ export function FormAddTransporte() {
 		>;
 		console.log({ newValues });
 
-		const [data, err] = await execute(newValues);
-
-		console.log(data);
-		console.log(err);
-
-		if (err) {
-			if (err.code === "NOT_AUTHORIZED") {
-				// Handle not authorized error
-			} else if (err.code === "INPUT_PARSE_ERROR") {
-				const zodError = JSON.parse(err?.data) as ZodError;
-				console.log(zodError.issues);
-				setFieldErrors(zodError.issues);
-			} else {
-				setMainDialog({
-					open: true,
-					content: (
-						<ErrorDialogContent
-							title={`${err.code}: (${err.name})`}
-							message={err.message}
-						/>
-					),
-					onClose: () => onClose(data),
-				});
-			}
-		} else {
-			setFieldErrors({});
-			setMainDialog({
-				open: true,
-				content: (
-					<SuccessDialogContent message="Transporte adicionado com sucesso" />
-				),
-				onClose: () => onClose(data),
-			});
-		}
+		mutation.mutate(newValues);
 	}
 
 	return (

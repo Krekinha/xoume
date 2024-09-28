@@ -8,11 +8,11 @@ import type { Empresa, Motorista, Tomador, Transporte } from "@/utils/types";
 import { useForm } from "react-hook-form";
 import type { z, ZodError } from "zod";
 import type React from "react";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
-import { useServerAction } from "zsa-react";
 import {
 	QueryKeyFactory,
+	useServerActionMutation,
 	useServerActionQuery,
 } from "@/hooks/server-action-hooks";
 import { getEmpresas } from "@/server/EmpresaActions";
@@ -43,12 +43,59 @@ export function FormUpdateTransporte({
 	const data = queryClient.getQueryData<Transporte[]>(
 		QueryKeyFactory.getTransportes(),
 	);
-	const { execute } = useServerAction(updateTransporte);
+
+	const transporte = data?.find((t) => t.id === Number(transporteId));
+
+	const mutation = useServerActionMutation(updateTransporte, {
+		onSuccess: (data) => {
+			console.log(data);
+			setFieldErrors({});
+			invalidateQueries();
+			if (data.code === 200) {
+				setMainDialog({
+					open: true,
+					content: <SuccessDialogContent message={data.message} />,
+					onClose: () => onClose(),
+				});
+			}
+			if (data.code === 204) {
+				setMainDialog({
+					open: true,
+					content: (
+						<InfoDialogContent
+							message={data.message}
+							title="Nada para atualizar"
+						/>
+					),
+					onClose: () => onClose(),
+				});
+			}
+		},
+		onError: (error) => {
+			console.log(error);
+			if (error.code === "NOT_AUTHORIZED") {
+				// Handle not authorized error
+			} else if (error.code === "INPUT_PARSE_ERROR") {
+				const zodError = JSON.parse(error?.data) as ZodError;
+				console.log(zodError.issues);
+				setFieldErrors(zodError.issues);
+			} else {
+				setMainDialog({
+					open: true,
+					content: (
+						<ErrorDialogContent
+							title={`${error.code}: (${error.name})`}
+							message={error.message}
+						/>
+					),
+				});
+			}
+		},
+	});
+
 	const { setMainDialog } = useMainDialogContext();
 	const [fieldErrors, setFieldErrors] = useState({});
 	const router = useRouter();
-
-	const transporte = data?.find((t) => t.id === Number(transporteId));
 
 	const refUfOrigem = useRef<any>(undefined);
 	const refMunicipioOrigem = useRef<any>(undefined);
@@ -124,101 +171,20 @@ export function FormUpdateTransporte({
 		return [];
 	};
 
-	// useEffect(() => {
-	// 	queryClient.refetchQueries({
-	// 		queryKey: QueryKeyFactory.getTransporteById(
-	// 			transporteId.toString(),
-	// 		), //retornar a mesma chave de consulta definida em factory
-	// 	});
-	// 	if (transporte) {
-	// 		if (transporte.uf_origem) {
-	// 			// setValue("uf_origem", transporte.uf_origem);
-	// 			// refUfOrigem.current.setValue({
-	// 			// 	label: transporte.uf_origem,
-	// 			// });
-	// 			// setValue("cidade_origem", transporte.cidade_origem);
-	// 			// refMunicipioOrigem.current.setValue({
-	// 			// 	label: transporte.cidade_origem,
-	// 			// });
-	// 			// const ufOrigem = estadosBrasil.find(
-	// 			// 	(estado) => estado.label === transporte.uf_origem,
-	// 			// );
-	// 			// refUfOrigem.current.setValue({
-	// 			// 	label: ufOrigem?.label,
-	// 			// 	value: ufOrigem?.value,
-	// 			// });
-	// 			// setValue("uf_origem", transporte.uf_origem);
-	// 			// refUfOrigem.current.selectOption((o: any) => {
-	// 			// 	console.log({ o });
-	// 			// 	return ufOrigem;
-	// 			// });
-	// 			// const options = refMunicipioOrigem.current.props.options;
-	// 			// console.log({ options });
-	// 		}
-
-	// 		// if (transporte.cidade_origem) {
-	// 		// 	const teste = refMunicipioOrigem.current;
-	// 		// 	console.log({ teste });
-	// 		// 	refMunicipioOrigem.current.setValue({
-	// 		// 		label: transporte.cidade_origem,
-	// 		// 	});
-	// 		// }
-	// 		// 		const ufOrigem = estadosBrasil.find(
-	// 		// 			(estado) => estado.label === transporte.uf_origem,
-	// 		// 		);
-	// 		// 		const ufDestino = estadosBrasil.find(
-	// 		// 			(estado) => estado.label === transporte.uf_destino,
-	// 		// 		);
-	// 		// 		setValue("empresaId", transporte.empresaId);
-	// 		// 		setValue("motoristaId", transporte.motoristaId);
-	// 		// 		setValue("tomadorId", transporte.tomadorId);
-	// 		// 		setValue("uf_origem", transporte.uf_origem);
-	// 		// 		refUfOrigem.current.setValue(ufOrigem);
-	// 		// 		setValue("cidade_origem", transporte.cidade_origem);
-	// 		// 		refMunicipioOrigem.current.setValue({
-	// 		// 			label: transporte.cidade_origem,
-	// 		// 		});
-	// 		// 		setValue("uf_destino", transporte.uf_destino);
-	// 		// 		refUfDestino.current.setValue(ufDestino);
-	// 		// 		setValue("cidade_destino", transporte.cidade_destino);
-	// 		// 		refMunicipioDestino.current.setValue({
-	// 		// 			label: transporte.cidade_destino,
-	// 		// 		});
-	// 		// 		setValue("notas", transporte.notas);
-	// 		// 		const notas = transporte.notas?.map((nota: string) => ({
-	// 		// 			label: nota,
-	// 		// 			value: nota,
-	// 		// 		}));
-	// 		// 		refNotas.current?.setValue(notas);
-	// 		// 		setValue("cte", transporte.cte);
-	// 		// 		if (refCte.current) {
-	// 		// 			refCte.current.value = transporte.cte;
-	// 		// 			refCte.current.defaultValue = transporte.cte;
-	// 		// 			console.log({ refCte: refCte.current.defaultValue });
-	// 		// 		}
-	// 		// 		setValue("peso", transporte.peso);
-	// 		// 		setValue("val_tonelada", transporte.val_tonelada);
-	// 		// 		setValue("val_cte", transporte.val_cte);
-	// 		// 		setValue("reducao_bc_icms", transporte.reducao_bc_icms);
-	// 		// 		setValue("aliquota_icms", transporte.aliquota_icms);
-	// 		// 		setValue("emissao_cte", transporte.emissao_cte);
-	// 	}
-	// }, [queryClient, transporteId, transporte]);
-
-	async function refetchQuery() {
-		await queryClient.refetchQueries({
+	function invalidateQueries() {
+		queryClient.invalidateQueries({
+			queryKey: QueryKeyFactory.getTransportes(),
+		});
+		queryClient.invalidateQueries({
 			queryKey: QueryKeyFactory.getTransporteById(
 				transporteId.toString(),
-			), //retornar a mesma chave de consulta definida em factory
+			),
 		});
-		// console.log({ query });
 	}
-	function onClose(data: unknown) {
-		if (data) {
-			refetchQuery();
-			router.push("/transmanager");
-			console.log("indo para /transmanager");
-		}
+
+	function onClose() {
+		router.push("/transmanager");
+		console.log("indo para /transmanager");
 	}
 
 	function transformValues(values: any) {
@@ -351,62 +317,11 @@ export function FormUpdateTransporte({
 		>;
 
 		console.log({ newValues });
-
-		const [data, err] = await execute(newValues);
-
-		console.log(data);
-		console.log(err);
-
-		if (err) {
-			if (err.code === "NOT_AUTHORIZED") {
-				// Handle not authorized error
-			} else if (err.code === "INPUT_PARSE_ERROR") {
-				const zodError = JSON.parse(err?.data) as ZodError;
-				console.log(zodError.issues);
-				setFieldErrors(zodError.issues);
-			} else {
-				setMainDialog({
-					open: true,
-					content: (
-						<ErrorDialogContent
-							title={`${err.code}: (${err.name})`}
-							message={err.message}
-						/>
-					),
-					onClose: () => onClose(data),
-				});
-			}
-		} else {
-			setFieldErrors({});
-			if (data.code === 201) {
-				setMainDialog({
-					open: true,
-					content: <SuccessDialogContent message={data.message} />,
-					onClose: () => onClose(data),
-				});
-			}
-			if (data.code === 204) {
-				setMainDialog({
-					open: true,
-					content: (
-						<InfoDialogContent
-							message={data.message}
-							title="Nada para atualizar"
-						/>
-					),
-					onClose: () => onClose(data),
-				});
-			}
-		}
+		mutation.mutate(newValues);
 	}
 
 	return (
 		<div className="h-full w-full flex flex-col overflow-y-auto">
-			{/* {isLoading && (
-				<div className="flex justify-center items-center w-full mt-5">
-					<div className="loader" />
-				</div>
-			)} */}
 			{transporte && (
 				<form onSubmit={handleSubmit(onSubmit)}>
 					<div className="flex flex-col w-full p-4 gap-3 dark:bg-[#191c1f] ">
@@ -563,7 +478,7 @@ export function FormUpdateTransporte({
 						</div>
 
 						<div className="flex justify-center self-end mt-5 gap-2">
-							<Button
+							{/* <Button
 								onClick={() => {
 									const element =
 										document.getElementById("calendar");
@@ -573,7 +488,7 @@ export function FormUpdateTransporte({
 								className="bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-600 dark:text-white shadow-sm dark:shadow-black/90"
 							>
 								Teste
-							</Button>
+							</Button> */}
 							<Button
 								type="button"
 								onClick={() => router.push("/transmanager")}

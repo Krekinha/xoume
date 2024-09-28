@@ -6,32 +6,33 @@ import { useForm, useWatch } from "react-hook-form";
 import type { z, ZodError } from "zod";
 import type React from "react";
 import { useRef, useState } from "react";
-import type { complementoSchema } from "@/utils/schemas";
 import { DecimalInputField } from "../form/DecimalInputField";
 import { NumberInputField } from "../form/NumberInputField";
 import { DatePickerField } from "../form/DatePickerField";
-import { addComplemento } from "@/server/ComplementoActions";
+import { updateComplemento } from "@/server/ComplementoActions";
 import {
 	QueryKeyFactory,
 	useServerActionMutation,
-	useServerActionQuery,
 } from "@/hooks/server-action-hooks";
-import { getTransporteById } from "@/server/TransporteActions";
 import { formatCurrency, formatDecimal } from "@/utils/format";
 import { cn } from "@/lib/utils";
 import { useMainDialogContext } from "@/providers/MainDialogProvider";
 import {
 	ErrorDialogContent,
+	InfoDialogContent,
 	SuccessDialogContent,
 } from "./MessageDialogContent";
 import { useQueryClient } from "@tanstack/react-query";
 import type { Transporte } from "@/utils/types";
+import type { complementoUpdateSchema } from "@/utils/schemas";
 
 interface FormAddComplementoProps {
 	transporteId: number;
 }
 
-export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
+export function FormUpdateComplemento({
+	transporteId,
+}: FormAddComplementoProps) {
 	const queryClient = useQueryClient();
 
 	const data = queryClient.getQueryData<Transporte[]>(
@@ -40,15 +41,27 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 
 	const transporte = data?.find((t) => t.id === Number(transporteId));
 
-	const mutation = useServerActionMutation(addComplemento, {
+	const mutation = useServerActionMutation(updateComplemento, {
 		onSuccess: (data) => {
 			console.log(data);
 			setFieldErrors({});
 			invalidateQueries();
-			if (data.code === 201) {
+			if (data.code === 200) {
 				setMainDialog({
 					open: true,
 					content: <SuccessDialogContent message={data.message} />,
+					onClose: () => onClose(),
+				});
+			}
+			if (data.code === 204) {
+				setMainDialog({
+					open: true,
+					content: (
+						<InfoDialogContent
+							message={data.message}
+							title="Nada para atualizar"
+						/>
+					),
 					onClose: () => onClose(),
 				});
 			}
@@ -80,18 +93,19 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 	const router = useRouter();
 
 	const refCteComplementar = useRef<HTMLInputElement | null>(null);
-	const refValCte = useRef<HTMLInputElement | null>(null);
+	const refValCteComplementar = useRef<HTMLInputElement | null>(null);
 
-	const { control, handleSubmit, setValue, getValues, getFieldState } =
-		useForm<z.infer<typeof complementoSchema>>({
-			defaultValues: {
-				cte: undefined,
-				peso: undefined,
-				val_cte: undefined,
-				reducao_bc_icms: undefined,
-				aliquota_icms: undefined,
-			},
-		});
+	const { control, handleSubmit, getValues } = useForm<
+		z.infer<typeof complementoUpdateSchema>
+	>({
+		defaultValues: {
+			cte: undefined,
+			peso: undefined,
+			val_cte: undefined,
+			reducao_bc_icms: undefined,
+			aliquota_icms: undefined,
+		},
+	});
 
 	const pesoFieldValue = useWatch({
 		control,
@@ -104,11 +118,11 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 	});
 
 	const isEqualValCte = () => {
-		if (!valCteFieldValue || !valCtePrevision()) return false;
+		const valCte = valCteFieldValue ?? transporte?.cteComplementar?.val_cte;
+		console.log({ valCte, valCtePrevision: valCtePrevision() });
+		if (!valCte || !valCtePrevision()) return false;
 		const ctePrevision = valCtePrevision();
-		const cteWatch = Number.parseFloat(
-			valCteFieldValue.toString().replace(",", "."),
-		);
+		const cteWatch = Number.parseFloat(valCte.toString().replace(",", "."));
 		if (ctePrevision === cteWatch) {
 			return true;
 		}
@@ -118,8 +132,8 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 	function freteTotal() {
 		const peso =
 			pesoFieldValue?.toString().replace(",", ".") ??
-			getValues("peso")?.toString().replace(",", ".");
-
+			getValues("peso")?.toString().replace(",", ".") ??
+			transporte?.cteComplementar?.peso;
 		if (!peso || !transporte?.val_tonelada) return 0;
 
 		const val_peso = Number.parseFloat(peso.toString()) / 1000;
@@ -140,7 +154,8 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 			return formatDecimal(
 				getValues("peso")?.toString().replace(",", "."),
 			);
-
+		if (transporte?.cteComplementar?.peso)
+			return formatDecimal(transporte.cteComplementar.peso.toString());
 		return "?";
 	};
 
@@ -161,6 +176,97 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 		});
 	}
 
+	function onClose() {
+		router.push("/transmanager");
+		console.log("indo para /transmanager");
+	}
+
+	function transformValues(values: any) {
+		const transformedValues = { ...values };
+
+		// console.log(transporte);
+		transformedValues.transporteId = transporteId;
+
+		if (transformedValues.cte === "") {
+			if (transporte?.cteComplementar?.cte) {
+				transformedValues.cte = null;
+			} else {
+				transformedValues.cte = undefined;
+			}
+		}
+
+		if (transformedValues.peso === "") {
+			if (transporte?.peso) {
+				transformedValues.peso = null;
+			} else {
+				transformedValues.peso = undefined;
+			}
+		}
+
+		if (transformedValues.peso) {
+			transformedValues.peso = transformedValues.peso
+				.toString()
+				.replace(",", ".");
+		}
+
+		if (transformedValues.val_tonelada === "") {
+			if (transporte?.cteComplementar?.val_tonelada) {
+				transformedValues.val_tonelada = null;
+			} else {
+				transformedValues.val_tonelada = undefined;
+			}
+		}
+
+		if (transformedValues.val_tonelada) {
+			transformedValues.val_tonelada = transformedValues.val_tonelada
+				.toString()
+				.replace(",", ".");
+		}
+
+		if (transformedValues.val_cte === "") {
+			if (transporte?.cteComplementar?.val_cte) {
+				transformedValues.val_cte = null;
+			} else {
+				transformedValues.val_cte = undefined;
+			}
+		}
+
+		if (transformedValues.val_cte) {
+			transformedValues.val_cte = transformedValues.val_cte
+				.toString()
+				.replace(",", ".");
+		}
+
+		if (transformedValues.reducao_bc_icms === "") {
+			if (transporte?.cteComplementar?.reducao_bc_icms) {
+				transformedValues.reducao_bc_icms = null;
+			} else {
+				transformedValues.reducao_bc_icms = undefined;
+			}
+		}
+
+		if (transformedValues.reducao_bc_icms) {
+			transformedValues.reducao_bc_icms =
+				transformedValues.reducao_bc_icms.toString().replace(",", ".");
+		}
+
+		if (transformedValues.aliquota_icms === "") {
+			if (transporte?.cteComplementar?.aliquota_icms) {
+				transformedValues.aliquota_icms = null;
+			} else {
+				transformedValues.aliquota_icms = undefined;
+			}
+		}
+
+		if (transformedValues.aliquota_icms) {
+			transformedValues.aliquota_icms = transformedValues.aliquota_icms
+				.toString()
+				.replace(",", ".");
+		}
+
+		return { ...transformedValues, id: transporte?.cteComplementar?.id };
+	}
+
 	function setInputValue(input: HTMLInputElement, value: string) {
 		const nativeInputValueSetter = Object.getOwnPropertyDescriptor(
 			window?.HTMLInputElement?.prototype,
@@ -173,59 +279,12 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 		input.dispatchEvent(event);
 	}
 
-	function onClose() {
-		router.push("/transmanager");
-		console.log("indo para /transmanager");
-	}
-
-	function transformValues(values: any) {
-		const transformedValues = { ...values };
-
-		console.log(transporte);
-		transformedValues.transporteId = transporteId;
-
-		if (transformedValues.peso) {
-			transformedValues.peso = transformedValues.peso
-				.toString()
-				.replace(",", ".");
-		}
-
-		if (transformedValues.val_tonelada) {
-			transformedValues.val_tonelada = transformedValues.val_tonelada
-				.toString()
-				.replace(",", ".");
-		}
-
-		if (transformedValues.val_cte) {
-			console.log(transformedValues.val_cte);
-			transformedValues.val_cte = transformedValues.val_cte
-				.toString()
-				.replace(",", ".");
-		} else if (transformedValues.val_cte === "") {
-			console.log("val_cte é vazio");
-			transformedValues.val_cte = undefined;
-		}
-
-		if (transformedValues.reducao_bc_icms) {
-			transformedValues.reducao_bc_icms =
-				transformedValues.reducao_bc_icms.toString().replace(",", ".");
-		}
-
-		if (transformedValues.aliquota_icms) {
-			transformedValues.aliquota_icms = transformedValues.aliquota_icms
-				.toString()
-				.replace(",", ".");
-		}
-
-		return transformedValues;
-	}
-
-	async function onSubmit(values: z.infer<typeof complementoSchema>) {
-		console.log(values);
+	async function onSubmit(values: z.infer<typeof complementoUpdateSchema>) {
+		console.log({ values });
 		const newValues = transformValues(values) as z.infer<
-			typeof complementoSchema
+			typeof complementoUpdateSchema
 		>;
-		console.log(newValues);
+		console.log({ newValues });
 
 		mutation.mutate(newValues);
 	}
@@ -257,7 +316,9 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 				<span className="text-sm text-amber-500">
 					Val. CTe Anterior:{" "}
 					<span id="teste" className="text-sm text-gray-400">
-						{formatCurrency(transporte?.val_cte?.toString() ?? "?")}
+						{formatCurrency(
+							transporte?.val_cte?.toString() ?? "?",
+						) ?? "?"}
 					</span>
 				</span>
 
@@ -278,8 +339,8 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 						disabled={valCtePrevision() === 0}
 						type="button"
 						onClick={() => {
-							if (refValCte.current) {
-								const input = refValCte.current;
+							if (refValCteComplementar.current) {
+								const input = refValCteComplementar.current;
 
 								setInputValue(
 									input,
@@ -311,6 +372,8 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 							type="number"
 							control={control}
 							fieldErrors={fieldErrors}
+							defaultValue={transporte?.cteComplementar?.cte}
+							ref={refCteComplementar}
 						/>
 						<DecimalInputField
 							name="peso"
@@ -319,6 +382,9 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 							type="number"
 							control={control}
 							fieldErrors={fieldErrors}
+							defaultValue={transporte?.cteComplementar?.peso
+								?.toString()
+								.replace(".", ",")}
 						/>
 					</div>
 
@@ -330,27 +396,36 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 							type="number"
 							control={control}
 							fieldErrors={fieldErrors}
+							defaultValue={transporte?.cteComplementar?.reducao_bc_icms
+								?.toString()
+								.replace(".", ",")}
 						/>
 						<DecimalInputField
 							name="aliquota_icms"
 							label="Aliq. ICMS"
 							placeholder="Digite um valor"
-							defaultValue=""
 							type="number"
 							control={control}
 							fieldErrors={fieldErrors}
+							defaultValue={transporte?.cteComplementar?.aliquota_icms
+								?.toString()
+								.replace(".", ",")}
 						/>
 					</div>
 
 					<div className="grid grid-flow-col grid-cols-2 gap-3">
 						<DecimalInputField
+							id="val_cte"
 							name="val_cte"
 							label="Val. CTe"
 							placeholder="Digite um valor"
 							type="number"
-							ref={refValCte}
 							control={control}
 							fieldErrors={fieldErrors}
+							ref={refValCteComplementar}
+							defaultValue={transporte?.cteComplementar?.val_cte
+								?.toString()
+								.replace(".", ",")}
 						/>
 						<DatePickerField
 							name="emissao_cte"
@@ -358,6 +433,9 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 							placeholder="Selecione uma data"
 							control={control}
 							fieldErrors={fieldErrors}
+							defaultValue={
+								transporte?.cteComplementar?.emissao_cte
+							}
 						/>
 					</div>
 

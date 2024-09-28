@@ -133,7 +133,10 @@ export const addTransporte = createServerAction()
 				},
 			});
 
-			return "Transporte adicionado com sucesso";
+			return {
+				message: "Transporte adicionado com sucesso",
+				code: 200,
+			};
 		} catch (error: unknown) {
 			if (
 				error instanceof Prisma.PrismaClientKnownRequestError ||
@@ -192,7 +195,7 @@ export const updateTransporte = createServerAction()
 
 			return {
 				message: "Transporte atualizado com sucesso",
-				code: 201,
+				code: 200,
 			};
 		} catch (error: unknown) {
 			if (
@@ -257,6 +260,7 @@ export const delTransporte = createServerAction()
 			console.log(resultado);
 			return {
 				message: `Transporte referente ao CT-e "${resultado.cte ?? "(não informado)"}", nota(s) "${resultado.notas.length > 0 ? resultado.notas : "(não informado)"}" excluído com sucesso!`,
+				code: 200,
 			};
 		} catch (error: unknown) {
 			if (

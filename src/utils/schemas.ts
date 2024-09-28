@@ -391,3 +391,120 @@ export const complementoSchema = z.object({
 		.date({ message: "O valor deve ser uma data válida" })
 		.optional(),
 });
+
+export const complementoUpdateSchema = z.object({
+	id: z.number({
+		message: "Campo obrigatório",
+	}),
+	transporteId: z.coerce
+		.number({
+			message: "Campo obrigatório",
+		})
+		.positive({
+			message: "O número deve ser positivo",
+		}),
+	cte: z.coerce
+		.number({ message: "O valor deve ser um número válido" })
+		.superRefine((val, ctx) => {
+			if (val !== null && val !== undefined && val <= 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.too_big,
+					maximum: 1,
+					type: "number",
+					inclusive: true,
+					message: "O número deve ser maior que 0",
+				});
+			}
+		})
+		.nullable()
+		.optional(),
+	peso: z.coerce
+		.number({ message: "O valor deve ser um número válido" })
+		.superRefine((val, ctx) => {
+			if (val !== null && val !== undefined && val < 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.too_big,
+					maximum: 1,
+					type: "number",
+					inclusive: true,
+					message: "O número deve ser positivo",
+				});
+			}
+		})
+		.nullable()
+		.optional(),
+	val_tonelada: z.coerce
+		.number({ message: "O valor deve ser um número válido" })
+		.superRefine((val, ctx) => {
+			if (val !== null && val !== undefined && val < 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.too_big,
+					maximum: 1,
+					type: "number",
+					inclusive: true,
+					message: "O número deve ser positivo",
+				});
+			}
+		})
+		.nullable()
+		.optional(),
+	val_cte: z.coerce
+		.number({ message: "O valor deve ser um número válido" })
+		.nullable()
+		.optional()
+		.superRefine((val, ctx) => {
+			console.log({ val_cte: val });
+			if (val === null) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.too_small,
+					minimum: 1,
+					type: "number",
+					inclusive: true,
+					message: "Campo obrigatório",
+				});
+			}
+
+			if (val !== null && val !== undefined && val <= 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.too_big,
+					maximum: 1,
+					type: "number",
+					inclusive: true,
+					message: "O número deve ser maior que 0",
+				});
+			}
+		}),
+	reducao_bc_icms: z.coerce
+		.number({ message: "O valor deve ser um número válido" })
+		.superRefine((val, ctx) => {
+			if (val !== null && val !== undefined && val < 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.too_big,
+					maximum: 1,
+					type: "number",
+					inclusive: true,
+					message: "O número deve ser positivo",
+				});
+			}
+		})
+		.nullable()
+		.optional(),
+	aliquota_icms: z.coerce
+		.number({ message: "O valor deve ser um número válido" })
+		.superRefine((val, ctx) => {
+			if (val !== null && val !== undefined && val < 0) {
+				ctx.addIssue({
+					code: z.ZodIssueCode.too_big,
+					maximum: 1,
+					type: "number",
+					inclusive: true,
+					message: "O número deve ser positivo",
+				});
+			}
+		})
+		.nullable()
+		.optional(),
+	emissao_cte: z.coerce
+		.date({ message: "O valor deve ser uma data válida" })
+		.optional(),
+});

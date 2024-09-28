@@ -87,10 +87,11 @@ const DecimalInputField = React.forwardRef<
 						}
 						return defaultValue;
 					}}
-					render={({ field: { ref, value, onChange } }) => (
+					render={({ field: { value, onChange } }) => (
 						<Input
 							{...props}
 							id={id}
+							ref={ref}
 							type="text"
 							inputMode="decimal"
 							placeholder={placeholder}

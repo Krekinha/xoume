@@ -14,6 +14,7 @@ import {
 	formatarDataHora,
 	formatCurrency,
 	formatDecimal,
+	formatPercent,
 } from "@/utils/format";
 import { Separator } from "@/components/ui/separator";
 import type { Decimal } from "@prisma/client/runtime/library";
@@ -40,6 +41,15 @@ export function TransportesList() {
 		}
 		return null;
 	};
+
+	const titleAliqIcms = (
+		aliquota_icms: Decimal | undefined,
+		reducao_bc_icms: Decimal | undefined,
+	) => {
+		const val_alq = `Aliq: ${formatPercent(aliquota_icms?.toString())}`;
+		const val_red = `Red. bc: ${formatPercent(reducao_bc_icms?.toString())}`;
+		return `${val_alq}\n${val_red}`;
+	};
 	return (
 		<div className="h-full max-h-screen w-full space-y-3 overflow-y-auto p-4 overflow-x-hidden">
 			<QueryStatus
@@ -55,7 +65,9 @@ export function TransportesList() {
 								<TransporteListItem.Header>
 									<TransporteListItem.HeaderStart>
 										<TransporteListItem.Empresa
-											empresa={transporte.empresa?.razaoNome}
+											empresa={
+												transporte.empresa?.razaoNome
+											}
 										/>
 									</TransporteListItem.HeaderStart>
 									<TransporteListItem.HeaderEnd>
@@ -63,9 +75,13 @@ export function TransportesList() {
 											title="Data da criação"
 											className="text-[0.7rem] text-gray-500"
 										>
-											{formatarDataHora(transporte.criadoEm)}
+											{formatarDataHora(
+												transporte.criadoEm,
+											)}
 										</span>
-										<TransporteListItem.Menu transporte={transporte} />
+										<TransporteListItem.Menu
+											transporte={transporte}
+										/>
 									</TransporteListItem.HeaderEnd>
 								</TransporteListItem.Header>
 
@@ -75,24 +91,31 @@ export function TransportesList() {
 											<TransporteListItem.CTe
 												cte={transporte?.cte?.toString()}
 											/>
-											{transporte.cte && transporte?.notas && (
-												<Separator
-													orientation="vertical"
-													className="bg-gray-600 w-[1px] mx-1 h-[0.5rem]"
-												/>
-											)}
+											{transporte.cte &&
+												transporte?.notas && (
+													<Separator
+														orientation="vertical"
+														className="bg-gray-600 w-[1px] mx-1 h-[0.5rem]"
+													/>
+												)}
 											<TransporteListItem.Tag
-												tag={transporte.notas?.join("/")}
+												tag={transporte.notas?.join(
+													"/",
+												)}
 												icon={FaFileAlt}
 												title="Notas fiscais"
 												className="text-xs truncate"
 											/>
 										</div>
-										<TransporteListItem.ValCTe transporte={transporte} />
+										<TransporteListItem.ValCTe
+											transporte={transporte}
+										/>
 									</div>
 									<div className="flex gap-1 items-center">
 										<TransporteListItem.Motorista
-											motorista={transporte.motorista?.nome}
+											motorista={
+												transporte.motorista?.nome
+											}
 										/>
 										{transporte.cidade_origem && (
 											<Separator
@@ -101,11 +124,15 @@ export function TransportesList() {
 											/>
 										)}
 										<TransporteListItem.Origem
-											cidadeOrigem={transporte.cidade_origem}
+											cidadeOrigem={
+												transporte.cidade_origem
+											}
 											ufOrigem={transporte.uf_origem}
 										/>
 										<TransporteListItem.Destino
-											cidadeDestino={transporte.cidade_destino}
+											cidadeDestino={
+												transporte.cidade_destino
+											}
 											ufDestino={transporte.uf_destino}
 										/>
 									</div>
@@ -119,12 +146,16 @@ export function TransportesList() {
 									/>
 
 									<TransporteListItem.Tag
-										tag={formatDecimal(transporte.peso?.toString())}
+										tag={formatDecimal(
+											transporte.peso?.toString(),
+										)}
 										icon={RiWeightFill}
 										title="Peso"
 									/>
 									<TransporteListItem.Tag
-										tag={formatCurrency(transporte.val_tonelada?.toString())}
+										tag={formatCurrency(
+											transporte.val_tonelada?.toString(),
+										)}
 										icon={PiInvoiceBold}
 										title="Valor por tonelada"
 										other="/ton."
@@ -139,10 +170,15 @@ export function TransportesList() {
 											)?.toString(),
 										)}
 										icon={PercentCircle}
-										title="Valor do ICMS"
+										title={titleAliqIcms(
+											transporte.aliquota_icms,
+											transporte.reducao_bc_icms,
+										)}
 									/>
 									<TransporteListItem.Tag
-										tag={formatarData(transporte.emissao_cte)}
+										tag={formatarData(
+											transporte.emissao_cte,
+										)}
 										icon={Calendar}
 										title="Emissão"
 									/>
@@ -155,7 +191,7 @@ export function TransportesList() {
 										<div className="flex gap-2 items-center flex-wrap">
 											<TransporteListItem.CTe
 												cte={transporte.cteComplementar?.cte?.toString()}
-												className="text-sm font-semibold dark:text-fuchsia-500"
+												className="text-sm font-semibold "
 											/>
 
 											<TransporteListItem.Tag
@@ -164,7 +200,7 @@ export function TransportesList() {
 												)}
 												icon={RiWeightFill}
 												title="Peso"
-												className="text-sm font-semibold dark:text-fuchsia-500"
+												className="text-sm font-semibold "
 											/>
 
 											<TransporteListItem.Tag
@@ -174,42 +210,46 @@ export function TransportesList() {
 												icon={PiInvoiceBold}
 												title="Valor por tonelada"
 												other="/ton."
-												className="text-sm font-semibold dark:text-fuchsia-500"
-											/>
-
-											<TransporteListItem.Tag
-												tag={transporte.cteComplementar?.aliquota_icms?.toString()}
-												icon={PiInvoiceBold}
-												title="Alíquota ICMS"
+												className="text-sm font-semibold"
 											/>
 
 											<TransporteListItem.Tag
 												tag={formatCurrency(
 													valIcms(
-														transporte?.cteComplementar?.val_cte,
-														transporte?.cteComplementar?.aliquota_icms,
-														transporte?.cteComplementar?.reducao_bc_icms,
+														transporte
+															?.cteComplementar
+															?.val_cte,
+														transporte
+															?.cteComplementar
+															?.aliquota_icms,
+														transporte
+															?.cteComplementar
+															?.reducao_bc_icms,
 													)?.toString(),
 												)}
 												icon={PercentCircle}
-												title="Valor do ICMS"
-												className="text-sm font-semibold dark:text-fuchsia-500"
+												title={titleAliqIcms(
+													transporte.cteComplementar
+														?.aliquota_icms,
+													transporte.cteComplementar
+														?.reducao_bc_icms,
+												)}
+												className="text-sm font-semibold"
 											/>
 
 											<TransporteListItem.Tag
 												tag={formatarData(
-													transporte.cteComplementar?.emissao_cte,
+													transporte.cteComplementar
+														?.emissao_cte,
 												)}
 												icon={Calendar}
 												title="Emissão"
-												className="text-sm font-semibold dark:text-fuchsia-500"
+												className="text-sm font-semibold"
 											/>
 										</div>
-										<div className="text-sm font-semibold dark:text-amber-400">
-											{formatCurrency(
-												transporte.cteComplementar?.val_cte?.toString(),
-											)}
-										</div>
+										<TransporteListItem.ValCteComplementar
+											transporte={transporte}
+										/>
 									</div>
 								</TransporteListItem.Complemento>
 							</TransporteListItem.Root>

@@ -38,7 +38,7 @@ export function ComplementoItem({
 						</button>
 					</CollapsibleTrigger>
 					<CollapsibleContent>
-						<div className="flex flex-wrap gap-2 items-center text-cyan-500">
+						<div className="flex flex-wrap gap-2 items-center dark:text-slate-300">
 							{children}
 						</div>
 					</CollapsibleContent>

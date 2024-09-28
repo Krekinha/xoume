@@ -22,6 +22,8 @@ export const TransporteListItem = {
 	CTe: TransporteListItemCTe,
 	HeaderEnd: TransporteListItemHeaderEnd,
 	ValCTe: TransporteListItemValCTe,
+	ValCteComplementar: TransporteListItemValCteComplementar,
+
 	Menu: TransporteListItemMenu,
 	Content: TransporteListItemContent,
 	Motorista: TransporteListItemMotorista,
@@ -171,7 +173,8 @@ export function TransporteListItemValCTe({
 	} else {
 		if (transporte.peso && transporte.val_tonelada) {
 			val_frete =
-				(Number(transporte.peso) / 1000) * Number(transporte.val_tonelada);
+				(Number(transporte.peso) / 1000) *
+				Number(transporte.val_tonelada);
 		}
 	}
 
@@ -182,7 +185,9 @@ export function TransporteListItemValCTe({
 			</div>
 			{val_frete > 0 && (
 				<>
-					<span className="text-[0.650rem] dark:text-gray-400">/</span>
+					<span className="text-[0.650rem] dark:text-gray-400">
+						/
+					</span>
 					<span className="text-[0.650rem] font-semibold dark:text-gray-400">
 						{formatCurrency(val_frete.toString())}
 					</span>
@@ -214,7 +219,9 @@ export function TransporteListItemContent({
 	children,
 }: TransporteListItemContentProps) {
 	return (
-		<div className="flex flex-col gap-1 dark:text-slate-300">{children}</div>
+		<div className="flex flex-col gap-1 dark:text-slate-300">
+			{children}
+		</div>
 	);
 }
 
@@ -263,7 +270,9 @@ export function TransporteListItemOrigem({
 							{cidadeOrigem}
 						</span>
 						<span>-</span>
-						<span className="text-[0.7rem]/[1rem] sm:text-xs">{ufOrigem}</span>
+						<span className="text-[0.7rem]/[1rem] sm:text-xs">
+							{ufOrigem}
+						</span>
 					</div>
 				</>
 			)}
@@ -294,7 +303,9 @@ export function TransporteListItemDestino({
 							{cidadeDestino}
 						</span>
 						<span>-</span>
-						<span className="text-[0.7rem]/[1rem] sm:text-xs">{ufDestino}</span>
+						<span className="text-[0.7rem]/[1rem] sm:text-xs">
+							{ufDestino}
+						</span>
 					</div>
 				</>
 			)}
@@ -339,7 +350,10 @@ export function TransporteListItemTag({
 	return (
 		<>
 			{tag && (
-				<div title={title} className="grid grid-flow-col items-center gap-1">
+				<div
+					title={title}
+					className="grid grid-flow-col items-center gap-1"
+				>
 					<Icon className="text-amber-600 w-3 h-3" />
 					<span {...props} className={cn("font-medium", className)}>
 						{tag}
@@ -348,5 +362,92 @@ export function TransporteListItemTag({
 				</div>
 			)}
 		</>
+	);
+}
+
+/**
+ *  FOOTER: VALOR COMPLEMENTO
+ */
+interface TransporteListItemValCteComplementarProps {
+	transporte: Transporte;
+}
+export function TransporteListItemValCteComplementar({
+	transporte,
+}: TransporteListItemValCteComplementarProps) {
+	let val_frete = 0;
+	let val_previsto = 0;
+	let val_diferenca = 0;
+	let val_cte = 0;
+	let val_cteComplementar = 0;
+
+	if (transporte.cteComplementar) {
+		val_cte = Number((Number(transporte.val_cte) ?? 0).toFixed(2));
+		val_cteComplementar = Number(
+			(Number(transporte.cteComplementar.val_cte) ?? 0).toFixed(2),
+		);
+
+		val_frete = Number(
+			(
+				(Number(transporte.cteComplementar.peso) / 1000) *
+				Number(transporte.val_tonelada)
+			).toFixed(2),
+		);
+
+		val_previsto = val_frete - val_cte;
+
+		val_diferenca = val_previsto - val_cteComplementar;
+	}
+
+	function isDiferent() {
+		if (
+			val_cteComplementar > val_previsto ||
+			val_cteComplementar < val_previsto
+		) {
+			return true;
+		}
+
+		return false;
+	}
+
+	function diferenceDescription() {
+		if (val_cteComplementar > val_previsto) {
+			return `Valor acima do previsto: + (${formatCurrency((val_cteComplementar - val_previsto).toString())})`;
+		}
+		if (val_cteComplementar < val_previsto) {
+			return `Valor abaixo do previsto: - (${formatCurrency((val_previsto - val_cteComplementar).toString())})`;
+		}
+	}
+
+	return (
+		<div className="flex gap-1 items-center ">
+			<div className="text-sm font-semibold dark:text-amber-400">
+				{formatCurrency(
+					transporte.cteComplementar?.val_cte?.toString(),
+				)}
+			</div>
+			{isDiferent() && (
+				<>
+					<span className="text-[0.650rem] dark:text-gray-400">
+						/
+					</span>
+					<span
+						title={diferenceDescription()}
+						className="text-[0.650rem] font-semibold dark:text-red-400"
+					>
+						({formatCurrency(val_previsto.toString())})
+					</span>
+				</>
+			)}
+			{val_cteComplementar === val_previsto && (
+				<>
+					<span className="text-[0.650rem] dark:text-gray-400">
+						/
+					</span>
+					<span className="text-[0.650rem] font-semibold dark:text-green-400">
+						({formatCurrency(val_previsto.toString())})
+					</span>
+				</>
+			)}
+		</div>
 	);
 }

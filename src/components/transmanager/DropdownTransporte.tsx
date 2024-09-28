@@ -22,12 +22,14 @@ import {
 import type { Transporte } from "@/utils/types";
 import { delTransporte } from "@/server/TransporteActions";
 import { cn } from "@/lib/utils";
-import { QueryKeyFactory } from "@/hooks/server-action-hooks";
-import { useServerAction } from "zsa-react";
+import {
+	QueryKeyFactory,
+	useServerActionMutation,
+} from "@/hooks/server-action-hooks";
 import { useMainDialogContext } from "@/providers/MainDialogProvider";
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { delComplemento } from "@/server/ComplementoActions";
 import { TransporteAutomacoes } from "./TransporteAutomacoes";
 import { AlertDropdownMenuItem } from "../main/AlertDropdownMenuItem";
@@ -43,62 +45,75 @@ interface Props {
 const element = <div className="bg-red-500 w-full">teste</div>;
 
 export function DropdownTransporte({ transporte }: Props) {
-	const { execute: execTransporte } = useServerAction(delTransporte);
-	const { execute: execComplemento } = useServerAction(delComplemento);
+	const mutationTransporte = useServerActionMutation(delTransporte, {
+		onSuccess: (data) => {
+			console.log(data);
+			invalidateQueries();
+			if (data.code === 200) {
+				setMainDialog({
+					open: true,
+					content: <SuccessDialogContent message={data.message} />,
+					// onClose: () => onClose(),
+				});
+			}
+		},
+		onError: (error) => {
+			console.log(error);
+			setMainDialog({
+				open: true,
+				content: (
+					<ErrorDialogContent
+						title={`${error.code}: (${error.name})`}
+						message={error.message}
+					/>
+				),
+			});
+		},
+	});
+
+	const mutationComplemento = useServerActionMutation(delComplemento, {
+		onSuccess: (data) => {
+			console.log(data);
+			invalidateQueries();
+			if (data.code === 200) {
+				setMainDialog({
+					open: true,
+					content: <SuccessDialogContent message={data.message} />,
+					// onClose: () => onClose(),
+				});
+			}
+		},
+		onError: (error) => {
+			console.log(error);
+			setMainDialog({
+				open: true,
+				content: (
+					<ErrorDialogContent
+						title={`${error.code}: (${error.name})`}
+						message={error.message}
+					/>
+				),
+			});
+		},
+	});
 
 	const { setMainDialog } = useMainDialogContext();
 	const queryClient = useQueryClient();
 	const router = useRouter();
 	const [showDropdownMenu, setShowDropdownMenu] = useState(false);
 
-	function onClose() {
-		queryClient.refetchQueries({
-			queryKey: QueryKeyFactory.getTransportes(), //retornar a mesma chave de consulta definida em factory
+	function invalidateQueries() {
+		queryClient.invalidateQueries({
+			queryKey: QueryKeyFactory.getTransportes(),
 		});
 	}
 
 	async function excluirTransporte(id: number) {
-		const [data, err] = await execTransporte({ id: id });
-
-		if (err) {
-			setMainDialog({
-				open: true,
-				content: (
-					<ErrorDialogContent
-						title={`${err.code}: (${err.name})`}
-						message={err.message}
-					/>
-				),
-			});
-		} else {
-			setMainDialog({
-				open: true,
-				content: <SuccessDialogContent message={data.message} />,
-				onClose: () => onClose(),
-			});
-		}
+		mutationTransporte.mutate({ id: id });
 	}
 
 	async function excluirComplemento(id: number) {
-		const [data, err] = await execComplemento({ id: id });
-
-		if (err) {
-			setMainDialog({
-				open: true,
-				content: (
-					<ErrorDialogContent
-						title={`${err.code}: (${err.name})`}
-						message={err.message}
-					/>
-				),
-			});
-		} else {
-			setMainDialog({
-				open: true,
-				content: <SuccessDialogContent message={data.message} />,
-				onClose: () => onClose(),
-			});
-		}
+		mutationComplemento.mutate({ id: id });
 	}
 
 	return (
@@ -164,7 +179,7 @@ export function DropdownTransporte({ transporte }: Props) {
 								disabled={!!transporte.cteComplementar}
 								onClick={() =>
 									router.push(
-										`/transmanager/transportes/complemento/${transporte.id}`,
+										`/transmanager/transportes/complemento/add/${transporte.id}`,
 									)
 								}
 								className="hover:bg-gray-300 cursor-pointer rounded gap-2 disabled:opacity-50"
@@ -188,7 +203,11 @@ export function DropdownTransporte({ transporte }: Props) {
 							</DropdownMenuItem>
 							<DropdownMenuItem
 								disabled={!transporte.cteComplementar}
-								onClick={() => {}}
+								onClick={() =>
+									router.push(
+										`/transmanager/transportes/complemento/update/${transporte.id}`,
+									)
+								}
 								className="cursor-pointer rounded gap-2"
 							>
 								<AiFillEdit

@@ -61,8 +61,8 @@ export function formatarDataByDMAndAddDays(
 	return undefined;
 }
 
-export function formatPercent(valor: string) {
-	const val = valor.toString().replace(",", ".") || "0";
+export function formatPercent(valor?: string) {
+	const val = valor?.toString().replace(",", ".") || "0";
 	const conv = Number.parseFloat(val).toLocaleString("pt-BR", {
 		style: "decimal",
 		maximumFractionDigits: 2,

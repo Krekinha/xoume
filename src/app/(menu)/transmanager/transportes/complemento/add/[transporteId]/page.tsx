@@ -1,5 +1,5 @@
 import { ErrorBoundary } from "react-error-boundary";
-import { FallbackFetch } from "../../FallbackFetch";
+import { FallbackFetch } from "../../../FallbackFetch";
 import ComplementoAddNavbar from "@/components/transmanager/ComplementoAddNavbar";
 import { FormAddComplemento } from "@/components/transmanager/FormAddComplemento";
 
