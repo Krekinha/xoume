@@ -2,7 +2,7 @@
 import { ListAtendimentos } from "./ListAtendimentos";
 import { useAtendimentoStore } from "@/store/useAtendimentoStore";
 import { DialogAddAtendimento } from "./DialogAddAtendimento";
-import { prisma } from "@/utils/prisma";
+import prisma from "@/lib/prisma";
 import type { PrismaClientValidationError } from "@prisma/client/runtime/library";
 import type { Atendimento } from "@/utils/types";
 //import { use } from 'react';
@@ -39,7 +39,9 @@ export default async function Home() {
 		<>
 			<nav className="navbar p-4 sm:ml-64 fixed top-0 w-full mt-11 py-2 shadow-sm bg-white">
 				<DialogAddAtendimento />
-				<span className="ml-2 text-sm text-black">Novo atendimento</span>
+				<span className="ml-2 text-sm text-black">
+					Novo atendimento
+				</span>
 			</nav>
 			<div className="p-4 sm:ml-64 mt-8">
 				<div className="mt-12">

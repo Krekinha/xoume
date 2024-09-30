@@ -125,6 +125,7 @@ export enum SituacaoEventoEvolucaoAtendimento {
 
 export type Transporte = {
 	id?: number;
+	userId?: string;
 
 	notas?: number[];
 	cte?: number;

@@ -1,9 +1,8 @@
 "use server";
 
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { createServerAction } from "zsa";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export const getMotoristas = createServerAction().handler(async () => {
 	try {

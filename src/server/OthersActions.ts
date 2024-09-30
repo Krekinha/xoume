@@ -1,11 +1,8 @@
 "use server";
 
 import type { SelectItemProps } from "@/utils/types";
-import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { createServerAction } from "zsa";
-
-const prisma = new PrismaClient();
 
 export const getMunicipiosByUf = createServerAction()
 	.input(

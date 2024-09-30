@@ -1,14 +1,11 @@
 import { baseUrl } from "@/utils/constants";
 import type { Transporte } from "@/utils/types";
-import type { Decimal } from "@prisma/client/runtime/library";
 
 export const transporteService = {
 	get,
 	add,
 	delete: _delete,
 };
-
-const local_add = "http://localhost:3333/transportes/add";
 
 /** DELETE
  */

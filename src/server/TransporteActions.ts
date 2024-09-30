@@ -1,53 +1,16 @@
 "use server";
 
+import { auth } from "@/app/api/auth/[...nextauth]/auth";
+
+import prisma from "@/lib/prisma";
 import { transporteSchema, transporteUpdateSchema } from "@/utils/schemas";
 import type { Transporte } from "@/utils/types";
-import { Prisma, PrismaClient } from "@prisma/client";
-import { z, ZodError, type ZodIssue } from "zod";
-import { createServerAction, createServerActionProcedure, ZSAError } from "zsa";
-
-const prisma = new PrismaClient();
-
-const publicAction = createServerActionProcedure()
-	.experimental_shapeError(({ err, typedData }) => {
-		if (err instanceof ZSAError) {
-			const { code: type, inputParseErrors, message } = err;
-			return {
-				message: err.message,
-				code: err.code,
-				rhfErrors: {
-					root: {
-						type,
-						message: message ?? inputParseErrors?.fieldErrors?.[0],
-					},
-					...Object.fromEntries(
-						Object.entries(inputParseErrors?.fieldErrors ?? {}).map(
-							([name, errors]) => [
-								name,
-								{ message: errors?.[0] },
-							],
-						),
-					),
-				},
-				values: typedData.inputRaw,
-			};
-		}
-		return {
-			message: "Something went wrong",
-			code: "ERROR",
-			values: typedData.inputRaw,
-		};
-	})
-	.handler(() => {})
-	.createServerAction();
+import { Prisma } from "@prisma/client";
+import { z } from "zod";
+import { createServerAction, ZSAError } from "zsa";
 
 export const getTransportes = createServerAction().handler(async () => {
 	try {
-		/**
-		 * É necessário que o include seja feita em todos os relacionamentos
-		 * entre os objetos, do contrário, os elementos sem o include não
-		 * irão aparecer em componentes visuais como lista e tabelas
-		 */
 		const transportes = await prisma.transporte.findMany({
 			include: {
 				empresa: true,
@@ -110,11 +73,16 @@ export const getTransporteById = createServerAction()
 export const addTransporte = createServerAction()
 	.input(transporteSchema)
 	.handler(async ({ input }) => {
+		const session = await auth();
 		console.log(input);
 
 		try {
-			const novoTransporte = await prisma.transporte.create({
+			if (!session) {
+				throw new Error("Não autorizado");
+			}
+			await prisma.transporte.create({
 				data: {
+					userId: session.user.id,
 					empresaId: input.empresaId,
 					motoristaId: input.motoristaId,
 					tomadorId: input.tomadorId,
@@ -186,7 +154,7 @@ export const updateTransporte = createServerAction()
 		}
 
 		try {
-			const updatedTransporte = await prisma.transporte.update({
+			await prisma.transporte.update({
 				where: {
 					id: input.id,
 				},

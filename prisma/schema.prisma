@@ -24,6 +24,9 @@ model User {
   clienteCriado          Cliente[]     @relation("clienteCriado")
   clienteAtualizado      Cliente[]     @relation("clienteAtualizado")
   responsavelAtendimento Atendimento[] @relation("responsavelAtendimento")
+
+  // Relacionamentos por usuários
+  transportes Transporte[]
 }
 
 enum Role {
@@ -182,11 +185,13 @@ model Transporte {
   motorista       Motorista?       @relation(fields: [motoristaId], references: [id])
   tomador         Tomador?         @relation("transporteTomador", fields: [tomadorId], references: [id])
   empresa         Empresa          @relation("transporteEmpresa", fields: [empresaId], references: [id])
+  user            User             @relation(fields: [userId], references: [id])
 
   // Chave
   motoristaId Int?
   empresaId   Int
   tomadorId   Int?
+  userId      String
 }
 
 model CteComplementar {

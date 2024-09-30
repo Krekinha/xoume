@@ -5,8 +5,7 @@ import type { CteComplementar } from "@/utils/types";
 import { Prisma, PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import { createServerAction, ZSAError } from "zsa";
-
-const prisma = new PrismaClient();
+import prisma from "@/lib/prisma";
 
 export const addComplemento = createServerAction()
 	.input(complementoSchema)

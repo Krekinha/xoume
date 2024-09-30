@@ -32,7 +32,7 @@ export function MainDialog() {
 					}}
 				>
 					<DialogTrigger />
-					<DialogContent className=" bg-zinc-950 border border-zinc-900 space-y-4">
+					<DialogContent className="flex flex-col bg-zinc-950 border border-zinc-900 gap-3 max-h-fit">
 						<DialogHeader>
 							<DialogTitle />
 							<DialogDescription />

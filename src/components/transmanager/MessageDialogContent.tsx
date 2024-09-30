@@ -24,7 +24,7 @@ const ErrorDialogContent: React.FC<ErrorDialogContentProps> = ({
 	message,
 }: ErrorDialogContentProps) => {
 	return (
-		<div className="flex flex-col w-full space-y-5 items-center">
+		<div className="flex flex-col w-full space-y-5 items-center overflow-y-auto max-h-[250px] rounded-md">
 			<div className="flex items-center gap-4 fixed top-3 left-3">
 				<div className="flex items-start">
 					<MdOutlineErrorOutline className="flex-none h-10 w-10 text-red-600" />
@@ -84,7 +84,7 @@ const InfoDialogContent: React.FC<InfoDialogContentProps> = ({
 	message,
 }: InfoDialogContentProps) => {
 	return (
-		<div className="flex flex-col w-full space-y-5 items-center">
+		<div className="flex flex-col w-full space-y-5 items-center overflow-y-auto overflow-scroll max-h-[250px]">
 			<div className="flex items-center gap-4 fixed top-3 left-3">
 				<div className="flex items-start">
 					<MdOutlineInfo className="flex-none h-10 w-10 text-blue-600" />
