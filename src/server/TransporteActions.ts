@@ -1,17 +1,33 @@
 "use server";
 
-import { auth } from "@/app/api/auth/[...nextauth]/auth";
+import { auth } from "@/auth";
+import { ServerActionError } from "@/lib/exceptions";
 
 import prisma from "@/lib/prisma";
+import { verifyRoles } from "@/lib/session";
+import { camposAlterados } from "@/lib/utils";
 import { transporteSchema, transporteUpdateSchema } from "@/utils/schemas";
 import type { Transporte } from "@/utils/types";
-import { Prisma } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
 import { z } from "zod";
-import { createServerAction, ZSAError } from "zsa";
+import { createServerAction } from "zsa";
 
 export const getTransportes = createServerAction().handler(async () => {
+	const session = await auth();
+
+	if (!session?.user) {
+		throw new Error("Não autorizado");
+	}
+
+	console.log({ user: session?.user });
+
 	try {
 		const transportes = await prisma.transporte.findMany({
+			where: verifyRoles(session?.user.roles, ["ADMIN", "DEV"])
+				? {}
+				: {
+						userId: session?.user.id,
+					},
 			include: {
 				empresa: true,
 				motorista: true,
@@ -23,15 +39,8 @@ export const getTransportes = createServerAction().handler(async () => {
 			},
 		});
 		return JSON.parse(JSON.stringify(transportes));
-	} catch (error: unknown) {
-		if (
-			error instanceof Prisma.PrismaClientKnownRequestError ||
-			error instanceof Prisma.PrismaClientUnknownRequestError
-		) {
-			console.log("Erro conhecido do Prisma:", error.message);
-			return new Error(error.message);
-		}
-		throw error;
+	} catch (error) {
+		return new ServerActionError(error);
 	}
 });
 
@@ -58,15 +67,8 @@ export const getTransporteById = createServerAction()
 			});
 
 			return JSON.parse(JSON.stringify(transporte));
-		} catch (error: unknown) {
-			if (
-				error instanceof Prisma.PrismaClientKnownRequestError ||
-				error instanceof Prisma.PrismaClientUnknownRequestError
-			) {
-				console.log("Erro conhecido do Prisma:", error.message);
-				return new Error(error.message);
-			}
-			throw new Error(`Falha ao buscar municípios: ${String(error)}`);
+		} catch (error) {
+			return new ServerActionError(error);
 		}
 	});
 
@@ -74,12 +76,12 @@ export const addTransporte = createServerAction()
 	.input(transporteSchema)
 	.handler(async ({ input }) => {
 		const session = await auth();
-		console.log(input);
+
+		if (!session?.user) {
+			throw new Error("Não autorizado");
+		}
 
 		try {
-			if (!session) {
-				throw new Error("Não autorizado");
-			}
 			await prisma.transporte.create({
 				data: {
 					userId: session.user.id,
@@ -105,36 +107,19 @@ export const addTransporte = createServerAction()
 				message: "Transporte adicionado com sucesso",
 				code: 200,
 			};
-		} catch (error: unknown) {
-			if (
-				error instanceof Prisma.PrismaClientKnownRequestError ||
-				error instanceof Prisma.PrismaClientUnknownRequestError
-			) {
-				console.log(error.message);
-				throw error;
-			}
-			if (error instanceof ZSAError) {
-				console.log(error);
-				throw new ZSAError("INPUT_PARSE_ERROR", {
-					cause: error.cause,
-					code: error.code,
-					name: error.name,
-					data: error.data,
-					message: error.message,
-					inputParseErrors: error.inputParseErrors,
-					outputParseErrors: error.outputParseErrors,
-					stack: error.stack,
-				});
-			}
-			console.log(error);
-			throw error;
+		} catch (error) {
+			throw new ServerActionError(error);
 		}
 	});
 
 export const updateTransporte = createServerAction()
 	.input(transporteUpdateSchema)
 	.handler(async ({ input }) => {
-		// console.log({ input });
+		const session = await auth();
+
+		if (!session?.user) {
+			throw new Error("Não autorizado");
+		}
 
 		const data = await prisma.transporte.findUnique({
 			where: {
@@ -142,15 +127,31 @@ export const updateTransporte = createServerAction()
 			},
 		});
 
+		// Verifica se o transporte existe
+		if (!data) {
+			throw new Error("Transporte não encontrado");
+		}
+
+		// Verifica se o usuário tem permissão para editar o transporte
+		if (
+			data.userId !== session.user.id &&
+			!verifyRoles(session.user.roles, ["ADMIN", "DEV"])
+		) {
+			throw new Error("Não autorizado");
+		}
+
+		// Converte os campos de string para decimal
 		const transporte = stringFieldAsDecimalField(data);
-		const camposAlterados = obterCamposAlterados(
+
+		// Obtém os campos alterados
+		const alterados = camposAlterados(
 			transporte,
 			input as Partial<Transporte>,
 		);
 
-		// console.log({ camposAlterados });
-		if (Object.keys(camposAlterados).length === 0) {
-			return { message: "Nenhuma alteração foi realizada", code: 204 };
+		console.log({ alterados });
+		if (Object.keys(alterados).length === 0) {
+			return { message: "Nenhuma alteração a ser realizada", code: 204 };
 		}
 
 		try {
@@ -158,36 +159,15 @@ export const updateTransporte = createServerAction()
 				where: {
 					id: input.id,
 				},
-				data: camposAlterados as Prisma.TransporteUncheckedUpdateInput,
+				data: alterados as Prisma.TransporteUncheckedUpdateInput,
 			});
 
 			return {
 				message: "Transporte atualizado com sucesso",
 				code: 200,
 			};
-		} catch (error: unknown) {
-			if (
-				error instanceof Prisma.PrismaClientKnownRequestError ||
-				error instanceof Prisma.PrismaClientUnknownRequestError
-			) {
-				console.log(error.message);
-				throw error;
-			}
-			if (error instanceof ZSAError) {
-				console.log(error);
-				throw new ZSAError("INPUT_PARSE_ERROR", {
-					cause: error.cause,
-					code: error.code,
-					name: error.name,
-					data: error.data,
-					message: error.message,
-					inputParseErrors: error.inputParseErrors,
-					outputParseErrors: error.outputParseErrors,
-					stack: error.stack,
-				});
-			}
-			console.log(error);
-			throw error;
+		} catch (error) {
+			return new ServerActionError(error);
 		}
 	});
 
@@ -201,6 +181,31 @@ export const delTransporte = createServerAction()
 	)
 	.handler(async ({ input }) => {
 		console.log(input.id);
+
+		const session = await auth();
+
+		if (!session?.user) {
+			throw new Error("Não autorizado");
+		}
+
+		const data = await prisma.transporte.findUnique({
+			where: {
+				id: input.id,
+			},
+		});
+
+		// Verifica se o transporte existe
+		if (!data) {
+			throw new Error("Transporte não encontrado");
+		}
+
+		// Verifica se o usuário tem permissão para deletar o transporte
+		if (
+			data.userId !== session.user.id &&
+			!verifyRoles(session.user.roles, ["ADMIN", "DEV"])
+		) {
+			throw new Error("Não autorizado");
+		}
 
 		try {
 			const resultado = await prisma.$transaction(async (prisma) => {
@@ -230,58 +235,10 @@ export const delTransporte = createServerAction()
 				message: `Transporte referente ao CT-e "${resultado.cte ?? "(não informado)"}", nota(s) "${resultado.notas.length > 0 ? resultado.notas : "(não informado)"}" excluído com sucesso!`,
 				code: 200,
 			};
-		} catch (error: unknown) {
-			if (
-				error instanceof Prisma.PrismaClientKnownRequestError ||
-				error instanceof Prisma.PrismaClientUnknownRequestError
-			) {
-				console.log("Erro conhecido do Prisma:", error.message);
-				throw error;
-			}
-			throw error;
+		} catch (error) {
+			return new ServerActionError(error);
 		}
 	});
-
-function arraysAreEqual(arr1: any[], arr2: any[]): boolean {
-	if (arr1.length !== arr2.length) return false;
-	for (let i = 0; i < arr1.length; i++) {
-		if (arr1[i] !== arr2[i]) return false;
-	}
-	return true;
-}
-
-function obterCamposAlterados(
-	transporte: Transporte,
-	newValues: Partial<Transporte>,
-): Partial<Transporte> {
-	const camposAlterados: Partial<Transporte> = {};
-
-	for (const chave in newValues) {
-		if (Object.prototype.hasOwnProperty.call(transporte, chave)) {
-			const valorAntigo = transporte[chave as keyof Transporte];
-			const valorNovo = newValues[chave as keyof Transporte];
-
-			if (Array.isArray(valorNovo) && Array.isArray(valorAntigo)) {
-				if (!arraysAreEqual(valorNovo as any[], valorAntigo as any[])) {
-					camposAlterados[chave as keyof Transporte] =
-						valorNovo as any;
-				}
-			} else if (
-				valorAntigo instanceof Date &&
-				valorNovo instanceof Date
-			) {
-				if (valorAntigo.getTime() !== valorNovo.getTime()) {
-					camposAlterados[chave as keyof Transporte] =
-						valorNovo as any;
-				}
-			} else if (valorNovo !== valorAntigo) {
-				camposAlterados[chave as keyof Transporte] = valorNovo as any;
-			}
-		}
-	}
-
-	return camposAlterados;
-}
 
 function stringFieldAsDecimalField(transporte: any) {
 	const peso = transporte.peso

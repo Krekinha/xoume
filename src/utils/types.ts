@@ -11,7 +11,7 @@ export type User = {
 	roles?: Role[];
 };
 
-enum Role {
+export enum Role {
 	ADMIN = 0,
 	DEV = 1,
 	COLAB = 2,
