@@ -18,6 +18,10 @@
 			"suspicious": {
 				"noShadowRestrictedNames": "info",
 				"noExplicitAny": "info"
+			},
+			"correctness": {
+				"noUnusedImports": "error",
+				"noUnusedVariables": "error"
 			}
 		}
 	}
