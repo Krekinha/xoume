@@ -7,7 +7,6 @@ import type {
 import type { NextAuthOptions } from "next-auth";
 import { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
-import type { WarningCode } from "node_modules/next-auth/utils/logger";
 import {} from "zod";
 
 export const config = {
@@ -16,9 +15,6 @@ export const config = {
 	logger: {
 		error(code: string, metadata: Error | { error: Error }) {
 			console.log(code, metadata);
-		},
-		warn(code: WarningCode) {
-			console.log(code);
 		},
 		debug(code: string, metadata: unknown) {
 			console.log(code, metadata);
@@ -30,21 +26,35 @@ export const config = {
 			name: "credentials",
 			// Campos que irei usar ao fazer login
 			credentials: {
-				email: { type: "email" },
-				senha: { type: "password" },
+				email: {},
+				senha: {},
 			},
 			// API que irei usar para validar os dados (poderia ser também uma função)
 			async authorize(credentials) {
 				// const url = `${process.env.API_TRANSMANAGER_URL}/users/login`;
 
-				const [user] = await login({
+				const [userLogin, error] = await login({
 					email: credentials?.email as string,
 					senha: credentials?.senha as string,
 				});
 
-				console.log("USER: ", user);
-				if (!user) return null;
-				return { ...user };
+				console.log("USER: ", userLogin);
+				console.log("ERRO: ", error);
+
+				if (error?.message) {
+					throw new Error(error.message);
+				}
+
+				if (!userLogin) {
+					throw new Error(error?.message || "erro ao consultar");
+				}
+
+				// const userModel: User = {userLogin} as User;
+				// // userModel.id = userLogin.id;
+				// // userModel.nome = userLogin.nome;
+
+				return { ...userLogin };
+				// return userModel;
 
 				// try {
 				// 	const [user, error] = await login({
