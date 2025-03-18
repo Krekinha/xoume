@@ -1,5 +1,5 @@
-import type { ReactNode } from "react";
 import type { Decimal } from "@prisma/client/runtime/library";
+import type { ReactNode } from "react";
 import type { ZodIssue } from "zod";
 
 // USER TYPES
@@ -236,3 +236,16 @@ export interface SelectItemProps {
 	label?: string;
 	value?: unknown;
 }
+
+export type UserRequest = {
+	Body: {
+		nome: string;
+		email: string;
+		senha: string;
+		avatar: string;
+		roles: Role[];
+	};
+	Params: {
+		userId: string;
+	};
+};

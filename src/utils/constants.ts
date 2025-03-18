@@ -1,6 +1,3 @@
-import type { Sidemenu } from "./types";
-import { SvgConfiguracoes } from "@/components/svg/SvgConfiguracoes";
-
 /**
  * Neste arquivo serão criadas as constantes que ficarão
  * diponíveis de forma global em toddo app

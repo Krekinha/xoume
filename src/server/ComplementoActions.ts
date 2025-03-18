@@ -1,17 +1,17 @@
 "use server";
 
+import prisma from "@/lib/prisma";
 import { complementoSchema, complementoUpdateSchema } from "@/utils/schemas";
 import type { CteComplementar } from "@/utils/types";
-import { Prisma, PrismaClient } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
-import { createServerAction, ZSAError } from "zsa";
-import prisma from "@/lib/prisma";
+import { ZSAError, createServerAction } from "zsa";
 
 export const addComplemento = createServerAction()
 	.input(complementoSchema)
 	.handler(async ({ input }) => {
 		try {
-			const novoCteComplementar = await prisma.cteComplementar.create({
+			await prisma.cteComplementar.create({
 				data: {
 					cte: input.cte,
 					peso: input.peso,
@@ -77,7 +77,7 @@ export const updateComplemento = createServerAction()
 		}
 
 		try {
-			const updatedCteComplementar = await prisma.cteComplementar.update({
+			await prisma.cteComplementar.update({
 				where: {
 					id: input.id,
 				},
