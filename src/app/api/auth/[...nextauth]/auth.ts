@@ -73,23 +73,17 @@ export const config = {
 	},
 	// Retorno das funções
 	callbacks: {
-		async jwt({ token, user, account }: any) {
-			// Ao fazer login
+		async jwt({ token, user }: any) {
+			// Quando o usuário faz login, armazena os dados no token
 			if (user) {
 				token.user = user;
-				
-				// Se você tiver acesso ao token de userLogin
-				// Você precisaria passá-lo de authorize para aqui
-				// Isso é apenas um espaço reservado - você precisará ajustar como passa o token
-				if (account?.token) {
-					token.accessToken = account.token;
-				}
 			}
 			return token;
 		},
 		async session({ session, token }: any) {
-			//sendLog(JSON.stringify("SESSION"), window.location.href);
-			session = token.user as any;
+			// Aqui está o problema - você está substituindo todo o objeto session
+			// em vez de apenas adicionar o user a ele
+			session.user = token.user;
 			return session;
 		},
 	},

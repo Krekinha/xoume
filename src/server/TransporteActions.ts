@@ -37,6 +37,7 @@ export const getTransportes = createServerAction().handler(async () => {
 			orderBy: {
 				criadoEm: "desc",
 			},
+			take: 10, // Limita a consulta para retornar apenas os 10 últimos registros
 		});
 		return JSON.parse(JSON.stringify(transportes));
 	} catch (error) {
