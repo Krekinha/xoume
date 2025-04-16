@@ -56,7 +56,7 @@ export const login = createServerAction()
 				// para que não seja retornada na API por questão de segurança
 				const { senha, ...userSemSenha } = user;
 
-				return { user: userSemSenha, token: token };
+				return { user: userSemSenha, token };
 			});
 			return user;
 		} catch (error: unknown) {

@@ -8,7 +8,7 @@ import type { NextAuthOptions } from "next-auth";
 import { getServerSession } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import {} from "zod";
-
+// ==> !== 
 export const config = {
 	secret: process.env.NEXTAUTH_SECRET,
 	// Log do sistema de autenticação
@@ -49,48 +49,22 @@ export const config = {
 					throw new Error(error?.message || "erro ao consultar");
 				}
 
-				// const userModel: User = {userLogin} as User;
-				// // userModel.id = userLogin.id;
-				// // userModel.nome = userLogin.nome;
+				// Verifica se userLogin é um objeto Response (caso de erro)
+				if (userLogin instanceof Response) {
+					throw new Error("Erro na autenticação");
+				}
 
-				return { ...userLogin };
-				// return userModel;
-
-				// try {
-				// 	const [user, error] = await login({
-				// 		email: credentials?.email as string,
-				// 		senha: credentials?.senha as string,
-				// 	});
-
-				// 	console.log("RESPONSE: ", user);
-				// 	console.log("ERRO: ", error);
-
-				// 	if (!user)
-				// 		throw new Error(error?.message || "erro ao consultar");
-
-				// 	return {...user};
-				// } catch (error: any) {
-				// 	throw new Error(error?.message || "erro ao consultar");
-				// }
-
-				// process.env.NODE_ENV === "production"
-				//   ? `${process.env.SITE_URL}/api/users/login`
-				//   : `${process.env.NEXTAUTH_URL}/api/users/login`;
-
-				// const response = await fetch(url, {
-				// 	method: "POST",
-				// 	headers: {
-				// 		"Content-type": "application/json",
-				// 	},
-				// 	body: JSON.stringify({
-				// 		email: credentials?.email,
-				// 		senha: credentials?.senha,
-				// 	}),
-				// });
-
-				// Se a resposta à API der algum erro, captura o erro personalizado no cabeçalho
-				// da resposta e envia o mesmo erro para a função que chamou o Signin (o formulário de login)
-			},
+				// Extrai os dados do usuário da estrutura aninhada
+				const userModel = {
+					id: userLogin.user.id,
+					nome: userLogin.user.nome,
+					email: userLogin.user.email,
+					roles: userLogin.user.roles,
+					avatar: userLogin.user.avatar
+				};
+				
+				return userModel;
+			}
 		}),
 	],
 
@@ -99,8 +73,18 @@ export const config = {
 	},
 	// Retorno das funções
 	callbacks: {
-		async jwt({ token, user }: any) {
-			user && (token.user = user);
+		async jwt({ token, user, account }: any) {
+			// Ao fazer login
+			if (user) {
+				token.user = user;
+				
+				// Se você tiver acesso ao token de userLogin
+				// Você precisaria passá-lo de authorize para aqui
+				// Isso é apenas um espaço reservado - você precisará ajustar como passa o token
+				if (account?.token) {
+					token.accessToken = account.token;
+				}
+			}
 			return token;
 		},
 		async session({ session, token }: any) {
