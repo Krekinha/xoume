@@ -61,8 +61,18 @@ export function TransporteAutomacoes({
 	};
 
 	const valEmail = () => {
+		// Get current hour to determine greeting
+		const currentHour = new Date().getHours();
+		let greeting = "Boa noite!";
+		
+		if (currentHour >= 0 && currentHour < 12) {
+			greeting = "Bom dia!";
+		} else if (currentHour >= 12 && currentHour < 18) {
+			greeting = "Boa tarde!";
+		}
+		
 		// Versão para exibição
-		return `Boa noite!<br><br>Segue:<br><br>- CTe <b>${transporte.cte} (${notasText} ${transporte.notas?.join("/")})</b><br>- Manifesto referente ao CTe ${transporte.cte}<br><br><br>Empresa: ${transporte.empresa?.razaoNome}`;
+		return `${greeting}<br><br>Segue:<br><br>- CTe <b>${transporte.cte} (${notasText} ${transporte.notas?.join("/")})</b><br>- Manifesto referente ao CTe <b>${transporte.cte}</b><br><br><br>Empresa: <b>${transporte.empresa?.razaoNome}</b>`;
 	};
 
 	const valComplementoWhatsApp = () => {
@@ -99,37 +109,29 @@ export function TransporteAutomacoes({
 	// 	}
 	// }
 
-	const handleCopy = async (content: any) => {
-		const textArea = document.createElement("textarea");
-		textArea.value = content;
+	async function copyTextToClipboard(text: string) {
+		try {
+			// Criar o blob com o conteúdo HTML
+			const htmlBlob = new Blob([text], { type: "text/html" });
+			// Versão em texto simples (fallback)
+			const plainBlob = new Blob([text.replace(/<[^>]*>/g, "")], {
+				type: "text/plain",
+			});
 
-		console.log("content", content);
-		console.log("textArea", textArea);
-		console.log("textArea.value", textArea.value);
+			// Criar o item para a área de transferência
+			const clipboardItem = new ClipboardItem({
+				"text/html": htmlBlob,
+				"text/plain": plainBlob,
+			});
 
-		document.body.appendChild(textArea);
-		textArea.select();
-		document.execCommand("copy", true, "text");
-		// document.body.removeChild(textArea);
-		console.log("Texto copiado!");
-
-		// console.log("content", content);
-		// try {
-		//   await navigator.clipboard.write(content);
-		//   console.log('Copied to clipboard:', content);
-		// } catch (error) {
-		//   console.error('Unable to copy to clipboard:', error);
-		// }
-	};
-
-	async function copyTextToClipboard(text: any) {
-		if (!navigator.clipboard) {
-			console.log("document.execCommand", document);
-			return document.execCommand("copy", true, text);
+			// Copiar para a área de transferência
+			await navigator.clipboard.write([clipboardItem]);
+			console.log("Texto formatado copiado!");
+		} catch (err) {
+			console.error("Falha ao copiar:", err);
+			// Fallback: Copia apenas texto simples
+			await navigator.clipboard.writeText(text.replace(/<[^>]*>/g, ""));
 		}
-
-		console.log("!navigator.clipboard", !navigator.clipboard);
-		return await navigator.clipboard.write(text);
 	}
 
 	return (
@@ -202,7 +204,7 @@ export function TransporteAutomacoes({
 								/> */}
 								<button
 									onClick={() =>
-										copyTextToClipboard("<strong>hello word</strong>")
+										copyTextToClipboard(valEmail())
 									}
 								>
 									Copy to Clipboard
