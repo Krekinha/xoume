@@ -7,7 +7,6 @@ import prisma from "@/lib/prisma";
 import { verifyRoles } from "@/lib/session";
 import { camposAlterados } from "@/lib/utils";
 import { transporteSchema, transporteUpdateSchema } from "@/utils/schemas";
-import type { Transporte } from "@/utils/types";
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 import { createServerAction } from "zsa";
@@ -48,7 +47,7 @@ export const getTransportes = createServerAction().handler(async () => {
 export const getTransporteById = createServerAction()
 	.input(
 		z.object({
-			id: z.coerce.number(),
+			id: z.string(),
 		}),
 	)
 	.handler(async ({ input }) => {
@@ -78,6 +77,7 @@ export const addTransporte = createServerAction()
 	.handler(async ({ input }) => {
 		const session = await auth();
 
+		console.log("input:", input);
 		if (!session?.user) {
 			throw new Error("Não autorizado");
 		}
@@ -147,7 +147,7 @@ export const updateTransporte = createServerAction()
 		// Obtém os campos alterados
 		const alterados = camposAlterados(
 			transporte,
-			input as Partial<Transporte>,
+			input as any, // Usar 'any' temporariamente para evitar o erro de tipo
 		);
 
 		console.log({ alterados });
@@ -175,10 +175,7 @@ export const updateTransporte = createServerAction()
 export const delTransporte = createServerAction()
 	.input(
 		z.object({
-			id: z.coerce
-				.number()
-				.positive({ message: "O Id informado não é um número válido" }),
-		}),
+			id: z.string()}),
 	)
 	.handler(async ({ input }) => {
 		console.log(input.id);

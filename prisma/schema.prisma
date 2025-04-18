@@ -8,91 +8,59 @@ datasource db {
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
-//* USER
-
 model User {
-  id     String  @id @default(cuid())
-  nome   String
-  email  String  @unique
-  roles  Role[]  @default([COLAB])
-  senha  String
-  avatar String?
-
-  // Relacionamentos
-  atendimentoCriado      Atendimento[] @relation("atendimentoCriado")
+  id                     String        @id @default(cuid())
+  nome                   String
+  email                  String        @unique
+  roles                  Role[]        @default([COLAB])
+  senha                  String
+  avatar                 String?
   atendimentoAtualizado  Atendimento[] @relation("atendimentoAtualizado")
-  clienteCriado          Cliente[]     @relation("clienteCriado")
+  atendimentoCriado      Atendimento[] @relation("atendimentoCriado")
   clienteAtualizado      Cliente[]     @relation("clienteAtualizado")
+  clienteCriado          Cliente[]     @relation("clienteCriado")
+  transportes            Transporte[]
   responsavelAtendimento Atendimento[] @relation("responsavelAtendimento")
-
-  // Relacionamentos por usuários
-  transportes Transporte[]
 }
-
-enum Role {
-  ADMIN
-  DEV
-  COLAB
-  FINANCE
-}
-
-//* ATENDIMENTO
 
 model Atendimento {
-  id     String @id @default(cuid())
-  ordem  Int    @unique
-  titulo String @default("titulo")
-
-  descricao      String?
-  prazo          DateTime?
-  extra          Boolean?
-  situacao       SituacaoAtendimento[]
-  proximaAtuacao DateTime?
-
-  criadoEm     DateTime? @default(now())
-  atualizadoEm DateTime?
-
-  // Relacionamentos
-  cliente       Cliente?             @relation("atendimentoCliente", fields: [clienteId], references: [id])
-  responsavel   User[]               @relation("responsavelAtendimento")
-  evolucao      EvolucaoAtendimento?
-  criadoPor     User?                @relation("atendimentoCriado", fields: [userCriouId], references: [id])
-  atualizadoPor User?                @relation("atendimentoAtualizado", fields: [userAtualizouId], references: [id])
-
-  // Chave
+  id              String                @id @default(cuid())
+  ordem           Int                   @unique
+  titulo          String                @default("titulo")
+  descricao       String?
+  prazo           DateTime?
+  extra           Boolean?
+  situacao        SituacaoAtendimento[]
+  proximaAtuacao  DateTime?
+  criadoEm        DateTime?             @default(now())
+  atualizadoEm    DateTime?
   clienteId       String?
   userCriouId     String?
   userAtualizouId String?
-}
-
-enum SituacaoAtendimento {
-  ENCERRADO
-  ANDAMENTO
+  cliente         Cliente?              @relation("atendimentoCliente", fields: [clienteId], references: [id])
+  atualizadoPor   User?                 @relation("atendimentoAtualizado", fields: [userAtualizouId], references: [id])
+  criadoPor       User?                 @relation("atendimentoCriado", fields: [userCriouId], references: [id])
+  evolucao        EvolucaoAtendimento?
+  responsavel     User[]                @relation("responsavelAtendimento")
 }
 
 model Cliente {
-  id          String       @id @default(cuid())
-  tipoCliente TipoCliente?
-  razaoNome   String
-  nome        String?
-  cnpjCpf     String?      @unique
-
-  //Pessoa física
-  estadoCivilPf String?
-  rgPf          String?
-  dnPf          DateTime?
-
-  //Pessoa jurídica
-  logradouroPj       String?
-  numeroLogradouroPj String?
-  bairroPj           String?
-  complementoPj      String?
-  cepPj              String?
-  cidadePj           String?
-  ufPj               String?
-  telefonePj         String?
-
-  //Responsável
+  id                          String        @id @default(cuid())
+  tipoCliente                 TipoCliente?
+  razaoNome                   String
+  nome                        String?
+  cnpjCpf                     String?       @unique
+  estadoCivilPf               String?
+  rgPf                        String?
+  dnPf                        DateTime?
+  logradouroPj                String?
+  numeroLogradouroPj          String?
+  bairroPj                    String?
+  complementoPj               String?
+  cepPj                       String?
+  cidadePj                    String?
+  ufPj                        String?
+  telefonePj                  String?
   nomeResponsavel             String?
   cpfResponsavel              String?
   estadoCivilResponsavel      String?
@@ -105,24 +73,111 @@ model Cliente {
   cidadeResponsavel           String?
   ufResponsavel               String?
   telefoneResponsavel         String?
+  email                       String?
+  codigoSimples               String?
+  codigoEcac                  String?
+  pasta                       String?
+  criadoEm                    DateTime?     @default(now())
+  atualizadoEm                DateTime?
+  userCriouId                 String?
+  userAtualizouId             String?
+  atendimentoCliente          Atendimento[] @relation("atendimentoCliente")
+  atualizadoPor               User?         @relation("clienteAtualizado", fields: [userAtualizouId], references: [id])
+  criadoPor                   User?         @relation("clienteCriado", fields: [userCriouId], references: [id])
+}
 
-  //Comum
-  email         String?
-  codigoSimples String?
-  codigoEcac    String?
-  pasta         String?
+model EvolucaoAtendimento {
+  id            String                      @id @default(cuid())
+  ordem         Int
+  atendimentoId String                      @unique
+  eventos       EventoEvolucaoAtendimento[]
+  atendimento   Atendimento                 @relation(fields: [atendimentoId], references: [id])
+}
 
-  criadoEm     DateTime? @default(now())
-  atualizadoEm DateTime?
+model EventoEvolucaoAtendimento {
+  id                    String                            @id @default(cuid())
+  descricao             String
+  situacao              SituacaoEventoEvolucaoAtendimento
+  dataEvento            DateTime
+  evolucaoAtendimentoId String?
+  evolucaoAtendimento   EvolucaoAtendimento?              @relation(fields: [evolucaoAtendimentoId], references: [id])
+}
 
-  // Relacionamentos
-  criadoPor          User?         @relation("clienteCriado", fields: [userCriouId], references: [id])
-  atualizadoPor      User?         @relation("clienteAtualizado", fields: [userAtualizouId], references: [id])
-  atendimentoCliente Atendimento[] @relation("atendimentoCliente")
+model Transporte {
+  id              String           @id @default(cuid())
+  criadoEm        DateTime?        @default(now())
+  atualizadoEm    DateTime?
+  empresaId       String           // Alterado de Int para String
+  aliquota_icms   Decimal?
+  cte             Int?
+  peso            Decimal?
+  tomadorId       String?          // Alterado de Int? para String?
+  val_cte         Decimal?
+  val_tonelada    Decimal?
+  motoristaId     String?          // Alterado de Int? para String?
+  cidade_destino  String?
+  cidade_origem   String?
+  uf_destino      String?
+  uf_origem       String?
+  notas           Int[]
+  reducao_bc_icms Decimal?
+  emissao_cte     DateTime?
+  userId          String
+  cteComplementar CteComplementar?
+  empresa         Empresa          @relation("transporteEmpresa", fields: [empresaId], references: [id])
+  motorista       Motorista?       @relation(fields: [motoristaId], references: [id])
+  tomador         Tomador?         @relation("transporteTomador", fields: [tomadorId], references: [id])
+  user            User             @relation(fields: [userId], references: [id])
+}
 
-  // Chave
-  userCriouId     String?
-  userAtualizouId String?
+model CteComplementar {
+  id              String     @id @default(cuid())
+  cte             Int?
+  peso            Decimal?
+  val_tonelada    Decimal?
+  val_cte         Decimal
+  aliquota_icms   Decimal?
+  criadoEm        DateTime?  @default(now())
+  atualizadoEm    DateTime?
+  transporteId    String     @unique
+  emissao_cte     DateTime?
+  reducao_bc_icms Decimal?
+  transporte      Transporte @relation(fields: [transporteId], references: [id])
+}
+
+model Empresa {
+  id                String     @id @default(cuid())
+  razaoNome         String
+  cnpjCpf           String?      @unique
+  transporteEmpresa Transporte[] @relation("transporteEmpresa")
+  motoristas        Motorista[]  @relation("EmpresaToMotorista")
+}
+
+model Motorista {
+  id          String     @id @default(cuid())
+  nome        String
+  cpf         String?      @unique
+  transportes Transporte[]
+  empresas    Empresa[]    @relation("EmpresaToMotorista")
+}
+
+model Tomador {
+  id                String     @id @default(cuid())
+  razaoNome         String
+  cnpjCpf           String?      @unique
+  transporteTomador Transporte[] @relation("transporteTomador")
+}
+
+enum Role {
+  ADMIN
+  DEV
+  COLAB
+  FINANCE
+}
+
+enum SituacaoAtendimento {
+  ENCERRADO
+  ANDAMENTO
 }
 
 enum TipoCliente {
@@ -130,114 +185,7 @@ enum TipoCliente {
   PJURIDICA
 }
 
-model EvolucaoAtendimento {
-  id    String @id @default(cuid())
-  ordem Int
-
-  // Relacionamentos
-  eventos     EventoEvolucaoAtendimento[]
-  atendimento Atendimento                 @relation(fields: [atendimentoId], references: [id])
-
-  // Chave
-  atendimentoId String @unique
-}
-
-model EventoEvolucaoAtendimento {
-  id         String                            @id @default(cuid())
-  descricao  String
-  situacao   SituacaoEventoEvolucaoAtendimento
-  dataEvento DateTime
-
-  // Relacionamentos
-  evolucaoAtendimento EvolucaoAtendimento? @relation(fields: [evolucaoAtendimentoId], references: [id])
-
-  // Chave
-  evolucaoAtendimentoId String?
-}
-
 enum SituacaoEventoEvolucaoAtendimento {
   CONCLUIDO
   ANDAMENTO
-}
-
-//* TRANSPORTE
-
-model Transporte {
-  id              Int       @id @default(autoincrement())
-  notas           Int[]
-  cte             Int?
-  uf_origem       String?
-  cidade_origem   String?
-  uf_destino      String?
-  cidade_destino  String?
-  peso            Decimal?
-  val_tonelada    Decimal?
-  val_cte         Decimal?
-  reducao_bc_icms Decimal?
-  aliquota_icms   Decimal?
-  emissao_cte     DateTime?
-
-  criadoEm     DateTime? @default(now())
-  atualizadoEm DateTime?
-
-  // Relacionamentos
-  cteComplementar CteComplementar? // 1 para 1
-  motorista       Motorista?       @relation(fields: [motoristaId], references: [id])
-  tomador         Tomador?         @relation("transporteTomador", fields: [tomadorId], references: [id])
-  empresa         Empresa          @relation("transporteEmpresa", fields: [empresaId], references: [id])
-  user            User             @relation(fields: [userId], references: [id])
-
-  // Chave
-  motoristaId Int?
-  empresaId   Int
-  tomadorId   Int?
-  userId      String
-}
-
-model CteComplementar {
-  id              Int       @id @default(autoincrement())
-  cte             Int?
-  peso            Decimal?
-  val_tonelada    Decimal?
-  val_cte         Decimal
-  reducao_bc_icms Decimal?
-  aliquota_icms   Decimal?
-  emissao_cte     DateTime?
-
-  criadoEm     DateTime? @default(now())
-  atualizadoEm DateTime?
-
-  // Relacionamentos
-  transporte   Transporte @relation(fields: [transporteId], references: [id])
-  // Chave
-  transporteId Int        @unique
-}
-
-model Empresa {
-  id        Int     @id @default(autoincrement())
-  razaoNome String
-  cnpjCpf   String? @unique
-
-  // Relacionamentos
-  motoristas        Motorista[]
-  transporteEmpresa Transporte[] @relation("transporteEmpresa")
-}
-
-model Motorista {
-  id   Int     @id @default(autoincrement())
-  nome String
-  cpf  String? @unique
-
-  // Relacionamentos
-  empresas    Empresa[]
-  transportes Transporte[]
-}
-
-model Tomador {
-  id        Int     @id @default(autoincrement())
-  razaoNome String
-  cnpjCpf   String? @unique
-
-  // Relacionamentos
-  transporteTomador Transporte[] @relation("transporteTomador")
 }

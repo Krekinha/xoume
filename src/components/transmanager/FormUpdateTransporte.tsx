@@ -7,7 +7,6 @@ import { updateTransporte } from "@/server/TransporteActions";
 import type { Empresa, Motorista, Tomador, Transporte } from "@/utils/types";
 import { useForm } from "react-hook-form";
 import type { z, ZodError } from "zod";
-import type React from "react";
 import { useRef, useState } from "react";
 import { ReactSelectCity } from "@/components/form/ReactSelectCity";
 import {
@@ -33,7 +32,7 @@ import { estadosBrasil } from "@/utils/constants";
 import { useQueryClient } from "@tanstack/react-query";
 
 interface FormUpdateTransporteProps {
-	transporteId: number;
+	transporteId: string;
 }
 
 export function FormUpdateTransporte({
@@ -44,7 +43,7 @@ export function FormUpdateTransporte({
 		QueryKeyFactory.getTransportes(),
 	);
 
-	const transporte = data?.find((t) => t.id === Number(transporteId));
+	const transporte = data?.find((t) => t.id === transporteId);
 
 	const mutation = useServerActionMutation(updateTransporte, {
 		onSuccess: (data) => {

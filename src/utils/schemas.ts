@@ -1,19 +1,17 @@
 import { z } from "zod";
 
 export const transporteSchema = z.object({
-	empresaId: z.coerce
-		.number({
+	// id: z.string({
+	// 	message: "Campo obrigatório",
+	// }),
+	empresaId: z
+		.string({
 			message: "Campo obrigatório",
-		})
-		.positive({
-			message: "O número deve ser positivo",
 		}),
-	motoristaId: z.coerce
-		.number({ message: "Campo obrigatório" })
-		.positive({ message: "O número deve ser positivo" }),
-	tomadorId: z.coerce
-		.number({ message: "O valor deve ser um número válido" })
-		.positive({ message: "O número deve ser positivo" })
+	motoristaId: z
+		.string({ message: "Campo obrigatório" }),
+	tomadorId: z
+		.string({ message: "O valor deve ser informado" })
 		.optional(),
 	uf_origem: z
 		.string({ message: "UF: O valo esperado é uma string" })
@@ -142,23 +140,17 @@ export const transporteSchema = z.object({
 });
 
 export const transporteUpdateSchema = z.object({
-	id: z.number({
+	id: z.string({
 		message: "Campo obrigatório",
 	}),
-	empresaId: z.coerce
-		.number({
+	empresaId: z
+		.string({
 			message: "Campo obrigatório",
-		})
-		.positive({
-			message: "O número deve ser positivo",
 		}),
-	motoristaId: z.coerce
-		.number({ message: "Campo obrigatório" })
-		.positive({ message: "O número deve ser positivo" }),
-	tomadorId: z.coerce
-		.number({ message: "O valor deve ser um número válido" })
-		.positive({ message: "O número deve ser positivo" })
-		.nullable()
+	motoristaId: z
+		.string({ message: "Campo obrigatório" }),
+	tomadorId: z
+		.string({ message: "O valor deve ser infornado" })
 		.optional(),
 	uf_origem: z
 		.string({ message: "UF: O valor esperado é uma string" })
@@ -292,12 +284,9 @@ export const transporteUpdateSchema = z.object({
 });
 
 export const complementoSchema = z.object({
-	transporteId: z.coerce
-		.number({
+	transporteId: z
+		.string({
 			message: "Campo obrigatório",
-		})
-		.positive({
-			message: "O número deve ser positivo",
 		}),
 	cte: z.coerce
 		.number({ message: "O valor deve ser um número válido" })
@@ -393,15 +382,12 @@ export const complementoSchema = z.object({
 });
 
 export const complementoUpdateSchema = z.object({
-	id: z.number({
+	id: z.string({
 		message: "Campo obrigatório",
 	}),
-	transporteId: z.coerce
-		.number({
+	transporteId: z
+		.string({
 			message: "Campo obrigatório",
-		})
-		.positive({
-			message: "O número deve ser positivo",
 		}),
 	cte: z.coerce
 		.number({ message: "O valor deve ser um número válido" })

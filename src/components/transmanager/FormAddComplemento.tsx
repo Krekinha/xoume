@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useForm, useWatch } from "react-hook-form";
 import type { z, ZodError } from "zod";
-import type React from "react";
 import { useRef, useState } from "react";
 import type { complementoSchema } from "@/utils/schemas";
 import { DecimalInputField } from "../form/DecimalInputField";
@@ -14,9 +13,7 @@ import { addComplemento } from "@/server/ComplementoActions";
 import {
 	QueryKeyFactory,
 	useServerActionMutation,
-	useServerActionQuery,
 } from "@/hooks/server-action-hooks";
-import { getTransporteById } from "@/server/TransporteActions";
 import { formatCurrency, formatDecimal } from "@/utils/format";
 import { cn } from "@/lib/utils";
 import { useMainDialogContext } from "@/providers/MainDialogProvider";
@@ -28,7 +25,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { Transporte } from "@/utils/types";
 
 interface FormAddComplementoProps {
-	transporteId: number;
+	transporteId: string;
 }
 
 export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
@@ -38,7 +35,8 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 		QueryKeyFactory.getTransportes(),
 	);
 
-	const transporte = data?.find((t) => t.id === Number(transporteId));
+	console.log("transporteId:", transporteId);
+	const transporte = data?.find((t) => t.id === transporteId);
 
 	const mutation = useServerActionMutation(addComplemento, {
 		onSuccess: (data) => {
@@ -79,10 +77,9 @@ export function FormAddComplemento({ transporteId }: FormAddComplementoProps) {
 	const [fieldErrors, setFieldErrors] = useState({});
 	const router = useRouter();
 
-	const refCteComplementar = useRef<HTMLInputElement | null>(null);
 	const refValCte = useRef<HTMLInputElement | null>(null);
 
-	const { control, handleSubmit, setValue, getValues, getFieldState } =
+	const { control, handleSubmit, getValues } =
 		useForm<z.infer<typeof complementoSchema>>({
 			defaultValues: {
 				cte: undefined,

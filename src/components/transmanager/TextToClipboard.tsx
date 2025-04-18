@@ -1,5 +1,5 @@
 import type React from "react";
-import type { ElementType, ReactNode } from "react";
+import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "../ui/label";
 import CopyToClipboard from "../main/CopyToClipboard";
@@ -97,7 +97,7 @@ export function TextToClipboardValue({
  */
 interface TextToClipboardCopyButtonProps
 	extends React.HtmlHTMLAttributes<"div"> {
-	textToCopy: string;
+	textToCopy: any;
 }
 export function TextToClipboardCopyButton({
 	textToCopy,

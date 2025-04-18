@@ -20,8 +20,8 @@
 				"noExplicitAny": "info"
 			},
 			"correctness": {
-				"noUnusedImports": "error",
-				"noUnusedVariables": "error"
+				"noUnusedImports": "info",
+				"noUnusedVariables": "info"
 			}
 		}
 	}

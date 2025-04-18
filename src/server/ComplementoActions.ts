@@ -10,6 +10,9 @@ import { ZSAError, createServerAction } from "zsa";
 export const addComplemento = createServerAction()
 	.input(complementoSchema)
 	.handler(async ({ input }) => {
+
+		console.log("input:", { input });
+
 		try {
 			await prisma.cteComplementar.create({
 				data: {
@@ -66,9 +69,10 @@ export const updateComplemento = createServerAction()
 		});
 
 		const complemento = stringFieldAsDecimalField(data);
+		// Modificação aqui: remova o cast explícito ou use um tipo mais genérico
 		const camposAlterados = obterCamposAlterados(
 			complemento,
-			input as Partial<CteComplementar>,
+			input
 		);
 
 		console.log({ camposAlterados });
@@ -117,10 +121,7 @@ export const updateComplemento = createServerAction()
 export const delComplemento = createServerAction()
 	.input(
 		z.object({
-			id: z.coerce
-				.number()
-				.positive({ message: "O Id informado não é um número válido" }),
-		}),
+			id: z.string()}),
 	)
 	.handler(async ({ input }) => {
 		console.log(input.id);
@@ -160,7 +161,7 @@ function arraysAreEqual(arr1: any[], arr2: any[]): boolean {
 
 function obterCamposAlterados(
 	complemento: CteComplementar,
-	newValues: Partial<CteComplementar>,
+	newValues: Record<string, any>,
 ): Partial<CteComplementar> {
 	const camposAlterados: Partial<CteComplementar> = {};
 

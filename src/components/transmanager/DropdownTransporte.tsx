@@ -42,8 +42,6 @@ interface Props {
 	transporte: Transporte;
 }
 
-const element = <div className="bg-red-500 w-full">teste</div>;
-
 export function DropdownTransporte({ transporte }: Props) {
 	const mutationTransporte = useServerActionMutation(delTransporte, {
 		onSuccess: (data) => {
@@ -108,11 +106,11 @@ export function DropdownTransporte({ transporte }: Props) {
 		});
 	}
 
-	async function excluirTransporte(id: number) {
+	async function excluirTransporte(id: string) {
 		mutationTransporte.mutate({ id: id });
 	}
 
-	async function excluirComplemento(id: number) {
+	async function excluirComplemento(id: string) {
 		mutationComplemento.mutate({ id: id });
 	}
 
@@ -156,7 +154,7 @@ export function DropdownTransporte({ transporte }: Props) {
 					message={`Você esta prestes a deletar o transporte CTe "${transporte.cte}". 
 						${transporte.cteComplementar ? `O CT-e complementar "${transporte.cteComplementar.cte}" vinculado também será deletado.` : ""}
 						Deseja continuar?`}
-					onAction={() => excluirTransporte(transporte.id ?? 0)}
+					onAction={() => excluirTransporte(transporte?.id ?? "")}
 				>
 					<DropdownMenuItem
 						className="hover:bg-gray-300 cursor-pointer rounded gap-2"
@@ -236,7 +234,7 @@ export function DropdownTransporte({ transporte }: Props) {
 									Deseja continuar?`}
 								onAction={() =>
 									excluirComplemento(
-										transporte.cteComplementar?.id ?? 0,
+										transporte.cteComplementar?.id ?? "",
 									)
 								}
 							>

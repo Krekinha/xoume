@@ -39,7 +39,6 @@ interface TransporteListItemRootProps extends React.HtmlHTMLAttributes<"div"> {
 }
 export function TransporteListItemRoot({
 	children,
-	className,
 }: TransporteListItemRootProps) {
 	return (
 		<div className="flex flex-col gap-3 w-full rounded-lg border border-gray-200 bg-violet-50/30 dark:bg-zinc-800 dark:border-gray-700 p-1.5 shadow-sm-light shadow-gray-100">

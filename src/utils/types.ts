@@ -124,8 +124,7 @@ export enum SituacaoEventoEvolucaoAtendimento {
 // TRANSPORTE TYPES
 
 export type Transporte = {
-	id?: number;
-	userId?: string;
+	id?: string;
 
 	notas?: number[];
 	cte?: number;
@@ -147,13 +146,15 @@ export type Transporte = {
 	motorista?: Motorista;
 	tomador?: Tomador;
 
-	empresaId?: number;
-	motoristaId?: number;
-	tomadorId?: number;
+	userId?: string;
+	empresaId?: string;
+	motoristaId?: string;
+	tomadorId?: string;
 };
 
 export interface CteComplementar {
-	id: number;
+	id: string;
+
 	cte?: number;
 	peso?: Decimal;
 	val_tonelada?: Decimal;
@@ -161,39 +162,44 @@ export interface CteComplementar {
 	reducao_bc_icms?: Decimal;
 	aliquota_icms?: Decimal;
 	emissao_cte?: Date;
-
 	criadoEm?: Date;
 	atualizadoEm?: Date;
 
 	// Relacionamentos
 	transporte?: Transporte;
 	// Chave
-	transporteId?: number;
+	transporteId?: string;
 }
 
 export interface Motorista {
-	id?: number;
+	id?: string;
+
 	nome?: string;
 	cpf?: string;
 
+	// Relacionamentos
 	empresas: Empresa[];
 	transportes: Transporte[];
 }
 
 export interface Empresa {
-	id?: number;
+	id?: string;
+
 	razaoNome?: string;
 	cnpjCpf?: string;
 
+	// Relacionamentos
 	motoristas?: Motorista[];
 	transporteEmpresa?: Transporte[];
 }
 
 export interface Tomador {
-	id?: number;
+	id?: string;
+
 	razaoNome?: string;
 	cnpjCpf?: string;
 
+	// Relacionamentos
 	transporteTomador: Transporte[];
 }
 

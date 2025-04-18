@@ -1,7 +1,7 @@
 "use client";
 import { cn } from "@/lib/utils";
 import { notifyService } from "@/services/notifyService";
-import { ClipboardCopy, type LucideProps } from "lucide-react";
+import { Copy, type LucideProps } from "lucide-react";
 
 interface CopyToClipboardProps extends LucideProps {
 	textToCopy: string | undefined;
@@ -25,11 +25,11 @@ const CopyToClipboard = ({
 	return (
 		<button
 			onClick={copyToClipboard}
-			className="border rounded-md p-1 dark:border-zinc-800"
+			className="p-1 transition-colors hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md"
 		>
-			<ClipboardCopy
+			<Copy
 				{...props}
-				className={cn("h-[15px] w-[15px]", className)}
+				className={cn("h-[18px] w-[18px] text-blue-600 dark:text-blue-400", className)}
 			/>
 		</button>
 	);

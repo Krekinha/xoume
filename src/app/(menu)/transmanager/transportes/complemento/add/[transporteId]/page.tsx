@@ -3,7 +3,7 @@ import { FallbackFetch } from "../../../FallbackFetch";
 import ComplementoAddNavbar from "@/components/transmanager/ComplementoAddNavbar";
 import { FormAddComplemento } from "@/components/transmanager/FormAddComplemento";
 
-export default function Page({ params }: { params: { transporteId: number } }) {
+export default function Page({ params }: { params: { transporteId: string } }) {
 	console.log(params.transporteId);
 
 	return (

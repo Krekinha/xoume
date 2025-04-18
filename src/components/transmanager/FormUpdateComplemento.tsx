@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { useForm, useWatch } from "react-hook-form";
 import type { z, ZodError } from "zod";
-import type React from "react";
 import { useRef, useState } from "react";
 import { DecimalInputField } from "../form/DecimalInputField";
 import { NumberInputField } from "../form/NumberInputField";
@@ -27,7 +26,7 @@ import type { Transporte } from "@/utils/types";
 import type { complementoUpdateSchema } from "@/utils/schemas";
 
 interface FormAddComplementoProps {
-	transporteId: number;
+	transporteId: string;
 }
 
 export function FormUpdateComplemento({
@@ -39,7 +38,7 @@ export function FormUpdateComplemento({
 		QueryKeyFactory.getTransportes(),
 	);
 
-	const transporte = data?.find((t) => t.id === Number(transporteId));
+	const transporte = data?.find((t) => t.id === transporteId);
 
 	const mutation = useServerActionMutation(updateComplemento, {
 		onSuccess: (data) => {

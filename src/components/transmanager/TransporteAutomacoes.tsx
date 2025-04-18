@@ -5,9 +5,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FaCopyright } from "react-icons/fa6";
 import { FaSquareWhatsapp } from "react-icons/fa6";
 import { formatCurrency, formatDecimal } from "@/utils/format";
-import type React from "react";
 import { TextToClipboard } from "./TextToClipboard";
-import { Separator } from "../ui/separator";
 
 interface TransporteAutomacoesProps {
 	transporte: Transporte;
@@ -16,6 +14,9 @@ interface TransporteAutomacoesProps {
 export function TransporteAutomacoes({
 	transporte,
 }: TransporteAutomacoesProps) {
+	const notasText =
+		transporte.notas && transporte.notas.length > 1 ? "Notas" : "Nota";
+
 	const valCoralCteA = () => {
 		return `MARGEM PARA COMPLEMENTO = ${formatCurrency(
 			transporte.val_cte?.toString(),
@@ -23,7 +24,7 @@ export function TransporteAutomacoes({
 	};
 
 	const valCoralCteB = () => {
-		return `VALOR FRETE = PESO REAL NOTA ${transporte.notas?.join(
+		return `VALOR FRETE = PESO REAL ${notasText.toUpperCase()} ${transporte.notas?.join(
 			"/",
 		)} (${formatDecimal(transporte.peso?.toString())}) x ${formatCurrency(
 			transporte.val_tonelada?.toString(),
@@ -42,7 +43,7 @@ export function TransporteAutomacoes({
 			1000;
 		const valTransporte = val_peso * Number(transporte.val_tonelada);
 
-		return `COMPLEMENTO DO CTE ${transporte.cte}. VALOR FRETE = PESO REAL NOTA(S) ${transporte.notas?.join(
+		return `COMPLEMENTO DO CTE ${transporte.cte}. VALOR FRETE = PESO REAL ${notasText.toUpperCase()} ${transporte.notas?.join(
 			"/",
 		)} (${formatDecimal(transporte.cteComplementar?.peso?.toString())}) x ${formatCurrency(
 			transporte.val_tonelada?.toString(),
@@ -50,26 +51,86 @@ export function TransporteAutomacoes({
 	};
 
 	const valCTeWhatsApp = () => {
-		return `Segue CT-e *${transporte.cte} (Nota(s) ${transporte.notas?.join(
+		return `Segue CT-e *${transporte.cte} (${notasText} ${transporte.notas?.join(
 			"/",
 		)})* + MANIFESTO - (${transporte.cidade_origem}-${
 			transporte.uf_origem
 		} x ${transporte.cidade_destino}-${transporte.uf_destino}) - ${
 			transporte.tomador?.razaoNome
-		} - *${formatCurrency(transporte.val_cte?.toString())}*👇🏼`;
+		} - *(${transporte.motorista?.nome})* - *${formatCurrency(transporte.val_cte?.toString())}*👇🏼`;
+	};
+
+	const valEmail = () => {
+		// Versão para exibição
+		return `Boa noite!<br><br>Segue:<br><br>- CTe <b>${transporte.cte} (${notasText} ${transporte.notas?.join("/")})</b><br>- Manifesto referente ao CTe ${transporte.cte}<br><br><br>Empresa: ${transporte.empresa?.razaoNome}`;
 	};
 
 	const valComplementoWhatsApp = () => {
-		return `Segue CT-e *${transporte.cteComplementar?.cte}* COMPLEMENTAR ao CT-e *${transporte.cte} (Nota(s) ${transporte.notas?.join(
+		return `Segue CT-e *${transporte.cteComplementar?.cte}* COMPLEMENTAR ao CT-e *${transporte.cte} (${notasText} ${transporte.notas?.join(
 			"/",
 		)})* - (${transporte.cidade_origem}-${
 			transporte.uf_origem
 		} x ${transporte.cidade_destino}-${transporte.uf_destino}) - ${
 			transporte.tomador?.razaoNome
-		} - *${formatCurrency(
+		} - *(${transporte.motorista?.nome})* - *${formatCurrency(
 			transporte.cteComplementar?.val_cte?.toString(),
 		)}*👇🏼`;
 	};
+
+	// async function copyFormattedText() {
+	// 	const htmlContent = "<strong>Boa tarde</strong>"; // Texto em negrito (HTML)
+	// 	const plainContent = "Boa tarde"; // Fallback em texto puro
+
+	// 	try {
+	// 		// Cria um objeto Blob com o conteúdo HTML
+	// 		const blob = new Blob([htmlContent], { type: "text/html" });
+	// 		const clipboardItem = new ClipboardItem({
+	// 			"text/html": blob,
+	// 			"text/plain": new Blob([plainContent], { type: "text/plain" }),
+	// 		});
+
+	// 		// Copia para a área de transferência
+	// 		await navigator.clipboard.write([clipboardItem]);
+	// 		console.log("Texto formatado copiado!");
+	// 	} catch (err) {
+	// 		console.error("Falha ao copiar:", err);
+	// 		// Fallback: Copia apenas texto simples
+	// 		await navigator.clipboard.writeText(plainContent);
+	// 	}
+	// }
+
+	const handleCopy = async (content: any) => {
+		const textArea = document.createElement("textarea");
+		textArea.value = content;
+
+		console.log("content", content);
+		console.log("textArea", textArea);
+		console.log("textArea.value", textArea.value);
+
+		document.body.appendChild(textArea);
+		textArea.select();
+		document.execCommand("copy", true, "text");
+		// document.body.removeChild(textArea);
+		console.log("Texto copiado!");
+
+		// console.log("content", content);
+		// try {
+		//   await navigator.clipboard.write(content);
+		//   console.log('Copied to clipboard:', content);
+		// } catch (error) {
+		//   console.error('Unable to copy to clipboard:', error);
+		// }
+	};
+
+	async function copyTextToClipboard(text: any) {
+		if (!navigator.clipboard) {
+			console.log("document.execCommand", document);
+			return document.execCommand("copy", true, text);
+		}
+
+		console.log("!navigator.clipboard", !navigator.clipboard);
+		return await navigator.clipboard.write(text);
+	}
 
 	return (
 		<div className="flex flex-col gap-2 w-full">
@@ -80,6 +141,7 @@ export function TransporteAutomacoes({
 				</TabsList>
 				<TabsContent value="cte">
 					<div className="flex flex-col gap-4 mt-3">
+						{/* Coral A*/}
 						<TextToClipboard.Root>
 							<TextToClipboard.Label
 								label="Coral"
@@ -94,6 +156,7 @@ export function TransporteAutomacoes({
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
 
+						{/* Coral B*/}
 						<TextToClipboard.Root>
 							<TextToClipboard.ValueContainer>
 								<TextToClipboard.Value value={valCoralCteB()} />
@@ -104,6 +167,7 @@ export function TransporteAutomacoes({
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
 
+						{/* WhatsApp */}
 						<TextToClipboard.Root>
 							<TextToClipboard.Label
 								label="WhatsApp"
@@ -119,6 +183,30 @@ export function TransporteAutomacoes({
 									className="text-blue-700 hover:text-blue-500"
 									textToCopy={valCTeWhatsApp()}
 								/>
+							</TextToClipboard.ValueContainer>
+						</TextToClipboard.Root>
+
+						{/* Email */}
+						<TextToClipboard.Root>
+							<TextToClipboard.Label
+								label="Email"
+								icon={
+									<FaSquareWhatsapp className="text-green-500" />
+								}
+							/>
+							<TextToClipboard.ValueContainer>
+								<TextToClipboard.Value value={valEmail()} />
+								{/* <TextToClipboard.CopyButton
+									className="text-blue-700 hover:text-blue-500"
+									textToCopy={copyFormattedText()}
+								/> */}
+								<button
+									onClick={() =>
+										copyTextToClipboard("<strong>hello word</strong>")
+									}
+								>
+									Copy to Clipboard
+								</button>
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
 					</div>
