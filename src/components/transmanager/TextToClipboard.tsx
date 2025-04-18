@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { cn } from "@/lib/utils";
 import { Label } from "../ui/label";
 import CopyToClipboard from "../main/CopyToClipboard";
+import { Copy } from "lucide-react";
 
 /**
  * Item da lista de transportes/viagens cadastradas.
@@ -97,10 +98,10 @@ export function TextToClipboardValue({
  */
 interface TextToClipboardCopyButtonProps
 	extends React.HtmlHTMLAttributes<"div"> {
-	textToCopy: any;
+	copyData: () => void;
 }
 export function TextToClipboardCopyButton({
-	textToCopy,
+	copyData,
 	className,
 }: TextToClipboardCopyButtonProps) {
 	return (
@@ -108,7 +109,13 @@ export function TextToClipboardCopyButton({
 			className={cn("self-end", className)}
 			title="Copiar para área de transferência"
 		>
-			<CopyToClipboard textToCopy={textToCopy} />
+			<button
+			onClick={copyData}
+			className="p-1 transition-colors hover:bg-blue-50 dark:hover:bg-blue-900/20 rounded-md"
+		>
+			<Copy className={cn("h-[18px] w-[18px] text-blue-600 dark:text-blue-400", className)}
+			/>
+		</button>
 		</div>
 	);
 }

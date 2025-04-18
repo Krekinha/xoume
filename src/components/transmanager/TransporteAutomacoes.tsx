@@ -3,9 +3,11 @@
 import type { Transporte } from "@/utils/types";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { FaCopyright } from "react-icons/fa6";
-import { FaSquareWhatsapp } from "react-icons/fa6";
+import { FaWhatsapp } from "react-icons/fa"; 
 import { formatCurrency, formatDecimal } from "@/utils/format";
 import { TextToClipboard } from "./TextToClipboard";
+import { notifyService } from "@/services/notifyService";
+import { MdEmail } from "react-icons/md";
 
 interface TransporteAutomacoesProps {
 	transporte: Transporte;
@@ -64,13 +66,13 @@ export function TransporteAutomacoes({
 		// Get current hour to determine greeting
 		const currentHour = new Date().getHours();
 		let greeting = "Boa noite!";
-		
+
 		if (currentHour >= 0 && currentHour < 12) {
 			greeting = "Bom dia!";
 		} else if (currentHour >= 12 && currentHour < 18) {
 			greeting = "Boa tarde!";
 		}
-		
+
 		// Versão para exibição
 		return `${greeting}<br><br>Segue:<br><br>- CTe <b>${transporte.cte} (${notasText} ${transporte.notas?.join("/")})</b><br>- Manifesto referente ao CTe <b>${transporte.cte}</b><br><br><br>Empresa: <b>${transporte.empresa?.razaoNome}</b>`;
 	};
@@ -87,29 +89,12 @@ export function TransporteAutomacoes({
 		)}*👇🏼`;
 	};
 
-	// async function copyFormattedText() {
-	// 	const htmlContent = "<strong>Boa tarde</strong>"; // Texto em negrito (HTML)
-	// 	const plainContent = "Boa tarde"; // Fallback em texto puro
-
-	// 	try {
-	// 		// Cria um objeto Blob com o conteúdo HTML
-	// 		const blob = new Blob([htmlContent], { type: "text/html" });
-	// 		const clipboardItem = new ClipboardItem({
-	// 			"text/html": blob,
-	// 			"text/plain": new Blob([plainContent], { type: "text/plain" }),
-	// 		});
-
-	// 		// Copia para a área de transferência
-	// 		await navigator.clipboard.write([clipboardItem]);
-	// 		console.log("Texto formatado copiado!");
-	// 	} catch (err) {
-	// 		console.error("Falha ao copiar:", err);
-	// 		// Fallback: Copia apenas texto simples
-	// 		await navigator.clipboard.writeText(plainContent);
-	// 	}
-	// }
-
 	async function copyTextToClipboard(text: string) {
+		// Verificar se o Clipboard API está disponível
+		if (!navigator.clipboard) {
+			notifyService.error("Clipboard API não suportada. Usando fallback.");
+			return;
+		}
 		try {
 			// Criar o blob com o conteúdo HTML
 			const htmlBlob = new Blob([text], { type: "text/html" });
@@ -126,10 +111,10 @@ export function TransporteAutomacoes({
 
 			// Copiar para a área de transferência
 			await navigator.clipboard.write([clipboardItem]);
-			console.log("Texto formatado copiado!");
+			notifyService.success("Copiado para área de transferência!");
+
 		} catch (err) {
-			console.error("Falha ao copiar:", err);
-			// Fallback: Copia apenas texto simples
+			notifyService.error(`Erro ao copiar para a área de transferência: /n/ ${err}`);
 			await navigator.clipboard.writeText(text.replace(/<[^>]*>/g, ""));
 		}
 	}
@@ -153,7 +138,9 @@ export function TransporteAutomacoes({
 								<TextToClipboard.Value value={valCoralCteA()} />
 								<TextToClipboard.CopyButton
 									className="text-blue-700 hover:text-blue-500"
-									textToCopy={valCoralCteA()}
+									copyData={() =>
+										copyTextToClipboard(valCoralCteA())
+									}
 								/>
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
@@ -164,7 +151,9 @@ export function TransporteAutomacoes({
 								<TextToClipboard.Value value={valCoralCteB()} />
 								<TextToClipboard.CopyButton
 									className="text-blue-700 hover:text-blue-500"
-									textToCopy={valCoralCteB()}
+									copyData={() =>
+										copyTextToClipboard(valCoralCteB())
+									}
 								/>
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
@@ -174,7 +163,7 @@ export function TransporteAutomacoes({
 							<TextToClipboard.Label
 								label="WhatsApp"
 								icon={
-									<FaSquareWhatsapp className="text-green-500" />
+									<FaWhatsapp className="text-green-500" />
 								}
 							/>
 							<TextToClipboard.ValueContainer>
@@ -183,7 +172,9 @@ export function TransporteAutomacoes({
 								/>
 								<TextToClipboard.CopyButton
 									className="text-blue-700 hover:text-blue-500"
-									textToCopy={valCTeWhatsApp()}
+									copyData={() =>
+										copyTextToClipboard(valCTeWhatsApp())
+									}
 								/>
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
@@ -193,22 +184,17 @@ export function TransporteAutomacoes({
 							<TextToClipboard.Label
 								label="Email"
 								icon={
-									<FaSquareWhatsapp className="text-green-500" />
+									<MdEmail className="text-blue-600" />
 								}
 							/>
 							<TextToClipboard.ValueContainer>
 								<TextToClipboard.Value value={valEmail()} />
-								{/* <TextToClipboard.CopyButton
+								<TextToClipboard.CopyButton
 									className="text-blue-700 hover:text-blue-500"
-									textToCopy={copyFormattedText()}
-								/> */}
-								<button
-									onClick={() =>
+									copyData={() =>
 										copyTextToClipboard(valEmail())
 									}
-								>
-									Copy to Clipboard
-								</button>
+								/>
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
 					</div>
@@ -226,7 +212,11 @@ export function TransporteAutomacoes({
 								/>
 								<TextToClipboard.CopyButton
 									className="text-blue-700 hover:text-blue-500"
-									textToCopy={valCoralComplemento()}
+									copyData={() =>
+										copyTextToClipboard(
+											valCoralComplemento(),
+										)
+									}
 								/>
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
@@ -235,7 +225,7 @@ export function TransporteAutomacoes({
 							<TextToClipboard.Label
 								label="WhatsApp"
 								icon={
-									<FaSquareWhatsapp className="text-green-500" />
+									<FaWhatsapp className="text-green-500" />
 								}
 							/>
 							<TextToClipboard.ValueContainer>
@@ -244,7 +234,11 @@ export function TransporteAutomacoes({
 								/>
 								<TextToClipboard.CopyButton
 									className="text-blue-700 hover:text-blue-500"
-									textToCopy={valComplementoWhatsApp()}
+									copyData={() =>
+										copyTextToClipboard(
+											valComplementoWhatsApp(),
+										)
+									}
 								/>
 							</TextToClipboard.ValueContainer>
 						</TextToClipboard.Root>
