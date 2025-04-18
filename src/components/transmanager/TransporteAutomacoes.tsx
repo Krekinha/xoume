@@ -203,7 +203,10 @@ export function TransporteAutomacoes({
 								}
 							/>
 							<TextToClipboard.ValueContainer>
-								<TextToClipboard.Value value={valEmail()} />
+							<div 
+									className="text-sm font-medium whitespace-pre-wrap break-all"
+									dangerouslySetInnerHTML={{ __html: valEmail() }}
+								/>
 								<TextToClipboard.CopyButton
 									className="text-blue-700 hover:text-blue-500"
 									copyData={() =>
@@ -267,7 +270,10 @@ export function TransporteAutomacoes({
 								}
 							/>
 							<TextToClipboard.ValueContainer>
-								<TextToClipboard.Value value={valEmailComplementar()} />
+								<div 
+									className="text-sm font-medium whitespace-pre-wrap break-all"
+									dangerouslySetInnerHTML={{ __html: valEmailComplementar() }}
+								/>
 								<TextToClipboard.CopyButton
 									className="text-blue-700 hover:text-blue-500"
 									copyData={() =>
