@@ -77,6 +77,21 @@ export function TransporteAutomacoes({
 		return `${greeting}<br><br>Segue:<br><br>- CTe <b>${transporte.cte} (${notasText} ${transporte.notas?.join("/")})</b><br>- Manifesto referente ao CTe <b>${transporte.cte}</b><br><br><br>Empresa: <b>${transporte.empresa?.razaoNome}</b>`;
 	};
 
+	const valEmailComplementar = () => {
+		// Get current hour to determine greeting
+		const currentHour = new Date().getHours();
+		let greeting = "Boa noite!";
+
+		if (currentHour >= 0 && currentHour < 12) {
+			greeting = "Bom dia!";
+		} else if (currentHour >= 12 && currentHour < 18) {
+			greeting = "Boa tarde!";
+		}
+
+		// Versão para exibição
+		return `${greeting}<br><br>Segue:<br><br>- CTe <b>${transporte.cteComplementar?.cte}</b> COMPLEMENTAR ao CTe <b>${transporte.cte} (${notasText} ${transporte.notas?.join("/")})</b><br>- Peso real informado: <b>${transporte.cteComplementar?.peso}</b> (conforme anexo)<br>- GNRE ICMS Frete (Comprovante de pagamento será enviado posteriormente)<br>- Comprovante pgto. GNRE ICMS Frete ref. CTe <b>${transporte.cteComplementar?.cte}</b><br><br><br>Empresa: <b>${transporte.empresa?.razaoNome}</b>`;
+	};
+
 	const valComplementoWhatsApp = () => {
 		return `Segue CT-e *${transporte.cteComplementar?.cte}* COMPLEMENTAR ao CT-e *${transporte.cte} (${notasText} ${transporte.notas?.join(
 			"/",
@@ -238,6 +253,25 @@ export function TransporteAutomacoes({
 										copyTextToClipboard(
 											valComplementoWhatsApp(),
 										)
+									}
+								/>
+							</TextToClipboard.ValueContainer>
+						</TextToClipboard.Root>
+
+						{/* Email */}
+						<TextToClipboard.Root>
+							<TextToClipboard.Label
+								label="Email"
+								icon={
+									<MdEmail className="text-blue-600" />
+								}
+							/>
+							<TextToClipboard.ValueContainer>
+								<TextToClipboard.Value value={valEmailComplementar()} />
+								<TextToClipboard.CopyButton
+									className="text-blue-700 hover:text-blue-500"
+									copyData={() =>
+										copyTextToClipboard(valEmailComplementar())
 									}
 								/>
 							</TextToClipboard.ValueContainer>
